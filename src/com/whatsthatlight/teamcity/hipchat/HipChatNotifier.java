@@ -20,7 +20,7 @@ import jetbrains.buildServer.tests.TestName;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.vcs.VcsRoot;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 public class HipChatNotifier implements Notificator {
 
@@ -28,9 +28,9 @@ public class HipChatNotifier implements Notificator {
 	private static String name = "HipChat Notifier";
 	private static String type = "HipChat Build Notifiers";
 	
-	public HipChatNotifier(NotificatorRegistry reg) {
+	public HipChatNotifier(NotificatorRegistry registry) {
 		// Register the notifier in the TeamCity registry
-		reg.register(this);
+		registry.register(this);
 		//String version = this.getClass().getPackage().getImplementationVersion();
 		//String logMessage = String.format("%1$s (%2$s) version %3$s registered", getDisplayName(), getNotificatorType(), version);
 		//logger.info(logMessage);

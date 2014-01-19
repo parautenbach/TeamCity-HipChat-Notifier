@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:noNamespaceSchemaLocation="urn:shemas-jetbrains-com:teamcity-plugin-v1-xml">
+  <info>
+    <name>HipChat Notifier</name>
+    <display-name>HipChat Notifier</display-name>
+    <!-- <description>Some description goes here</description> -->
+    <version>0.0.0.0</version>
+    <vendor>
+      <name>What's That Light?</name>
+      <url>http://www.whatsthatlight.com/</url>
+    </vendor>
+  </info>
+  <deployment use-separate-classloader="true" /> <!-- load server plugin's classes in separate classloader-->
+  <!-- <parameters> -->
+    <!-- <parameter name="key">value</parameter> -->
+    <!-- ... -->
+  <!-- </parameters> -->
+</teamcity-plugin>

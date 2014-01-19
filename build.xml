@@ -36,7 +36,8 @@
 	<property name="lib" value="lib"/>
 	<property name="junit.home" value="lib/junit"/>
 	<property name="manifest" value="MANIFEST.MF"/>
-	<property name="plugin.xml" value="build-server-plugin-hipchat-notifier.xml"/>
+	<property name="plugin.xml" value="teamcity-plugin.xml"/>
+	<property name="plugin-bean.xml" value="build-server-plugin-hipchat-notifier.xml"/>
 
 	<path id="classpath">
 		<fileset dir="${lib}">
@@ -104,11 +105,14 @@
 	<target name="release" depends="compile" description="Generate the distribution" >
 		<mkdir dir="${build}"/>
 		<copy file="${plugin.xml}" todir="${build}"/>
-		<jar jarfile="${build}/${jar}.jar" manifest="${manifest}">
+		<jar jarfile="${build}/${jar}.jar" manifest="${manifest}" basedir="${build}">
+			<metainf dir="${src}/META-INF"/>
 			<fileset dir="${classes}" excludes="**/test/**"/>
 		</jar>
-		<zip basedir="." destfile="${jar}.zip" includes="${build}/${jar}.jar,${plugin.xml}"/>
-		
+		<zip basedir="${build}" destfile="${jar}.zip" includes="${jar}.jar,${plugin.xml}"/>
+		<move file="${jar}.zip" todir="${build}"/>
+		<delete file="${build}/${jar}.jar"/>
+		<delete file="${build}/${plugin.xml}"/>
 	</target>
 
 	<target name="run" depends="release">
