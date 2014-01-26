@@ -19,12 +19,12 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 	private static final String TAB_TITLE = "HipChat Notifier";
 	private static final String PLUGIN_NAME = "hipChat";
 	
+	private HipChatConfiguration configuration;
 	private static Logger logger = (Logger) Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
-	private HipChatNotifierGlobalSettings settings;
 
     public HipChatConfigurationPageExtension(@NotNull PagePlaces pagePlaces, 
     		@NotNull PluginDescriptor descriptor,
-    		@NotNull HipChatNotifierGlobalSettings settings) {
+    		@NotNull HipChatConfiguration configuration) {
         super(pagePlaces);
         setPluginName(PLUGIN_NAME);
         setIncludeUrl(descriptor.getPluginResourcesPath("settings.jsp"));
@@ -34,7 +34,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
         ArrayList<String> before = new ArrayList<String>();
         before.add("clouds"); 
         setPosition(PositionConstraint.between(after, before));
-        this.settings = settings;
+        this.configuration = configuration;
         register();
         logger.info("Global settings page registered");
     }
@@ -46,7 +46,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
     @Override
     public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
         super.fillModel(model, request);
-        model.put("apiUrl", settings.getApiUrl());
+        model.put("apiUrl", configuration.getApiUrl());
         logger.info("fillModel");
     }
 

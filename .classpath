@@ -12,5 +12,7 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/annotations.jar"/>
+	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/teamcity_professional-8.0.5/spring.jar"/>
+	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/teamcity_professional-8.0.5/spring-webmvc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

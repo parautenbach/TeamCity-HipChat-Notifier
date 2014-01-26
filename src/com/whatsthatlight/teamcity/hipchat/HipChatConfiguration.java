@@ -6,18 +6,18 @@ import org.jdom.Element;
 import jetbrains.buildServer.serverSide.MainConfigProcessor;
 import jetbrains.buildServer.serverSide.SBuildServer;
 
-public class HipChatNotifierGlobalSettings implements MainConfigProcessor {
+public class HipChatConfiguration implements MainConfigProcessor {
 
 	private static Logger logger = (Logger) Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private SBuildServer buildServer;
 	
-	public HipChatNotifierGlobalSettings(SBuildServer buildServer) {
+	public HipChatConfiguration(SBuildServer buildServer) {
 		this.buildServer = buildServer;
 	}
 	
     public void register() {
     	buildServer.registerExtension(MainConfigProcessor.class, "HipChat", this);
-    	logger.info("Registered global settings");
+    	logger.info("Registered configuration");
     }
     
 	@Override
@@ -33,6 +33,10 @@ public class HipChatNotifierGlobalSettings implements MainConfigProcessor {
 	public String getApiUrl() {
 		logger.info("getApiUrl");
 		return "http://example.com/";
+	}
+
+	public void setApiUrl(String url) {
+		logger.info("setApiUrl " + url);		
 	}
 
 }
