@@ -7,6 +7,7 @@
 	<property environment="env"/>
 	<property name="src" location="src"/>
 	<property name="classes" location="classes"/>
+	<property name="resources" location="src/resources"/>
 	<property name="build" location="build"/>
 	<property name="reports" location="reports"/>
 	<property name="main-class" value="HipChatNotifier"/>
@@ -50,6 +51,7 @@
 		<echo>
       Source:         ${src}
       Classes:        ${classes}
+      Resources:      ${resources}
       Build:          ${build}
       Reports:        ${reports}
       Main Class:     ${main-class}
@@ -101,13 +103,13 @@
 		</junitreport>
 	</target>
 
-	<!-- log4j.properties -->
 	<target name="release" depends="compile" description="Generate the distribution" >
 		<mkdir dir="${build}"/>
 		<copy file="${plugin.xml}" todir="${build}"/>
 		<jar jarfile="${build}/${jar}.jar" manifest="${manifest}" basedir="${build}">
 			<metainf dir="${src}/META-INF"/>
 			<fileset dir="${classes}" excludes="**/test/**"/>
+			<fileset dir="${resources}"/>
 		</jar>
 		<zip basedir="${build}" destfile="${jar}.zip" includes="${jar}.jar,${plugin.xml}"/>
 		<move file="${jar}.zip" todir="${build}"/>

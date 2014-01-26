@@ -5,11 +5,8 @@ import org.jdom.Element;
 
 import jetbrains.buildServer.serverSide.MainConfigProcessor;
 import jetbrains.buildServer.serverSide.SBuildServer;
-import jetbrains.buildServer.serverSide.ServerExtension;
 
-//import javax.servlet.http.HttpServletRequest;
-
-public class HipChatNotifierGlobalSettings implements MainConfigProcessor { //, ServerExtension {
+public class HipChatNotifierGlobalSettings implements MainConfigProcessor {
 
 	private static Logger logger = (Logger) Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private SBuildServer buildServer;
@@ -19,8 +16,8 @@ public class HipChatNotifierGlobalSettings implements MainConfigProcessor { //, 
 	}
 	
     public void register() {
-    	logger.info("Registering global settings");
     	buildServer.registerExtension(MainConfigProcessor.class, "HipChat", this);
+    	logger.info("Registered global settings");
     }
     
 	@Override

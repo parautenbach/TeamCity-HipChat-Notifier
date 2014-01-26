@@ -1,3 +1,5 @@
 /bin
 /build
 /classes
+.DS_Store
+MANIFEST.MF
