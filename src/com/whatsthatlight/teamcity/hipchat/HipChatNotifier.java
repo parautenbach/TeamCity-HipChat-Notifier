@@ -20,20 +20,22 @@ import jetbrains.buildServer.tests.TestName;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.vcs.VcsRoot;
 
-//import org.apache.log4j.Logger;
+import org.apache.log4j.Logger;
 
 public class HipChatNotifier implements Notificator {
 
-//	private static Logger logger = Logger.getLogger(HipChatNotifier.class);
+	private static Logger logger = (Logger) Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private static String name = "HipChat Notifier";
-	private static String type = "HipChat Build Notifiers";
+	
+	// WARNING: This string has a 20 character limit!
+	private static String type = "HipChat Notifiers";
 	
 	public HipChatNotifier(NotificatorRegistry registry) {
 		// Register the notifier in the TeamCity registry
 		registry.register(this);
-		//String version = this.getClass().getPackage().getImplementationVersion();
-		//String logMessage = String.format("%1$s (%2$s) version %3$s registered", getDisplayName(), getNotificatorType(), version);
-		//logger.info(logMessage);
+		String version = this.getClass().getPackage().getImplementationVersion();
+		String logMessage = String.format("%1$s (%2$s) version %3$s registered", getDisplayName(), getNotificatorType(), version);
+		logger.info(logMessage);
 	}
 	
 	@Override
@@ -48,110 +50,110 @@ public class HipChatNotifier implements Notificator {
 
 	@Override
 	public void notifyBuildFailed(SRunningBuild arg0, Set<SUser> arg1) {
-		//logger.info("Build failed");
+		logger.info("Build failed");
 	}
 
 	@Override
 	public void notifyBuildFailedToStart(SRunningBuild arg0, Set<SUser> arg1) {
-		//logger.info("Build failed to start");
+		logger.info("Build failed to start");
 	}
 
 	@Override
 	public void notifyBuildFailing(SRunningBuild arg0, Set<SUser> arg1) {
-		//logger.info("Build failing");
+		logger.info("Build failing");
 	}
 
 	@Override
 	public void notifyBuildProbablyHanging(SRunningBuild arg0, Set<SUser> arg1) {
-//		logger.info("Build hanging");
+		logger.info("Build hanging");
 	}
 
 	@Override
 	public void notifyBuildProblemResponsibleAssigned(
 			Collection<BuildProblemInfo> arg0, ResponsibilityEntry arg1,
 			SProject arg2, Set<SUser> arg3) {
-//		logger.info("Build problem responsibility assigned");		
+		logger.info("Build problem responsibility assigned");		
 	}
 
 	@Override
 	public void notifyBuildProblemResponsibleChanged(
 			Collection<BuildProblemInfo> arg0, ResponsibilityEntry arg1,
 			SProject arg2, Set<SUser> arg3) {
-//		logger.info("Build problem responsible changed");
+		logger.info("Build problem responsible changed");
 	}
 
 	@Override
 	public void notifyBuildProblemsMuted(Collection<BuildProblemInfo> arg0,
 			MuteInfo arg1, Set<SUser> arg2) {
-//		logger.info("Build problems muted");
+		logger.info("Build problems muted");
 	}
 
 	@Override
 	public void notifyBuildProblemsUnmuted(Collection<BuildProblemInfo> arg0,
 			MuteInfo arg1, SUser arg2, Set<SUser> arg3) {
-//		logger.info("Build problems unmuted");
+		logger.info("Build problems unmuted");
 	}
 
 	@Override
 	public void notifyBuildStarted(SRunningBuild arg0, Set<SUser> arg1) {
-//		logger.info("Build started");
+		logger.info("Build started");
 	}
 
 	@Override
 	public void notifyBuildSuccessful(SRunningBuild arg0, Set<SUser> arg1) {
-//		logger.info("Build successful");
+		logger.info("Build successful");
 	}
 
 	@Override
 	public void notifyLabelingFailed(Build arg0, VcsRoot arg1, Throwable arg2,
 			Set<SUser> arg3) {
-//		logger.info("Build labeling failed");
+		logger.info("Build labeling failed");
 	}
 
 	@Override
 	public void notifyResponsibleAssigned(SBuildType arg0, Set<SUser> arg1) {
-//		logger.info("Build responsible assigned");
+		logger.info("Build responsible assigned");
 	}
 
 	@Override
 	public void notifyResponsibleAssigned(TestNameResponsibilityEntry arg0,
 			TestNameResponsibilityEntry arg1, SProject arg2, Set<SUser> arg3) {
-//		logger.info("Build responsible assigned for test");
+		logger.info("Build responsible assigned for test");
 	}
 
 	@Override
 	public void notifyResponsibleAssigned(Collection<TestName> arg0,
 			ResponsibilityEntry arg1, SProject arg2, Set<SUser> arg3) {
-//		logger.info("Build responsible assigned for test");
+		logger.info("Build responsible assigned for test");
 	}
 
 	@Override
 	public void notifyResponsibleChanged(SBuildType arg0, Set<SUser> arg1) {
-//		logger.info("Build responsible changed");
+		logger.info("Build responsible changed");
 	}
 
 	@Override
 	public void notifyResponsibleChanged(TestNameResponsibilityEntry arg0,
 			TestNameResponsibilityEntry arg1, SProject arg2, Set<SUser> arg3) {
-//		logger.info("Build responsible changed for test");
+		logger.info("Build responsible changed for test");
 	}
 
 	@Override
 	public void notifyResponsibleChanged(Collection<TestName> arg0,
 			ResponsibilityEntry arg1, SProject arg2, Set<SUser> arg3) {
-//		logger.info("Build responsible changed");
+		logger.info("Build responsible changed");
 	}
 
 	@Override
 	public void notifyTestsMuted(Collection<STest> arg0, MuteInfo arg1,
 			Set<SUser> arg2) {
-//		logger.info("Tests muted");
+		logger.info("Tests muted");
 	}
 
 	@Override
 	public void notifyTestsUnmuted(Collection<STest> arg0, MuteInfo arg1,
 			SUser arg2, Set<SUser> arg3) {
-//		logger.info("Tests unmuted");
+		logger.info("Tests unmuted");
 	}
 
 }

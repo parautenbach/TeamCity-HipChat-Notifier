@@ -3,4 +3,6 @@
 
 <beans default-autowire="constructor">
   <bean id="hipChatNotifier" class="com.whatsthatlight.teamcity.hipchat.HipChatNotifier"/>
+  <bean id="hipChatNotifierGlobalSettings" class="com.whatsthatlight.teamcity.hipchat.HipChatNotifierGlobalSettings" init-method="register"/>
+  <bean id="hipChatAdminPage" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension"/>
 </beans>
