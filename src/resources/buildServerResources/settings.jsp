@@ -25,9 +25,8 @@
 <bs:refreshable containerId="piazzaComponent" pageUrl="${pageUrl}">
     <h2>HipChat Notifier Settings</h2>
 </bs:refreshable> --%>
-<HTML>
-<BODY>
-	Hello! The time is now
-	<%=new java.util.Date()%>
-</BODY>
-</HTML>
+
+Hello <%= request.getRemoteHost() %>! The time is now <%= new java.util.Date() %>.
+<%-- <jsp:useBean id="resourceRoot" type="java.lang.String" scope="request"/> --%>
+<br>
+The API URL is ${apiUrl}.

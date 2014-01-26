@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class HipChatConfigurationPageExtension extends AdminPage {
 
@@ -19,23 +20,21 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 	private static final String PLUGIN_NAME = "hipChat";
 	
 	private static Logger logger = (Logger) Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
-
-    //private PiazzaConfiguration piazzaConfiguration;
-    //private Piazza piazza;
+	private HipChatNotifierGlobalSettings settings;
 
     public HipChatConfigurationPageExtension(@NotNull PagePlaces pagePlaces, 
-    		@NotNull PluginDescriptor descriptor) {
+    		@NotNull PluginDescriptor descriptor,
+    		@NotNull HipChatNotifierGlobalSettings settings) {
         super(pagePlaces);
         setPluginName(PLUGIN_NAME);
         setIncludeUrl(descriptor.getPluginResourcesPath("settings.jsp"));
         setTabTitle(TAB_TITLE);
         ArrayList<String> after = new ArrayList<String>();
-        //after.add("email");
         after.add("jabber");
         ArrayList<String> before = new ArrayList<String>();
-        before.add("cloud"); 
-        //before.add("diagnostics");
+        before.add("clouds"); 
         setPosition(PositionConstraint.between(after, before));
+        this.settings = settings;
         register();
         logger.info("Global settings page registered");
     }
@@ -44,12 +43,12 @@ public class HipChatConfigurationPageExtension extends AdminPage {
     	return super.isAvailable(request) && checkHasGlobalPermission(request, Permission.CHANGE_SERVER_SETTINGS);
     }
     
-//    @Override
-//    public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
-//        super.fillModel(model, request);
-//        //model.put("showOnFailureOnly", piazzaConfiguration.isShowOnFailureOnly());
-//        //model.put("resourceRoot", this.piazza.resourcePath(""));
-//    }
+    @Override
+    public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
+        super.fillModel(model, request);
+        model.put("apiUrl", settings.getApiUrl());
+        logger.info("fillModel");
+    }
 
 	@Override
 	public String getGroup() {

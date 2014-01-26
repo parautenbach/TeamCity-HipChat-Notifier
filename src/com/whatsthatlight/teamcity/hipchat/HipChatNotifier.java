@@ -24,20 +24,24 @@ import org.apache.log4j.Logger;
 
 public class HipChatNotifier implements Notificator {
 
-	private static Logger logger = (Logger) Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
+	private static Logger logger = (Logger) Logger
+			.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private static String name = "HipChat Notifier";
-	
+
 	// WARNING: This string has a 20 character limit!
 	private static String type = "HipChat Notifiers";
-	
+
 	public HipChatNotifier(NotificatorRegistry registry) {
 		// Register the notifier in the TeamCity registry
 		registry.register(this);
-		String version = this.getClass().getPackage().getImplementationVersion();
-		String logMessage = String.format("%1$s (%2$s) version %3$s registered", getDisplayName(), getNotificatorType(), version);
+		String version = this.getClass().getPackage()
+				.getImplementationVersion();
+		String logMessage = String.format(
+				"%1$s (%2$s) version %3$s registered", getDisplayName(),
+				getNotificatorType(), version);
 		logger.info(logMessage);
 	}
-	
+
 	@Override
 	public String getDisplayName() {
 		return name;
@@ -72,7 +76,7 @@ public class HipChatNotifier implements Notificator {
 	public void notifyBuildProblemResponsibleAssigned(
 			Collection<BuildProblemInfo> arg0, ResponsibilityEntry arg1,
 			SProject arg2, Set<SUser> arg3) {
-		logger.info("Build problem responsibility assigned");		
+		logger.info("Build problem responsibility assigned");
 	}
 
 	@Override

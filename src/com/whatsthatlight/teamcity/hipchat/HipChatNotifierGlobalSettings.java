@@ -30,4 +30,9 @@ public class HipChatNotifierGlobalSettings implements MainConfigProcessor {
 		logger.info("writeTo");
 	}
 
+	public String getApiUrl() {
+		logger.info("getApiUrl");
+		return "http://example.com/";
+	}
+
 }
