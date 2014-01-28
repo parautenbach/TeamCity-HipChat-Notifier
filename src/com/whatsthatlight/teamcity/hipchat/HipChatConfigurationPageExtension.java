@@ -20,6 +20,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 	private static final String PLUGIN_NAME = "hipChat";
 	
 	private HipChatConfiguration configuration;
+	private PluginDescriptor descriptor;
 	private static Logger logger = (Logger) Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 
     public HipChatConfigurationPageExtension(@NotNull PagePlaces pagePlaces, 
@@ -35,6 +36,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
         before.add("clouds"); 
         setPosition(PositionConstraint.between(after, before));
         this.configuration = configuration;
+        this.descriptor = descriptor;
         register();
         logger.info("Global settings page registered");
     }
@@ -46,7 +48,11 @@ public class HipChatConfigurationPageExtension extends AdminPage {
     @Override
     public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
         super.fillModel(model, request);
+        model.put("resourceRoot", this.descriptor.getPluginResourcesPath());
         model.put("apiUrl", configuration.getApiUrl());
+        model.put("apiToken", configuration.getApiToken());
+        logger.debug(this.configuration.getStatus());
+        model.put("disabled", !this.configuration.getStatus());
         logger.info("fillModel");
     }
 

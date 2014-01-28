@@ -1,0 +1,13 @@
+.editNotificatorSettingsPage {
+  width: 75%;
+}
+
+.editNotificatorSettingsPage .runnerFormTable th {
+  width: 240px;
+}
+
+.editNotificatorSettingsPage .runnerFormTable td input.textfield {
+  width: 25em;
+  margin: 0;
+  padding: 0;
+}
