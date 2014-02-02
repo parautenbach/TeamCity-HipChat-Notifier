@@ -1,4 +1,4 @@
-package com.whatsthatlight.com.teamcity.hipchat.test;
+package com.whatsthatlight.teamcity.hipchat.test;
 
 import java.io.BufferedWriter;
 import java.io.File;

@@ -44,6 +44,7 @@
 		</table>
 		<div class="saveButtonsBlock">
 			<forms:submit label="Save" />
+			<!-- TODO: Test API connection -->
 			<!-- <forms:submit id="testConnection" type="button"
 					label="Test connection" /> -->
 			<forms:saving />

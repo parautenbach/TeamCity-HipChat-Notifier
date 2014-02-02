@@ -19,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.thoughtworks.xstream.XStream;
 
+import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
+
 public class HipChatConfigurationController extends BaseController {
 
 	private static final String HIPCHAT_CONFIG_FILE = "hipchat.xml";
@@ -89,6 +91,7 @@ public class HipChatConfigurationController extends BaseController {
 		xstream.processAnnotations(HipChatConfiguration.class);
 		File file = new File(this.configFilePath);
 		HipChatConfiguration configuration = (HipChatConfiguration) xstream.fromXML(file);
+		// Copy the values, because we need it on the original shared (bean), which is a singleton
 		this.configuration.setApiUrl(configuration.getApiUrl());
 		this.configuration.setApiToken(configuration.getApiToken());
 		this.configuration.setDisabledStatus(configuration.getDisabledStatus());
