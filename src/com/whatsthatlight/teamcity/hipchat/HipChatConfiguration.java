@@ -43,7 +43,7 @@ public class HipChatConfiguration {
 		this.apiUrl = url;
 	}
 	
-	public void setDisabledStatus(boolean status) {
+	public void setDisabledStatus(Boolean status) {
 		this.disabled = status;
 	}
 	

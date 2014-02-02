@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.thoughtworks.xstream.XStream;
-
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 
 public class HipChatConfigurationController extends BaseController {
@@ -88,7 +88,8 @@ public class HipChatConfigurationController extends BaseController {
 
 	public void loadConfiguration() throws IOException {
 		XStream xstream = new XStream();
-		xstream.processAnnotations(HipChatConfiguration.class);
+		xstream.setClassLoader(this.configuration.getClass().getClassLoader());
+		xstream.processAnnotations(this.configuration.getClass());
 		File file = new File(this.configFilePath);
 		HipChatConfiguration configuration = (HipChatConfiguration) xstream.fromXML(file);
 		// Copy the values, because we need it on the original shared (bean), which is a singleton
@@ -99,7 +100,7 @@ public class HipChatConfigurationController extends BaseController {
 
 	public void saveConfiguration() throws IOException {
 		XStream xstream = new XStream();
-		xstream.processAnnotations(HipChatConfiguration.class);
+		xstream.processAnnotations(this.configuration.getClass());
 		File file = new File(this.configFilePath);
 		file.createNewFile();
 		FileWriter fileWriter = new FileWriter(file);
