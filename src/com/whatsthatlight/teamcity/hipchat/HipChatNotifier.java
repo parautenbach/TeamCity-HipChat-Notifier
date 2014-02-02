@@ -5,6 +5,7 @@ import java.util.Set;
 
 //import com.whatsthatlight.teamcity.Utils;
 
+
 import jetbrains.buildServer.Build;
 import jetbrains.buildServer.notification.Notificator;
 import jetbrains.buildServer.notification.NotificatorRegistry;
@@ -21,17 +22,18 @@ import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.vcs.VcsRoot;
 
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 public class HipChatNotifier implements Notificator {
 
-	private static Logger logger = (Logger) Logger
-			.getLogger("com.whatsthatlight.teamcity.hipchat");
+	private static Logger logger = (Logger) Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private static String name = "HipChat Notifier";
 
 	// WARNING: This string has a 20 character limit!
 	private static String type = "HipChat Notifiers";
+	private HipChatConfiguration configuration;
 
-	public HipChatNotifier(NotificatorRegistry registry) {
+	public HipChatNotifier(@NotNull NotificatorRegistry registry, @NotNull HipChatConfiguration configuration) {
 		// Register the notifier in the TeamCity registry
 		registry.register(this);
 		String version = this.getClass().getPackage()
@@ -40,8 +42,13 @@ public class HipChatNotifier implements Notificator {
 				"%1$s (%2$s) version %3$s registered", getDisplayName(),
 				getNotificatorType(), version);
 		logger.info(logMessage);
+		this.configuration = configuration;
 	}
 
+	private void handleNotification() {
+		// check config enabled?
+	}
+	
 	@Override
 	public String getDisplayName() {
 		return name;
@@ -101,6 +108,7 @@ public class HipChatNotifier implements Notificator {
 	@Override
 	public void notifyBuildStarted(SRunningBuild arg0, Set<SUser> arg1) {
 		logger.info("Build started");
+		logger.debug(configuration.getApiUrl() + ", " + configuration.getApiToken());
 	}
 
 	@Override

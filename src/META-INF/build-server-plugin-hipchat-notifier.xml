@@ -2,8 +2,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="constructor">
-  <bean id="hipChatNotifier" class="com.whatsthatlight.teamcity.hipchat.HipChatNotifier"/>
-  <bean id="hipChatConfigurationProcessor" class="com.whatsthatlight.teamcity.hipchat.HipChatConfiguration" init-method="register"/>
+  <bean id="hipChatConfiguration" class="com.whatsthatlight.teamcity.hipchat.HipChatConfiguration"/>
+  <bean id="hipChatConfigurationController" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController" init-method="initialise"/>
   <bean id="hipChatAdminPage" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension"/>
-  <bean class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController"/>
+  <bean id="hipChatNotifier" class="com.whatsthatlight.teamcity.hipchat.HipChatNotifier"/>
 </beans>

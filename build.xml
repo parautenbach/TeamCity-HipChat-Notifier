@@ -92,6 +92,7 @@
 			<batchtest fork="true" todir="${reports}">
 				<fileset dir="${classes}">
 					<include name="**/*Test*"/>
+					<include name="log4j.properties"/>
 					<exclude name="**/*$*.class"/>
 				</fileset>
 			</batchtest>

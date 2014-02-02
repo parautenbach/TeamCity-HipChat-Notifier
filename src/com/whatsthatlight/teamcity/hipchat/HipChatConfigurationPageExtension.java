@@ -18,9 +18,14 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 
 	private static final String TAB_TITLE = "HipChat Notifier";
 	private static final String PLUGIN_NAME = "hipChat";
+	private static final String PAGE = "settings.jsp";
+	private static final String RESOURCE_ROOT = "resourceRoot";
+	private static final String BEFORE_PAGE_ID = "clouds";
+	private static final String AFTER_PAGE_ID = "jabber";
 	
 	private HipChatConfiguration configuration;
 	private PluginDescriptor descriptor;
+	
 	private static Logger logger = (Logger) Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 
     public HipChatConfigurationPageExtension(@NotNull PagePlaces pagePlaces, 
@@ -28,17 +33,17 @@ public class HipChatConfigurationPageExtension extends AdminPage {
     		@NotNull HipChatConfiguration configuration) {
         super(pagePlaces);
         setPluginName(PLUGIN_NAME);
-        setIncludeUrl(descriptor.getPluginResourcesPath("settings.jsp"));
+        setIncludeUrl(descriptor.getPluginResourcesPath(PAGE));
         setTabTitle(TAB_TITLE);
         ArrayList<String> after = new ArrayList<String>();
-        after.add("jabber");
+        after.add(AFTER_PAGE_ID);
         ArrayList<String> before = new ArrayList<String>();
-        before.add("clouds"); 
+        before.add(BEFORE_PAGE_ID); 
         setPosition(PositionConstraint.between(after, before));
         this.configuration = configuration;
         this.descriptor = descriptor;
         register();
-        logger.info("Global settings page registered");
+        logger.info("Global configuration page registered");
     }
 
     public boolean isAvailable(@NotNull HttpServletRequest request) {
@@ -48,12 +53,11 @@ public class HipChatConfigurationPageExtension extends AdminPage {
     @Override
     public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
         super.fillModel(model, request);
-        model.put("resourceRoot", this.descriptor.getPluginResourcesPath());
-        model.put("apiUrl", configuration.getApiUrl());
-        model.put("apiToken", configuration.getApiToken());
-        logger.debug(this.configuration.getStatus());
-        model.put("disabled", !this.configuration.getStatus());
-        logger.info("fillModel");
+        model.put(RESOURCE_ROOT, this.descriptor.getPluginResourcesPath());
+        model.put(HipChatConfiguration.API_URL_KEY, configuration.getApiUrl());
+        model.put(HipChatConfiguration.API_TOKEN_KEY, configuration.getApiToken());
+        model.put(HipChatConfiguration.DISABLED_STATUS_KEY, this.configuration.getDisabledStatus());
+        logger.debug("Configuration page variables populated");
     }
 
 	@Override
