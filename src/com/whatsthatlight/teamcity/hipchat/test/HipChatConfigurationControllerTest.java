@@ -30,8 +30,6 @@ import org.junit.Test;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController;
 
-;
-
 public class HipChatConfigurationControllerTest {
 
 	@BeforeClass
@@ -76,7 +74,7 @@ public class HipChatConfigurationControllerTest {
 
 		// Check XML of the newly created config file
 		SAXBuilder builder = new SAXBuilder();
-		Document document = (Document) builder.build(postRegistrationConfigFile);
+		Document document = builder.build(postRegistrationConfigFile);
 		Element rootElement = document.getRootElement();
 		assertNull(rootElement.getChildText(expectedApiUrlKey));
 		assertNull(rootElement.getChildText(expectedApiTokenKey));
@@ -95,7 +93,7 @@ public class HipChatConfigurationControllerTest {
 
 		// Check XML of the saved config file
 		builder = new SAXBuilder();
-		document = (Document) builder.build(postRegistrationConfigFile);
+		document = builder.build(postRegistrationConfigFile);
 		rootElement = document.getRootElement();
 		assertEquals(expectedApiUrlValue, rootElement.getChildText(expectedApiUrlKey));
 		assertEquals(expectedApiTokenValue, rootElement.getChildText(expectedApiTokenKey));
@@ -152,7 +150,7 @@ public class HipChatConfigurationControllerTest {
 		controller.initialise();
 		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
 		SAXBuilder builder = new SAXBuilder();
-		Document document = (Document) builder.build(postInitConfigFile);
+		Document document = builder.build(postInitConfigFile);
 		Element rootElement = document.getRootElement();
 		assertEquals(expectedApiUrlValue, rootElement.getChildText(expectedApiUrlKey));
 		assertEquals(expectedApiTokenValue, rootElement.getChildText(expectedApiTokenKey));

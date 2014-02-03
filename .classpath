@@ -21,5 +21,7 @@
 	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/xstream-1.4.6.6/xmlpull-1.1.3.1.jar"/>
 	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/xstream-1.4.6.6/xpp3_min-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/xstream-1.4.6.6/xstream-1.4.6.jar"/>
+	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/jersey-1.18/jersey-bundle-1.18.jar"/>
+	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/jackson-1.9.11/jackson-all-1.9.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,5 +5,5 @@
   <bean id="hipChatConfiguration" class="com.whatsthatlight.teamcity.hipchat.HipChatConfiguration"/>
   <bean id="hipChatConfigurationController" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController" init-method="initialise"/>
   <bean id="hipChatAdminPage" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension"/>
-  <bean id="hipChatServerExtension" class="com.whatsthatlight.teamcity.hipchat.HipChatServerExtension"/>
+  <bean id="hipChatServerExtension" class="com.whatsthatlight.teamcity.hipchat.HipChatServerExtension" init-method="register"/>
 </beans>

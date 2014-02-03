@@ -15,6 +15,10 @@ user settings (notifications)
 
 limitation: mapped using email address (haven't found a way to add user settings for plugins, admin mapping ugly)
 
+# TODO
+room id
+notification?
+
 # Improvements
 Configure from user (TeamCity)
 Configure user mapping (when supported)
