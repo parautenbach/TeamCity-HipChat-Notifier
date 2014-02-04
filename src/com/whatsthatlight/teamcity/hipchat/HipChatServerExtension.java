@@ -56,7 +56,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 
 	private void processBuildEvent(SRunningBuild build, BuildEvent buildEvent) {
 		try {
-			// check enabled?
+			// check enabled? notify?
 			// https://api.hipchat.com/v1/rooms/message/?auth_token=960dd39a8aedd02ba194ab0ef5a70c&room_id=389590&from=TeamCity&notify=1
 			// personal
 			// triggered by

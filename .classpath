@@ -12,16 +12,16 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/annotations.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/teamcity_professional-8.0.5/spring.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/teamcity_professional-8.0.5/spring-webmvc.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/mockito-1.9.0/mockito-all-1.9.0.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/junit-4.8.2/hamcrest-core-1.3.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/junit-4.8.2/junit-4.11.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/teamcity_professional-8.0.5/commons-logging.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/xstream-1.4.6.6/xmlpull-1.1.3.1.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/xstream-1.4.6.6/xpp3_min-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/xstream-1.4.6.6/xstream-1.4.6.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/jersey-1.18/jersey-bundle-1.18.jar"/>
-	<classpathentry kind="lib" path="/Users/parautenbach/git/TeamCity-HipChat-Notifier/lib/jackson-1.9.11/jackson-all-1.9.11.jar"/>
+	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/spring.jar"/>
+	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/spring-webmvc.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-1.9.0/mockito-all-1.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.8.2/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.8.2/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/xstream-1.4.6.6/xmlpull-1.1.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/xstream-1.4.6.6/xpp3_min-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="lib/xstream-1.4.6.6/xstream-1.4.6.jar"/>
+	<classpathentry kind="lib" path="lib/jersey-1.18/jersey-bundle-1.18.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-1.9.11/jackson-all-1.9.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

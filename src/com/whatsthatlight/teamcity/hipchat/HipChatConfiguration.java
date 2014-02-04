@@ -7,6 +7,8 @@ public class HipChatConfiguration {
 
 	public static final String API_TOKEN_KEY = "apiToken";
 	public static final String API_URL_KEY = "apiUrl";
+	public static final String ROOM_ID_KEY = "roomId";
+	public static final String NOTIFY_STATUS_KEY = "notify";
 	public static final String DISABLED_STATUS_KEY = "disabled";
 	
 	@XStreamAlias(API_TOKEN_KEY)
@@ -15,9 +17,15 @@ public class HipChatConfiguration {
 	@XStreamAlias(API_URL_KEY)
 	private String apiUrl = null; 
 	
-	@XStreamAlias(DISABLED_STATUS_KEY)
-	private Boolean disabled = null; 
+	@XStreamAlias(ROOM_ID_KEY)
+	private String roomId;
 
+	@XStreamAlias(NOTIFY_STATUS_KEY)
+	private Boolean notify; 
+	
+	@XStreamAlias(DISABLED_STATUS_KEY)
+	private Boolean disabled = null;
+	
 	public HipChatConfiguration() {
 		// Intentionally left empty
 	}
@@ -46,5 +54,20 @@ public class HipChatConfiguration {
 	public void setDisabledStatus(Boolean status) {
 		this.disabled = status;
 	}
-	
+
+	public Boolean getNotifyStatus() {
+		return this.notify;
+	}
+
+	public void setNotifyStatus(Boolean status) {
+		this.notify = status;
+	}
+
+	public String getRoomId() {
+		return this.roomId;
+	}
+
+	public void setRoomId(String roomId) {
+		this.roomId = roomId;
+	}
 }

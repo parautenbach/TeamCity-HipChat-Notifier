@@ -15,7 +15,7 @@ import com.whatsthatlight.teamcity.hipchat.HipChatServerExtension;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestHipChatServerExtension {
+public class HipChatServerExtensionTest {
 
 	@BeforeClass
 	public static void ClassSetup() {
@@ -27,8 +27,8 @@ public class TestHipChatServerExtension {
 	public void test() {
 
 		HipChatConfiguration configuration = new HipChatConfiguration();
-		
 		configuration.setApiUrl("https://api.hipchat.com/v2/");
+		// TODO: Remove token/use dummy token
 		configuration.setApiToken("Mi7JkzdiT5wYZ0OAMrjFQzeAP7B5DfcYQu2wXp8e");
 		
 		SBuildServer server = null;

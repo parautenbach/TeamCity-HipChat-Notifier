@@ -47,11 +47,17 @@ public class HipChatConfigurationController extends BaseController {
 			if (request.getParameter(EDIT_PARAMETER) != null) {
 				String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
 				String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
+				String roomId = request.getParameter(HipChatConfiguration.ROOM_ID_KEY);
+				String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
 				logger.debug(String.format("API URL: %s", apiUrl));
 				logger.debug(String.format("API token: %s", apiToken));
-				configuration.setApiUrl(apiUrl);
-				configuration.setApiToken(apiToken);
-				getOrCreateMessages(request).addMessage("configurationSaved", "Saved");
+				logger.debug(String.format("Room ID: %s", roomId));
+				logger.debug(String.format("Trigger notification: %s", notify));
+				this.configuration.setApiUrl(apiUrl);
+				this.configuration.setApiToken(apiToken);
+				this.configuration.setRoomId(roomId);
+				this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
+				this.getOrCreateMessages(request).addMessage("configurationSaved", "Saved");
 			}
 
 			if (request.getParameter(ACTION_PARAMETER) != null) {
@@ -94,6 +100,8 @@ public class HipChatConfigurationController extends BaseController {
 		// which is a singleton
 		this.configuration.setApiUrl(configuration.getApiUrl());
 		this.configuration.setApiToken(configuration.getApiToken());
+		this.configuration.setRoomId(configuration.getRoomId());
+		this.configuration.setNotifyStatus(configuration.getNotifyStatus());
 		this.configuration.setDisabledStatus(configuration.getDisabledStatus());
 	}
 

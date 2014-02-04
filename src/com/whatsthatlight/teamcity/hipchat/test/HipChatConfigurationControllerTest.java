@@ -46,6 +46,10 @@ public class HipChatConfigurationControllerTest {
 		String expectedApiUrlValue = "http://example.com/";
 		String expectedApiTokenKey = "apiToken";
 		String expectedApiTokenValue = "admin_token";
+		String expectedRoomIdKey = "roomId";
+		String expectedRoomIdValue = "room_id";
+		String expectedNotifyStatusKey = "notify";
+		Boolean expectedNotifyStatusValue = true;
 		String expectedDisabledStatusKey = "disabled";
 		Boolean expectedDisabledStatusValue = false;
 		String expectedConfigDir = ".";
@@ -63,6 +67,8 @@ public class HipChatConfigurationControllerTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		assertNull(configuration.getApiUrl());
 		assertNull(configuration.getApiToken());
+		assertNull(configuration.getRoomId());
+		assertNull(configuration.getNotifyStatus());
 		assertNull(configuration.getDisabledStatus());
 
 		// Execute
@@ -78,16 +84,22 @@ public class HipChatConfigurationControllerTest {
 		Element rootElement = document.getRootElement();
 		assertNull(rootElement.getChildText(expectedApiUrlKey));
 		assertNull(rootElement.getChildText(expectedApiTokenKey));
+		assertNull(rootElement.getChildText(expectedRoomIdKey));
+		assertNull(rootElement.getChildText(expectedNotifyStatusKey));
 		assertNull(rootElement.getChildText(expectedDisabledStatusKey));
 
 		// And the instance values must still be null
 		assertNull(configuration.getApiUrl());
 		assertNull(configuration.getApiToken());
+		assertNull(configuration.getRoomId());
+		assertNull(configuration.getNotifyStatus());
 		assertNull(configuration.getDisabledStatus());
 
 		// Now change and save the configuration
 		configuration.setApiUrl(expectedApiUrlValue);
 		configuration.setApiToken(expectedApiTokenValue);
+		configuration.setRoomId(expectedRoomIdValue);
+		configuration.setNotifyStatus(expectedNotifyStatusValue);
 		configuration.setDisabledStatus(expectedDisabledStatusValue);
 		controller.saveConfiguration();
 
@@ -97,11 +109,15 @@ public class HipChatConfigurationControllerTest {
 		rootElement = document.getRootElement();
 		assertEquals(expectedApiUrlValue, rootElement.getChildText(expectedApiUrlKey));
 		assertEquals(expectedApiTokenValue, rootElement.getChildText(expectedApiTokenKey));
+		assertEquals(expectedRoomIdValue, rootElement.getChildText(expectedRoomIdKey));
+		assertEquals(expectedNotifyStatusValue.toString(), rootElement.getChildText(expectedNotifyStatusKey));
 		assertEquals(expectedDisabledStatusValue.toString(), rootElement.getChildText(expectedDisabledStatusKey));
 
 		// And also the values in memory
 		assertEquals(expectedApiUrlValue, configuration.getApiUrl());
 		assertEquals(expectedApiTokenValue, configuration.getApiToken());
+		configuration.setRoomId(expectedRoomIdValue);
+		configuration.setNotifyStatus(expectedNotifyStatusValue);
 		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
 	}
 
@@ -113,6 +129,10 @@ public class HipChatConfigurationControllerTest {
 		String expectedApiUrlValue = "http://example.com/";
 		String expectedApiTokenKey = "apiToken";
 		String expectedApiTokenValue = "admin_token";
+		String expectedRoomIdKey = "roomId";
+		String expectedRoomIdValue = "room_id";
+		String expectedNotifyStatusKey = "notify";
+		Boolean expectedNotifyStatusValue = true;
 		String expectedDisabledStatusKey = "disabled";
 		Boolean expectedDisabledStatusValue = false;
 		String expectedConfigDir = ".";
@@ -129,6 +149,8 @@ public class HipChatConfigurationControllerTest {
 				"<hipchat>" + 
 				"<apiToken>" + expectedApiTokenValue + "</apiToken>" + 
 				"<apiUrl>" + expectedApiUrlValue + "</apiUrl>" + 
+				"<roomId>" + expectedRoomIdValue + "</roomId>" +
+				"<notify>" + expectedNotifyStatusValue + "</notify>" +
 				"<disabled>" + expectedDisabledStatusValue + "</disabled>" + 
 				"</hipchat>";
 		// @formatter:on
@@ -154,11 +176,15 @@ public class HipChatConfigurationControllerTest {
 		Element rootElement = document.getRootElement();
 		assertEquals(expectedApiUrlValue, rootElement.getChildText(expectedApiUrlKey));
 		assertEquals(expectedApiTokenValue, rootElement.getChildText(expectedApiTokenKey));
+		assertEquals(expectedRoomIdValue, rootElement.getChildText(expectedRoomIdKey));
+		assertEquals(expectedNotifyStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedNotifyStatusKey)));
 		assertEquals(expectedDisabledStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedDisabledStatusKey)));
 
 		// Now check the loaded configuration
 		assertEquals(expectedApiUrlValue, configuration.getApiUrl());
 		assertEquals(expectedApiTokenValue, configuration.getApiToken());
+		assertEquals(expectedRoomIdValue, configuration.getRoomId());
+		assertEquals(expectedNotifyStatusValue, configuration.getNotifyStatus());
 		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
 	}
 

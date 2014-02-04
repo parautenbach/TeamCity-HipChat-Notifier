@@ -84,7 +84,7 @@
 
 	<target name="test" depends="compile" description="Run tests">
 		<mkdir dir="${reports}"/>
-		<junit haltonerror="false" haltonfailure="false" tempdir="${reports}" failureproperty="junit.failure">
+		<junit haltonerror="true" haltonfailure="true" tempdir="${reports}" failureproperty="junit.failure">
 			<classpath refid="classpath"/>
 			<formatter type="xml"/>
 			<formatter type="plain" usefile="false" />

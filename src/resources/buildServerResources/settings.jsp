@@ -41,6 +41,14 @@
 				<th><label for="apiUrl">API token: <l:star /></label></th>
 				<td><forms:textField name="apiToken" value="${apiToken}" /></td>
 			</tr>
+			<tr>
+				<th><label for="roomId">Room ID: <l:star /></label></th>
+				<td><forms:textField name="roomId" value="${roomId}" /></td>
+			</tr>
+			<tr>
+				<th><label for="notify">Trigger notifications: </label></th>
+				<td><forms:checkbox name="notify" checked="${notify}" /></td>
+			</tr>
 		</table>
 		<div class="saveButtonsBlock">
 			<forms:submit label="Save" />
