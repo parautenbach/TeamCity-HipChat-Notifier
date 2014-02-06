@@ -2,26 +2,30 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/agent-api.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/common-api.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/server-api.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/server-common-api.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/util.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/log4j-1.2.12.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/jdom.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/annotations.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/spring.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/spring-webmvc.jar"/>
 	<classpathentry kind="lib" path="lib/mockito-1.9.0/mockito-all-1.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.2/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.2/junit-4.11.jar"/>
-	<classpathentry kind="lib" path="lib/teamcity_professional-8.0.5/commons-logging.jar"/>
-	<classpathentry kind="lib" path="lib/xstream-1.4.6.6/xmlpull-1.1.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/xstream-1.4.6.6/xpp3_min-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="lib/xstream-1.4.6.6/xstream-1.4.6.jar"/>
-	<classpathentry kind="lib" path="lib/jersey-1.18/jersey-bundle-1.18.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-1.9.11/jackson-all-1.9.11.jar"/>
+        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-4.3.2.jar"/>
+        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpcore-4.3.1.jar"/>
+        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/commons-codec-1.6.jar"/>
+        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/commons-logging-1.1.3.jar"/>
+        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/fluent-hc-4.3.2.jar"/>
+        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-cache-4.3.2.jar"/>
+        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpmime-4.3.2.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/lib/servlet-api.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/annotations.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/common-api.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/commons-logging.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/jdom.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/log4j-1.2.12.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/server-api.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/spring-webmvc.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/spring.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/util.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/server-common-api.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/xstream-1.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

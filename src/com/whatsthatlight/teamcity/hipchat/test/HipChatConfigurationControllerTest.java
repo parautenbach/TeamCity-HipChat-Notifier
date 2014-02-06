@@ -68,8 +68,8 @@ public class HipChatConfigurationControllerTest {
 		assertNull(configuration.getApiUrl());
 		assertNull(configuration.getApiToken());
 		assertNull(configuration.getRoomId());
-		assertNull(configuration.getNotifyStatus());
-		assertNull(configuration.getDisabledStatus());
+		assertFalse(configuration.getNotifyStatus());
+		assertFalse(configuration.getDisabledStatus());
 
 		// Execute
 		// The config file must exist on disk after initialisation
@@ -85,15 +85,15 @@ public class HipChatConfigurationControllerTest {
 		assertNull(rootElement.getChildText(expectedApiUrlKey));
 		assertNull(rootElement.getChildText(expectedApiTokenKey));
 		assertNull(rootElement.getChildText(expectedRoomIdKey));
-		assertNull(rootElement.getChildText(expectedNotifyStatusKey));
-		assertNull(rootElement.getChildText(expectedDisabledStatusKey));
+		assertFalse(Boolean.parseBoolean(rootElement.getChildText(expectedNotifyStatusKey)));
+		assertFalse(Boolean.parseBoolean(rootElement.getChildText(expectedDisabledStatusKey)));
 
-		// And the instance values must still be null
+		// And the instance values must still be the defaults
 		assertNull(configuration.getApiUrl());
 		assertNull(configuration.getApiToken());
 		assertNull(configuration.getRoomId());
-		assertNull(configuration.getNotifyStatus());
-		assertNull(configuration.getDisabledStatus());
+		assertFalse(configuration.getNotifyStatus());
+		assertFalse(configuration.getDisabledStatus());
 
 		// Now change and save the configuration
 		configuration.setApiUrl(expectedApiUrlValue);

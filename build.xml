@@ -1,7 +1,7 @@
 <project name="lights-notifier" default="compile" basedir=".">
 	
 	<description>
-      TeamCity notifier plugin to send messages to HipChat.
+      TeamCity notifier plugin to send messages to a HipChat room.
     </description>
 
 	<property environment="env"/>
@@ -35,6 +35,8 @@
 		<matches string="${env.MUST_VERSION_ARTIFACTS}" pattern="^-?true|yes|1$" casesensitive="false"/>
 	</condition>
 	<property name="lib" value="lib"/>
+    <property name="teamcity.home" location="${user.home}/TeamCity"/>
+    <property name="teamcity.appdir" location="${teamcity.home}/webapps/ROOT/WEB-INF"/>
 	<property name="junit.home" value="lib/junit"/>
 	<property name="manifest" value="MANIFEST.MF"/>
 	<property name="plugin.xml" value="teamcity-plugin.xml"/>
@@ -45,12 +47,20 @@
 			<include name="**/*.jar"/>
 		</fileset>
 		<pathelement location="${classes}"/>
+        <pathelement location="${teamcity.appdir}/classes"/>
+		<fileset dir="${teamcity.home}/lib" includes="*.jar"/>
+        <fileset dir="${teamcity.appdir}/lib" includes="*.jar" excludes="${main-class}*.jar"/>
 	</path>
-
+	
+	<manifestclasspath property="manifest.classpath" jarfile="${jar}.jar">
+		<classpath refid="classpath" />
+	</manifestclasspath>
+	
 	<target name="init">
 		<echo>
       Source:         ${src}
       Classes:        ${classes}
+	  Classpath:      ${manifest.classpath}
       Resources:      ${resources}
       Build:          ${build}
       Reports:        ${reports}
@@ -59,20 +69,23 @@
       Vendor:         ${vendor}
       Tag Type:       ${tag-type}
       Jar Name        ${jar}
-      Libraries:      ${lib}
+      Library path:   ${lib}
       JUnit Home:     ${junit.home}
+	  TeamCity Home:  ${teamcity.home}
+	  TeamCity App:   ${teamcity.appdir}
     </echo>
 	</target>
 
 	<target name="compile" depends="init" description="Compile the source code" >
 		<mkdir dir="${classes}"/>
-		<javac srcdir="${src}" destdir="${classes}" classpathref="classpath" includeAntRuntime="false"/>
+		<javac srcdir="${src}" destdir="${classes}" classpathref="classpath" includeAntRuntime="false" debug="on"/>
 		<!-- Create manifest on disk to make it easy to view during development -->
 		<!-- Help: http://java.sun.com/developer/Books/javaprogramming/JAR/basics/manifest.html -->
 		<!--       http://docs.oracle.com/javase/1.4.2/docs/guide/versioning/spec/versioning2.html -->
 		<manifest file="${manifest}">
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Main-Class" value="${main-class}" />
+			<attribute name="Class-Path" value="${manifest.classpath}"/>
 			<attribute name="Specification-Title" value="${main-class}" />
 			<attribute name="Specification-Version" value="${version}" />
 			<attribute name="Specification-Vendor" value="${vendor}" />
@@ -112,10 +125,15 @@
 			<fileset dir="${classes}" excludes="**/test/**"/>
 			<fileset dir="${resources}"/>
 		</jar>
-		<zip basedir="${build}" destfile="${jar}.zip" includes="${jar}.jar,${plugin.xml}"/>
+		<mkdir dir="${build}/${lib}"/>
+		<copy todir="${build}/${lib}">
+		    <fileset dir="${lib}" includes="**"/>
+		</copy>
+		<zip basedir="${build}" destfile="${jar}.zip" includes="${jar}.jar,${plugin.xml},${lib}/**"/>
 		<move file="${jar}.zip" todir="${build}"/>
 		<delete file="${build}/${jar}.jar"/>
 		<delete file="${build}/${plugin.xml}"/>
+		<delete dir="${build}/${lib}"/>
 	</target>
 
 	<target name="run" depends="release">

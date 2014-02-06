@@ -21,10 +21,10 @@ public class HipChatConfiguration {
 	private String roomId;
 
 	@XStreamAlias(NOTIFY_STATUS_KEY)
-	private Boolean notify; 
+	private boolean notify = false; 
 	
 	@XStreamAlias(DISABLED_STATUS_KEY)
-	private Boolean disabled = null;
+	private boolean disabled = false;
 	
 	public HipChatConfiguration() {
 		// Intentionally left empty

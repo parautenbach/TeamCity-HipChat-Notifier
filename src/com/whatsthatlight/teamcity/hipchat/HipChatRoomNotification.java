@@ -26,5 +26,10 @@ public class HipChatRoomNotification {
 
 	@JsonProperty("notify")
 	public boolean notify;
+	
+	@Override
+	public String toString() {
+		return String.format("Message: '%s'\nFormat: %s\nColor: %s\nNotify: %s", message, messageFormat, color, notify);
+	}
 
 }

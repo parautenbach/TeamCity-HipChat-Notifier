@@ -1,18 +1,20 @@
 package com.whatsthatlight.teamcity.hipchat;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
+import java.net.URI;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.apache.http.HttpStatus;
+import org.apache.http.HttpHeaders;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
+import org.springframework.http.MediaType;
 
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.SBuildServer;
@@ -56,9 +58,6 @@ public class HipChatServerExtension extends BuildServerAdapter {
 
 	private void processBuildEvent(SRunningBuild build, BuildEvent buildEvent) {
 		try {
-			// check enabled? notify?
-			// https://api.hipchat.com/v1/rooms/message/?auth_token=960dd39a8aedd02ba194ab0ef5a70c&room_id=389590&from=TeamCity&notify=1
-			// personal
 			// triggered by
 			// owner
 			// status
@@ -69,37 +68,48 @@ public class HipChatServerExtension extends BuildServerAdapter {
 			// link to build
 			// build.getBuildType().getFullName()
 			// build.getBuildType().getProjectName()
-
-			// logger.info("Received build event");
-			HipChatRoomNotification notification = new HipChatRoomNotification("test", "text", "gray", true);
-			this.postRoomNotification(notification);
-
+			logger.info(String.format("Received %s build event", buildEvent));
+			if (!this.configuration.getDisabledStatus() && !build.isPersonal()) {
+				logger.info("Processing build event");
+				String apiUrl = this.configuration.getApiUrl();
+				String apiToken = this.configuration.getApiToken();
+				String roomId = this.configuration.getRoomId();
+				String message = buildEvent.toString();
+				String messageFormat = "text";
+				String colour = "gray";
+				boolean notify = this.configuration.getNotifyStatus();
+				HipChatRoomNotification notification = new HipChatRoomNotification(message, messageFormat, colour, notify);
+				postRoomNotification(apiUrl, apiToken, roomId, notification);
+			}
 		} catch (Exception e) {
 			logger.error("Could not process build event", e);
 		}
 	}
 
-	private void postRoomNotification(HipChatRoomNotification notification) {
-		ClientConfig clientConfig = new DefaultClientConfig();
-		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		Client client = Client.create(clientConfig);
-		String roomId = "389590";
-		String roomNotificationResource = String.format("room/%s/notification", roomId);
-		String resource = String.format("%s%s", this.configuration.getApiUrl(), roomNotificationResource);
-		WebResource webResource = client.resource(resource);
-		String authorisationHeader = String.format("Bearer %s", this.configuration.getApiToken());
-		logger.debug(webResource.getURI());
-		// @formatter:off
-		ClientResponse webResponse = 
-				webResource.header(HttpHeaders.AUTHORIZATION, authorisationHeader)
-				.accept(MediaType.APPLICATION_JSON)
-				.type(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, notification);
-		// @formatter:on
-		Status clientResponseStatus = Status.fromStatusCode(webResponse.getStatus());
-		logger.debug(String.format("Reponse status: %s %s", clientResponseStatus.getStatusCode(), clientResponseStatus));
-		if (clientResponseStatus != Status.NO_CONTENT) {
-			logger.error(String.format("Message could not be delivered: %s %s", clientResponseStatus.getStatusCode(), clientResponseStatus));
+	private static synchronized void postRoomNotification(String apiUrl, String apiToken, String roomId, HipChatRoomNotification notification) {
+		try {
+			String resource = String.format("room/%s/notification", roomId);
+			String uri = String.format("%s%s", apiUrl, resource);
+			URI u = new URI(uri);
+			String authorisationHeader = String.format("Bearer %s", apiToken);
+
+			// Serialise the notification to JSON
+			ObjectMapper mapper = new ObjectMapper();
+			String json = mapper.writeValueAsString(notification);
+			logger.debug(json);
+
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpPost postRequest = new HttpPost(u.toString());
+			postRequest.addHeader(HttpHeaders.AUTHORIZATION, authorisationHeader);
+			postRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+			postRequest.setEntity(new StringEntity(json));
+			HttpResponse postResponse = client.execute(postRequest);
+			StatusLine status = postResponse.getStatusLine();
+			if (status.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
+				logger.error(String.format("Message could not be delivered: %s %s", status.getStatusCode(), status.getReasonPhrase()));
+			}
+		} catch (Exception e) {
+			logger.error("Could not post room notification", e);
 		}
 	}
 

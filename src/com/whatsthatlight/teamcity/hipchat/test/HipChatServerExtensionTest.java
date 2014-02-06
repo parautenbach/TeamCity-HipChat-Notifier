@@ -7,6 +7,7 @@ import jetbrains.buildServer.serverSide.SRunningBuild;
 
 import org.apache.log4j.BasicConfigurator;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
@@ -29,7 +30,10 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl("https://api.hipchat.com/v2/");
 		// TODO: Remove token/use dummy token
-		configuration.setApiToken("Mi7JkzdiT5wYZ0OAMrjFQzeAP7B5DfcYQu2wXp8e");
+		configuration.setApiToken("token");
+		configuration.setRoomId("389590");
+		configuration.setNotifyStatus(true);
+		//configuration.setDisabledStatus(false);
 		
 		SBuildServer server = null;
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration);
@@ -38,6 +42,7 @@ public class HipChatServerExtensionTest {
 		when(buildType.getName()).thenReturn("test");
 		SRunningBuild build = mock(SRunningBuild.class);
 		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
 		
 		extension.buildStarted(build);
 	}
