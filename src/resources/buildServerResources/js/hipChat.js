@@ -1,7 +1,8 @@
 var HipChat = {
 	save : function() {
 		BS.ajaxRequest($('hipChatForm').action, {
-			parameters : 'edit=1&apiUrl=' + $('apiUrl').value + 
+			parameters : 'edit=1' + 
+			'&apiUrl=' + $('apiUrl').value + 
 			'&apiToken=' + $('apiToken').value +
 			'&roomId=' + $('roomId').value +
 			'&notify=' + $('notify').value,

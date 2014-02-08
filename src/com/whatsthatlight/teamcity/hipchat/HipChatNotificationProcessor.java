@@ -18,19 +18,20 @@ import org.springframework.http.MediaType;
 
 public class HipChatNotificationProcessor {
 	
-	private String authorisationHeader;
-	private URI uri;
-
+	private HipChatConfiguration configuration;
+	
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	
 	public HipChatNotificationProcessor(@NotNull HipChatConfiguration configuration) throws URISyntaxException {
-		String resource = String.format("room/%s/notification", configuration.getRoomId());
-		this.uri = new URI(String.format("%s%s", configuration.getApiUrl(), resource));
-		this.authorisationHeader = String.format("Bearer %s", configuration.getApiToken());
-	}
+		this.configuration = configuration;
+			}
 	
 	public void process(HipChatRoomNotification notification) {
 		try {
+			String resource = String.format("room/%s/notification", configuration.getRoomId());
+			URI uri = new URI(String.format("%s%s", configuration.getApiUrl(), resource));
+			String authorisationHeader = String.format("Bearer %s", configuration.getApiToken());
+
 			// Serialise the notification to JSON
 			ObjectMapper mapper = new ObjectMapper();
 			String json = mapper.writeValueAsString(notification);
@@ -38,7 +39,7 @@ public class HipChatNotificationProcessor {
 
 			// Make request
 			HttpClient client = HttpClientBuilder.create().build();
-			HttpPost postRequest = new HttpPost(this.uri.toString());
+			HttpPost postRequest = new HttpPost(uri.toString());
 			postRequest.addHeader(HttpHeaders.AUTHORIZATION, authorisationHeader);
 			postRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 			postRequest.setEntity(new StringEntity(json));
