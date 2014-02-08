@@ -8,7 +8,6 @@ import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SBuildType;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.serverSide.TriggeredBy;
-import jetbrains.buildServer.users.SUser;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -29,10 +28,18 @@ import static org.mockito.Mockito.when;
 
 public class HipChatServerExtensionTest {
 
+	private static String apiUrl;
+	private static String apiToken;
+	private static String roomId;
+
 	@BeforeClass
 	public static void ClassSetup() {
 		// Set up a basic logger for debugging purposes
 		BasicConfigurator.configure();
+		// TODO: Use fake
+		apiUrl = "https://api.hipchat.com/v2/";
+		apiToken = "Mi7JkzdiT5wYZ0OAMrjFQzeAP7B5DfcYQu2wXp8e";
+		roomId = "432380";
 	}
 
 	@Test
@@ -87,12 +94,66 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
+	public void testServerStartupEvent() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedServerStartupMessage = "Build server started.";
+		String expectedServerShutdownMessage = "Build server shutting down.";
+		boolean expectedNotificationStatus = true;
+		String expectedMessageColour = HipChatMessageColour.INFO;
+		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+
+		// Callback closure
+		final ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, notifications);
+		
+		// Mocks and other dependencies, and the extension
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		HipChatRoomNotification actualNotification = null;
+		
+		// Execute start-up
+		extension.serverStartup();
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+				
+		// Execute shutdown
+		extension.serverShutdown();
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test start-up
+		assertEquals(2, notifications.size());
+		// Start-up
+		actualNotification = notifications.get(0);
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedServerStartupMessage));
+
+		// Shutdown
+		actualNotification = notifications.get(1);
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedServerShutdownMessage));
+	}
+	
+	
+	@Test
+	@Ignore
 	public void testActualServerStartupAndShutdownEvents() throws URISyntaxException {
 		// Test parameters
 		HipChatConfiguration configuration = new HipChatConfiguration();
-		configuration.setApiUrl("https://api.hipchat.com/v2/");
-		configuration.setApiToken("Mi7JkzdiT5wYZ0OAMrjFQzeAP7B5DfcYQu2wXp8e");
-		configuration.setRoomId("432380");
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+		configuration.setRoomId(roomId);
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
@@ -109,9 +170,9 @@ public class HipChatServerExtensionTest {
 	public void testActualBuildStartedEvent() throws URISyntaxException {
 		// Test parameters
 		HipChatConfiguration configuration = new HipChatConfiguration();
-		configuration.setApiUrl("https://api.hipchat.com/v2/");
-		configuration.setApiToken("Mi7JkzdiT5wYZ0OAMrjFQzeAP7B5DfcYQu2wXp8e");
-		configuration.setRoomId("432380");
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+		configuration.setRoomId(roomId);
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
@@ -133,9 +194,9 @@ public class HipChatServerExtensionTest {
 	public void testActualBuildSucceededEvent() throws URISyntaxException {
 		// Test parameters
 		HipChatConfiguration configuration = new HipChatConfiguration();
-		configuration.setApiUrl("https://api.hipchat.com/v2/");
-		configuration.setApiToken("Mi7JkzdiT5wYZ0OAMrjFQzeAP7B5DfcYQu2wXp8e");
-		configuration.setRoomId("432380");
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+		configuration.setRoomId(roomId);
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
@@ -159,9 +220,9 @@ public class HipChatServerExtensionTest {
 	public void testActualBuildFailedEvent() throws URISyntaxException {
 		// Test parameters
 		HipChatConfiguration configuration = new HipChatConfiguration();
-		configuration.setApiUrl("https://api.hipchat.com/v2/");
-		configuration.setApiToken("Mi7JkzdiT5wYZ0OAMrjFQzeAP7B5DfcYQu2wXp8e");
-		configuration.setRoomId("432380");
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+		configuration.setRoomId(roomId);
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
