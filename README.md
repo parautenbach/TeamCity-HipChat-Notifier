@@ -7,7 +7,7 @@ A fun TeamCity HipChat Notifier for sending build server notifications to a HipC
 
 # Installation
 
-Download the ZIP file release, drop it in your TeamCity installation's `.BuildServer/plugins/` 
+[Download](https://github.com/parautenbach/TeamCity-HipChat-Notifier/releases/latest) the ZIP file release, drop it in your TeamCity installation's `.BuildServer/plugins/` 
 directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins/)) and restart the server. 
 
 # Configuration
