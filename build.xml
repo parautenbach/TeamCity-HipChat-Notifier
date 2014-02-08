@@ -12,7 +12,7 @@
 	<property name="reports" location="reports"/>
 	<property name="main-class" value="HipChatNotifier"/>
 	<!-- Default to 0.0.0.0 if no version specified -->
-	<condition property="version" value="${env.BUILD_NUMBER}" else="0.0.0.0">
+	<condition property="version" value="${env.BUILD_NUMBER}" else="0.1.0">
 		<and>
 			<isset property="env.BUILD_NUMBER"/>
 			<not>
@@ -41,6 +41,7 @@
 	<property name="manifest" value="MANIFEST.MF"/>
 	<property name="plugin.xml" value="teamcity-plugin.xml"/>
 	<property name="plugin-bean.xml" value="build-server-plugin-hipchat-notifier.xml"/>
+	<property name="versiontag" value="&lt;version&gt;${version}&lt;/version&gt;"/>
 
 	<path id="classpath">
 		<fileset dir="${lib}">
@@ -66,6 +67,7 @@
       Reports:        ${reports}
       Main Class:     ${main-class}
       Version:        ${version}
+	  Version Tag:    ${versiontag}
       Vendor:         ${vendor}
       Tag Type:       ${tag-type}
       Jar Name        ${jar}
@@ -118,6 +120,7 @@
 	</target>
 
 	<target name="release" depends="compile" description="Generate the distribution" >
+		<replaceregexp file="teamcity-plugin.xml" match="&lt;version&gt;.*?&lt;/version&gt;" replace="${versiontag}" />
 		<mkdir dir="${build}"/>
 		<copy file="${plugin.xml}" todir="${build}"/>
 		<jar jarfile="${build}/${jar}.jar" manifest="${manifest}" basedir="${build}">

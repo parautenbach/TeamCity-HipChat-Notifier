@@ -19,6 +19,10 @@ notification trigger
 
 limitation: mapped using email address (haven't found a way to add user settings for plugins, admin mapping ugly)
 
+# Developers
+
+property name="teamcity.home"
+
 # TODO
 message template
 https://weblogs.java.net/blog/aberrant/archive/2010/05/25/using-stringtemplate-part-1-introduction-stringtemplate
