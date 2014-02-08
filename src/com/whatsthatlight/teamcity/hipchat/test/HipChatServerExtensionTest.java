@@ -39,10 +39,9 @@ public class HipChatServerExtensionTest {
 	public static void ClassSetup() {
 		// Set up a basic logger for debugging purposes
 		BasicConfigurator.configure();
-		// TODO: Use fake
 		apiUrl = "https://api.hipchat.com/v2/";
-		apiToken = "Mi7JkzdiT5wYZ0OAMrjFQzeAP7B5DfcYQu2wXp8e";
-		roomId = "432380";
+		apiToken = "notatoken";
+		roomId = "000000";
 	}
 
 	@Test
