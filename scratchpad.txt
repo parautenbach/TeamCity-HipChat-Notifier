@@ -1,0 +1,63 @@
+try {
+	List<SVcsModification> changes = build.getChanges(SelectPrevBuildPolicy.SINCE_LAST_BUILD, true);
+	logger.debug("changes: " + changes.size());
+	SVcsModification change = changes.get(0);
+	logger.debug("vcs committers: " + change.getCommitters().size());
+	logger.debug("vcs username: " + change.getUserName());
+	logger.debug("vcs name: " + change.getVersionControlName());
+} catch (Exception e) {}
+
+try {
+	UserSet<SUser> committers = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
+	//logger.debug("build committers: " + );
+} catch (Exception e) {}
+
+//BuildStatistics statistics = build.getFullStatistics();
+
+try {
+	logger.debug("build owner: " + build.getOwner());
+} catch (Exception e) {}
+
+try {
+	TriggeredBy triggeredBy = build.getTriggeredBy();
+	logger.debug("triggered by: " + triggeredBy.getAsString());
+} catch (Exception e) {}
+
+try {
+	BuildRevision revision = build.getRevisions().get(0);
+	logger.debug("revision: " + revision.getRevision());
+	logger.debug("revision dn: " + revision.getRevisionDisplayName());
+} catch (Exception e) {}
+
+try {
+	
+	logger.debug("ftc: " + build.getShortStatistics().getFailedTestCount()); // 0
+	logger.debug("ptc: " + build.getShortStatistics().getPassedTestCount()); // 0
+	logger.debug("hanging: " + build.isProbablyHanging()); // false
+} catch (Exception e) {}
+
+try {
+	logger.debug("branch: " + build.getBranch());
+} catch (Exception e) {}
+
+try {
+	VcsRootInstanceEntry vcsRootEntries = build.getVcsRootEntries().get(0);
+	logger.debug("vcs root name: " + vcsRootEntries.getVcsName());
+	logger.debug("vcs root entries: " + vcsRootEntries.getDisplayName());
+} catch (Exception e) {}
+
+try {
+	List<BuildProblemData> reasons = build.getFailureReasons();
+	logger.debug("reasons: " + reasons.size());
+	for (BuildProblemData reason : reasons) {
+		logger.debug("reason: " + reason.getDescription());
+	}
+
+} catch (Exception e) {}
+
+List<BuildProblemData> reasons = build.getFailureReasons();
+message = "FAILED: " + reasons.get(0).getDescription() + " (" +
+reasons.size() + " reasons) " +
+getRandomEmoticon(HipChatEmoticonSet.NEGATIVE);
+
+message = "INTERRUPTED " + build.getCanceledInfo().getUserId() + " " + getRandomEmoticon(HipChatEmoticonSet.INDIFFERENT);

@@ -8,6 +8,9 @@ import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SBuildType;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.serverSide.TriggeredBy;
+import jetbrains.buildServer.serverSide.userChanges.CanceledInfo;
+import jetbrains.buildServer.users.SUser;
+import jetbrains.buildServer.users.UserModel;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -48,7 +51,7 @@ public class HipChatServerExtensionTest {
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedStartMessage = "started";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User";
+		String expectedTriggerBy = "Triggered by: Test User";
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.START;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
@@ -92,9 +95,182 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains(expectedBuildNumber));
 		assertTrue(actualNotification.message.contains(expectedTriggerBy));
 	}
+
+	@Test
+	public void testBuildSuccessfulEvent() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedSuccessMessage = "successful";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Triggered by: Test User";
+		String expectedEmoticonEndCharacter = ")";
+		boolean expectedNotificationStatus = true;
+		String expectedMessageColour = HipChatMessageColour.SUCCESSFUL;
+		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+
+		// Callback closure
+		final ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, notifications);
+		
+		// Mocks and other dependencies
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		Status status = Status.NORMAL;
+		when(build.getBuildStatus()).thenReturn(status);
+		SBuildServer server = null;
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildFinished(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(1, notifications.size());
+		HipChatRoomNotification actualNotification = notifications.get(0);
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedBuildName));
+		assertTrue(actualNotification.message.contains(expectedSuccessMessage));
+		assertTrue(actualNotification.message.contains(expectedBuildNumber));
+		assertTrue(actualNotification.message.contains(expectedTriggerBy));
+		assertTrue(actualNotification.message.endsWith(expectedEmoticonEndCharacter));
+	}
 	
 	@Test
-	public void testServerStartupEvent() throws URISyntaxException, InterruptedException {
+	public void testBuildFailedEvent() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedFailedMessage = "failed";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Triggered by: Test User";
+		String expectedEmoticonEndCharacter = ")";
+		boolean expectedNotificationStatus = true;
+		String expectedMessageColour = HipChatMessageColour.FAILED;
+		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+
+		// Callback closure
+		final ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, notifications);
+		
+		// Mocks and other dependencies
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		Status status = Status.FAILURE;
+		when(build.getBuildStatus()).thenReturn(status);
+		SBuildServer server = null;
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildFinished(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(1, notifications.size());
+		HipChatRoomNotification actualNotification = notifications.get(0);
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedBuildName));
+		assertTrue(actualNotification.message.contains(expectedFailedMessage));
+		assertTrue(actualNotification.message.contains(expectedBuildNumber));
+		assertTrue(actualNotification.message.contains(expectedTriggerBy));
+		assertTrue(actualNotification.message.endsWith(expectedEmoticonEndCharacter));
+	}
+
+	@Test
+	public void testBuildInterruptedEvent() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedInterruptedMessage = "cancelled";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggeredBy = "Test User";
+		String expectedCanceledBy = "Cancelled by: Test User";
+		String expectedEmoticonEndCharacter = ")";
+		boolean expectedNotificationStatus = true;
+		String expectedMessageColour = HipChatMessageColour.INTERRUPTED;
+		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+
+		// Callback closure
+		final ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, notifications);
+		
+		// Mocks and other dependencies
+		CanceledInfo canceledInfo = mock(CanceledInfo.class);
+		when(canceledInfo.getUserId()).thenReturn((long) 0);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggeredBy);
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getCanceledInfo()).thenReturn(canceledInfo);
+		SUser user = mock(SUser.class);
+		when(user.getDescriptiveName()).thenReturn(expectedCanceledBy);
+		UserModel userModel = mock(UserModel.class);
+		when(userModel.findUserById(0)).thenReturn(user);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getUserModel()).thenReturn(userModel);
+		
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildInterrupted(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(1, notifications.size());
+		HipChatRoomNotification actualNotification = notifications.get(0);
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedBuildName));
+		assertTrue(actualNotification.message.contains(expectedInterruptedMessage));
+		assertTrue(actualNotification.message.contains(expectedBuildNumber));
+		assertTrue(actualNotification.message.contains(expectedTriggeredBy));
+		assertTrue(actualNotification.message.endsWith(expectedEmoticonEndCharacter));
+	}
+
+	@Test
+	public void testServerStartupAndShutdownEvent() throws URISyntaxException, InterruptedException {
 		// Test parameters
 		String expectedServerStartupMessage = "Build server started.";
 		String expectedServerShutdownMessage = "Build server shutting down.";
@@ -146,6 +322,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	
+	
 	@Test
 	@Ignore
 	public void testActualServerStartupAndShutdownEvents() throws URISyntaxException {
@@ -189,10 +366,14 @@ public class HipChatServerExtensionTest {
 		extension.buildStarted(build);
 	}
 	
+
 	@Test
 	@Ignore
-	public void testActualBuildSucceededEvent() throws URISyntaxException {
+	public void testActualBuildSuccessfulEvent() throws URISyntaxException {
 		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Test User";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
@@ -200,11 +381,15 @@ public class HipChatServerExtensionTest {
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
 		SBuildType buildType = mock(SBuildType.class);
-		when(buildType.getName()).thenReturn("test");
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
 		SRunningBuild build = mock(SRunningBuild.class);
 		when(build.getBuildType()).thenReturn(buildType);
 		when(build.isPersonal()).thenReturn(false);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		Status status = Status.NORMAL;
 		when(build.getBuildStatus()).thenReturn(status);
 		SBuildServer server = null;
@@ -219,6 +404,9 @@ public class HipChatServerExtensionTest {
 	@Ignore
 	public void testActualBuildFailedEvent() throws URISyntaxException {
 		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Test User";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
@@ -226,11 +414,15 @@ public class HipChatServerExtensionTest {
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
 		SBuildType buildType = mock(SBuildType.class);
-		when(buildType.getName()).thenReturn("test");
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
 		SRunningBuild build = mock(SRunningBuild.class);
 		when(build.getBuildType()).thenReturn(buildType);
 		when(build.isPersonal()).thenReturn(false);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		Status status = Status.FAILURE;
 		when(build.getBuildStatus()).thenReturn(status);
 		SBuildServer server = null;
@@ -239,6 +431,46 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
 		extension.buildFinished(build);
+	}
+	
+	@Test
+	@Ignore
+	public void testActualBuildInterruptedEvent() throws URISyntaxException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Test User";
+		String expectedCanceledBy = "Cancel User";
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+		configuration.setRoomId(roomId);
+		configuration.setNotifyStatus(true);
+
+		// Mocks and other dependencies
+		CanceledInfo canceledInfo = mock(CanceledInfo.class);
+		when(canceledInfo.getUserId()).thenReturn((long) 0);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getCanceledInfo()).thenReturn(canceledInfo);
+		SUser user = mock(SUser.class);
+		when(user.getDescriptiveName()).thenReturn(expectedCanceledBy);
+		UserModel userModel = mock(UserModel.class);
+		when(userModel.findUserById(0)).thenReturn(user);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getUserModel()).thenReturn(userModel);
+		HipChatNotificationProcessor processor = new HipChatNotificationProcessor(configuration);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildInterrupted(build);
 	}
 	
 	private interface Callback {
