@@ -3,17 +3,18 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="lib" path="lib/hamcrest-1.3/hamcrest-all-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/mockito-1.9.0/mockito-all-1.9.0.jar"/>
-	<classpathentry kind="lib" path="lib/junit-4.8.2/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.2/junit-4.11.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-1.9.11/jackson-all-1.9.11.jar"/>
-        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-4.3.2.jar"/>
-        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpcore-4.3.1.jar"/>
-        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/commons-codec-1.6.jar"/>
-        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/commons-logging-1.1.3.jar"/>
-        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/fluent-hc-4.3.2.jar"/>
-        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-cache-4.3.2.jar"/>
-        <classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpmime-4.3.2.jar"/>
+        <classpathentry kind="lib" path="lib/stringtemplate-4.0.7/stringtemplate-4.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-4.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpcore-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/fluent-hc-4.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-cache-4.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpmime-4.3.2.jar"/>
 	<classpathentry kind="var" path="USER_HOME/TeamCity/lib/servlet-api.jar"/>
 	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/annotations.jar"/>
 	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/common-api.jar"/>

@@ -1,34 +1,28 @@
 package com.whatsthatlight.teamcity.hipchat;
 
-import java.net.URI;
+import java.util.Random;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpHeaders;
-
-import org.springframework.http.MediaType;
+import org.stringtemplate.v4.ST;
 
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SRunningBuild;
+import jetbrains.buildServer.users.SUser;
 
 public class HipChatServerExtension extends BuildServerAdapter {
 
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private SBuildServer server;
 	private HipChatConfiguration configuration;
+	private HipChatNotificationProcessor processor;
+	private static Random rng = new Random();
 
-	public HipChatServerExtension(@NotNull SBuildServer server, @NotNull HipChatConfiguration configuration) {
+	public HipChatServerExtension(@NotNull SBuildServer server, @NotNull HipChatConfiguration configuration, @NotNull HipChatNotificationProcessor processor) {
 		this.server = server;
 		this.configuration = configuration;
+		this.processor = processor;
 		logger.debug("Server extension created");
 	}
 
@@ -41,75 +35,118 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	public void buildStarted(SRunningBuild build) {
 		logger.debug(String.format("Build started: %s", build.getBuildType().getName()));
 		super.buildStarted(build);
-		this.processBuildEvent(build, BuildEvent.STARTED);
+		this.processBuildEvent(build, TeamCityBuildEvent.STARTED);
 	}
 
 	@Override
 	public void buildFinished(SRunningBuild build) {
 		super.buildFinished(build);
-		this.processBuildEvent(build, BuildEvent.FINISHED);
+		this.processBuildEvent(build, TeamCityBuildEvent.FINISHED);
 	}
 
 	@Override
 	public void buildInterrupted(SRunningBuild build) {
 		super.buildInterrupted(build);
-		this.processBuildEvent(build, BuildEvent.INTERRUPTED);
+		this.processBuildEvent(build, TeamCityBuildEvent.INTERRUPTED);
 	}
 
-	private void processBuildEvent(SRunningBuild build, BuildEvent buildEvent) {
+	@Override
+	public void serverStartup() {
+		boolean notify = this.configuration.getNotifyStatus();
+		String messageFormat = HipChatMessageFormat.TEXT;
+		String colour = HipChatMessageColour.INFO;
+		String message = "Build server started. :-)";
+		HipChatRoomNotification notification = new HipChatRoomNotification(message, messageFormat, colour, notify);
+		this.processor.process(notification);
+	}
+
+	@Override
+	public void serverShutdown() {
+		boolean notify = this.configuration.getNotifyStatus();
+		String messageFormat = HipChatMessageFormat.TEXT;
+		String colour = HipChatMessageColour.INFO;
+		String message = "Build server shutting down. :-(";
+		HipChatRoomNotification notification = new HipChatRoomNotification(message, messageFormat, colour, notify);
+		this.processor.process(notification);
+	}
+
+	private void processBuildEvent(SRunningBuild build, TeamCityBuildEvent buildEvent) {
 		try {
-			// triggered by
-			// owner
-			// status
-			// type name
-			// project name
-			// committers
-			// build.getFailureReasons()
-			// link to build
-			// build.getBuildType().getFullName()
-			// build.getBuildType().getProjectName()
 			logger.info(String.format("Received %s build event", buildEvent));
 			if (!this.configuration.getDisabledStatus() && !build.isPersonal()) {
 				logger.info("Processing build event");
-				String apiUrl = this.configuration.getApiUrl();
-				String apiToken = this.configuration.getApiToken();
-				String roomId = this.configuration.getRoomId();
-				String message = buildEvent.toString();
-				String messageFormat = "text";
-				String colour = "gray";
+				String message = createPlainTextBuildEventMessage(build, buildEvent);
+				String messageFormat = HipChatMessageFormat.TEXT;
+				String colour = getMessageColour(build, buildEvent);
 				boolean notify = this.configuration.getNotifyStatus();
 				HipChatRoomNotification notification = new HipChatRoomNotification(message, messageFormat, colour, notify);
-				postRoomNotification(apiUrl, apiToken, roomId, notification);
+				this.processor.process(notification);
 			}
 		} catch (Exception e) {
 			logger.error("Could not process build event", e);
 		}
 	}
 
-	private static synchronized void postRoomNotification(String apiUrl, String apiToken, String roomId, HipChatRoomNotification notification) {
+	private static String getMessageColour(SRunningBuild build, TeamCityBuildEvent buildEvent) {
+		if (buildEvent == TeamCityBuildEvent.STARTED) {
+			return HipChatMessageColour.START;
+		} else if (buildEvent == TeamCityBuildEvent.FINISHED && build.getBuildStatus().isSuccessful()) {
+			return HipChatMessageColour.SUCCESS;
+		} else if (buildEvent == TeamCityBuildEvent.FINISHED && build.getBuildStatus().isFailed()) {
+			return HipChatMessageColour.FAILURE;
+		} else if (buildEvent == TeamCityBuildEvent.INTERRUPTED) {
+			return HipChatMessageColour.INTERRUPTION;
+		}
+
+		return HipChatMessageColour.INFO;
+	}
+
+	private String createPlainTextBuildEventMessage(SRunningBuild build, TeamCityBuildEvent buildEvent) {
 		try {
-			String resource = String.format("room/%s/notification", roomId);
-			String uri = String.format("%s%s", apiUrl, resource);
-			URI u = new URI(uri);
-			String authorisationHeader = String.format("Bearer %s", apiToken);
-
-			// Serialise the notification to JSON
-			ObjectMapper mapper = new ObjectMapper();
-			String json = mapper.writeValueAsString(notification);
-			logger.debug(json);
-
-			HttpClient client = HttpClientBuilder.create().build();
-			HttpPost postRequest = new HttpPost(u.toString());
-			postRequest.addHeader(HttpHeaders.AUTHORIZATION, authorisationHeader);
-			postRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			postRequest.setEntity(new StringEntity(json));
-			HttpResponse postResponse = client.execute(postRequest);
-			StatusLine status = postResponse.getStatusLine();
-			if (status.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-				logger.error(String.format("Message could not be delivered: %s %s", status.getStatusCode(), status.getReasonPhrase()));
-			}
+			// logger.debug(build.getRevisions().get(0).getRevision());
+			// logger.debug(build.getRevisions().get(0).getRevisionDisplayName());
+			logger.debug(build.getShortStatistics().getFailedTestCount()); // 0
+			logger.debug(build.getShortStatistics().getPassedTestCount()); // 0
+			logger.debug(build.isProbablyHanging()); // false
+			// build.getBranch().=
+			// build.getVcsRootEntries().get(0).
 		} catch (Exception e) {
-			logger.error("Could not post room notification", e);
+		}
+
+		String message = "(Unknown)";
+		if (buildEvent == TeamCityBuildEvent.STARTED) {
+			ST buildStartedMessage = new ST("Build \"<fullName>\" has <status>. This is build number <buildNumber>, triggered by <triggeredBy>.");
+			buildStartedMessage.add("fullName", build.getBuildType().getFullName());
+			buildStartedMessage.add("status", buildEvent.toString().toLowerCase());
+			buildStartedMessage.add("buildNumber", build.getBuildNumber());
+			buildStartedMessage.add("triggeredBy", tryGetTriggeredByUser(build));
+			message = buildStartedMessage.render();
+		} else if (buildEvent == TeamCityBuildEvent.FINISHED && build.getBuildStatus().isSuccessful()) {
+			message = "SUCCEEDED " + getRandomEmoticon(HipChatEmoticonSet.POSITIVE);
+		} else if (buildEvent == TeamCityBuildEvent.FINISHED && build.getBuildStatus().isFailed()) {
+			// List<BuildProblemData> reasons = build.getFailureReasons();
+			// message = "FAILED: " + reasons.get(0).getDescription() + " (" +
+			// reasons.size() + " reasons) " +
+			// getRandomEmoticon(HipChatEmoticonSet.NEGATIVE);
+			message = "FAILED " + getRandomEmoticon(HipChatEmoticonSet.NEGATIVE);
+		} else if (buildEvent == TeamCityBuildEvent.INTERRUPTED) {
+			message = "INTERRUPTED " + build.getCanceledInfo().getUserId() + " " + getRandomEmoticon(HipChatEmoticonSet.INDIFFERENT);
+		}
+
+		return message;
+	}
+
+	private static String getRandomEmoticon(String[] set) {
+		int i = rng.nextInt(set.length);
+		logger.debug("getRandomEmoticon: " + i);
+		return set[i];
+	}
+
+	public String tryGetTriggeredByUser(SRunningBuild build) {
+		if (build.getTriggeredBy() != null && build.getTriggeredBy().getUser() != null) {
+			return build.getTriggeredBy().getUser().getDescriptiveName();
+		} else {
+			return null;
 		}
 	}
 

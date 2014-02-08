@@ -96,6 +96,7 @@ public class HipChatConfigurationController extends BaseController {
 		xstream.processAnnotations(this.configuration.getClass());
 		File file = new File(this.configFilePath);
 		HipChatConfiguration configuration = (HipChatConfiguration) xstream.fromXML(file);
+		
 		// Copy the values, because we need it on the original shared (bean),
 		// which is a singleton
 		this.configuration.setApiUrl(configuration.getApiUrl());

@@ -16,19 +16,19 @@ import java.util.Map;
 
 public class HipChatConfigurationPageExtension extends AdminPage {
 
-	private static final String TAB_TITLE = "HipChat Notifier";
-	private static final String PLUGIN_NAME = "hipChat";
-	private static final String PAGE = "settings.jsp";
-	private static final String RESOURCE_ROOT = "resourceRoot";
-	private static final String BEFORE_PAGE_ID = "clouds";
 	private static final String AFTER_PAGE_ID = "jabber";
+	private static final String BEFORE_PAGE_ID = "clouds";
+	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
+	private static final String PAGE = "settings.jsp";
+	private static final String PLUGIN_NAME = "hipChat";
+	private static final String RESOURCE_ROOT = "resourceRoot";
 
+	private static final String TAB_TITLE = "HipChat Notifier";
 	private HipChatConfiguration configuration;
+
 	private PluginDescriptor descriptor;
 
-	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
-
-	public HipChatConfigurationPageExtension(@NotNull PagePlaces pagePlaces, @NotNull PluginDescriptor descriptor, @NotNull HipChatConfiguration configuration) {
+	public HipChatConfigurationPageExtension(@NotNull PagePlaces pagePlaces, @NotNull PluginDescriptor descriptor, @NotNull HipChatConfiguration configuration, @NotNull HipChatNotificationProcessor processor) {
 		super(pagePlaces);
 		setPluginName(PLUGIN_NAME);
 		setIncludeUrl(descriptor.getPluginResourcesPath(PAGE));
@@ -42,11 +42,6 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		this.descriptor = descriptor;
 		register();
 		logger.info("Global configuration page registered");
-	}
-
-	@Override
-	public boolean isAvailable(@NotNull HttpServletRequest request) {
-		return super.isAvailable(request) && checkHasGlobalPermission(request, Permission.CHANGE_SERVER_SETTINGS);
 	}
 
 	@Override
@@ -64,6 +59,11 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 	@Override
 	public String getGroup() {
 		return SERVER_RELATED_GROUP;
+	}
+
+	@Override
+	public boolean isAvailable(@NotNull HttpServletRequest request) {
+		return super.isAvailable(request) && checkHasGlobalPermission(request, Permission.CHANGE_SERVER_SETTINGS);
 	}
 
 }

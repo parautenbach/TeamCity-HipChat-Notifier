@@ -12,12 +12,15 @@ or git clone, build with ant, drop zip
 
 admin settings (url and token)
 user settings (notifications)
+room ID
+notification trigger
 
 limitation: mapped using email address (haven't found a way to add user settings for plugins, admin mapping ugly)
 
 # TODO
-room id
-notification?
+message template
+https://weblogs.java.net/blog/aberrant/archive/2010/05/25/using-stringtemplate-part-1-introduction-stringtemplate
+responsibility assigned, tests muted, etc, shutdown
 
 # Improvements
 Configure from user (TeamCity)
