@@ -1,7 +1,9 @@
 TeamCity-HipChat-Notifier
 =========================
 
-TeamCity HipChat Notifier for sending build server notifications to a HipChat room.
+A fun TeamCity HipChat Notifier for sending build server notifications to a HipChat room, using colours and emoticons.
+
+![Screen shot of app](images/screen_shot.png "Screen shot of app")
 
 # Installation
 
@@ -17,10 +19,10 @@ On TeamCity, as an administrator, configure the generated token and other settin
 
 # Developers
 
-Clone the repository and set the `teamcity.home` property in `build.xml` to your TeamCity server's home directory and you're good to go. 
+Clone the repository and set the `teamcity.home` property in the `build.xml` to your TeamCity server's home directory and you're good to go. 
 
 # Improvements
 
 * A button on the configuration page to test the API credentials.
 * Configurable notification message templates, with their colours and emoticon sets. 
-* Implement more events with per event configuration of events.  
+* Implement more events with per-event configuration of events.  
