@@ -25,8 +25,7 @@ https://weblogs.java.net/blog/aberrant/archive/2010/05/25/using-stringtemplate-p
 responsibility assigned, tests muted, etc, shutdown
 
 # Bugs
-singleton config
-notify status checkbox
+
 
 # Improvements
 Configure from user (TeamCity)

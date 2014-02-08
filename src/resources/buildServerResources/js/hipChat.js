@@ -5,7 +5,7 @@ var HipChat = {
 			'&apiUrl=' + $('apiUrl').value + 
 			'&apiToken=' + $('apiToken').value +
 			'&roomId=' + $('roomId').value +
-			'&notify=' + $('notify').value,
+			'&notify=' + $('notify').checked,
 			onComplete : function(transport) {
 				if (transport.responseXML) {
 					BS.XMLResponse.processErrors(transport.responseXML, {

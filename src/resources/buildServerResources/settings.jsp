@@ -47,7 +47,7 @@
 			</tr>
 			<tr>
 				<th><label for="notify">Trigger notifications: </label></th>
-				<td><forms:checkbox name="notify" checked="${notify}" /></td>
+				<td><forms:checkbox name="notify" checked="${notify}" value="${notify}"/></td>
 			</tr>
 		</table>
 		<div class="saveButtonsBlock">

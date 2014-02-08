@@ -24,7 +24,7 @@ public class HipChatNotificationProcessor {
 	
 	public HipChatNotificationProcessor(@NotNull HipChatConfiguration configuration) throws URISyntaxException {
 		this.configuration = configuration;
-			}
+	}
 	
 	public void process(HipChatRoomNotification notification) {
 		try {
