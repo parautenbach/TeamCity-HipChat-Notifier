@@ -53,7 +53,7 @@ public class HipChatServerExtensionTest {
 		String expectedBuildNumber = "0.0.0.0";
 		String expectedTriggerBy = "Triggered by: Test User";
 		boolean expectedNotificationStatus = true;
-		String expectedMessageColour = HipChatMessageColour.START;
+		String expectedMessageColour = HipChatMessageColour.INFO;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
 
 		// Callback closure
@@ -105,7 +105,7 @@ public class HipChatServerExtensionTest {
 		String expectedTriggerBy = "Triggered by: Test User";
 		String expectedEmoticonEndCharacter = ")";
 		boolean expectedNotificationStatus = true;
-		String expectedMessageColour = HipChatMessageColour.SUCCESSFUL;
+		String expectedMessageColour = HipChatMessageColour.SUCCESS;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
 
 		// Callback closure
@@ -160,7 +160,7 @@ public class HipChatServerExtensionTest {
 		String expectedTriggerBy = "Triggered by: Test User";
 		String expectedEmoticonEndCharacter = ")";
 		boolean expectedNotificationStatus = true;
-		String expectedMessageColour = HipChatMessageColour.FAILED;
+		String expectedMessageColour = HipChatMessageColour.ERROR;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
 
 		// Callback closure
@@ -216,7 +216,7 @@ public class HipChatServerExtensionTest {
 		String expectedCanceledBy = "Cancelled by: Test User";
 		String expectedEmoticonEndCharacter = ")";
 		boolean expectedNotificationStatus = true;
-		String expectedMessageColour = HipChatMessageColour.INTERRUPTED;
+		String expectedMessageColour = HipChatMessageColour.WARNING;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
 
 		// Callback closure
@@ -275,7 +275,7 @@ public class HipChatServerExtensionTest {
 		String expectedServerStartupMessage = "Build server started.";
 		String expectedServerShutdownMessage = "Build server shutting down.";
 		boolean expectedNotificationStatus = true;
-		String expectedMessageColour = HipChatMessageColour.INFO;
+		String expectedMessageColour = HipChatMessageColour.NEUTRAL;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
 
 		// Callback closure

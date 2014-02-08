@@ -31,27 +31,27 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		this.eventMap.put(TeamCityEvent.BUILD_STARTED, 
 				new HipChatMessageBundle(HipChatNotificationMessageTemplate.BUILD_STARTED, 
 						HipChatEmoticonSet.POSITIVE, 
-						HipChatMessageColour.START));
+						HipChatMessageColour.INFO));
 		this.eventMap.put(TeamCityEvent.BUILD_SUCCESSFUL, 
 				new HipChatMessageBundle(HipChatNotificationMessageTemplate.BUILD_SUCCESSFUL, 
 						HipChatEmoticonSet.POSITIVE, 
-						HipChatMessageColour.SUCCESSFUL));
+						HipChatMessageColour.SUCCESS));
 		this.eventMap.put(TeamCityEvent.BUILD_FAILED, 
 				new HipChatMessageBundle(HipChatNotificationMessageTemplate.BUILD_FAILED, 
 						HipChatEmoticonSet.NEGATIVE, 
-						HipChatMessageColour.FAILED));
+						HipChatMessageColour.ERROR));
 		this.eventMap.put(TeamCityEvent.BUILD_INTERRUPTED, 
 				new HipChatMessageBundle(HipChatNotificationMessageTemplate.BUILD_INTERRUPTED, 
 						HipChatEmoticonSet.INDIFFERENT, 
-						HipChatMessageColour.INTERRUPTED));
+						HipChatMessageColour.WARNING));
 		this.eventMap.put(TeamCityEvent.SERVER_STARTUP, 
 				new HipChatMessageBundle(HipChatNotificationMessageTemplate.SERVER_STARTUP, 
 						null, 
-						HipChatMessageColour.INFO));
+						HipChatMessageColour.NEUTRAL));
 		this.eventMap.put(TeamCityEvent.SERVER_SHUTDOWN, 
 				new HipChatMessageBundle(HipChatNotificationMessageTemplate.SERVER_SHUTDOWN, 
 						null, 
-						HipChatMessageColour.INFO));
+						HipChatMessageColour.NEUTRAL));
 		logger.debug("Server extension created");
 	}
 
