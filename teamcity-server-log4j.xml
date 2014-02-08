@@ -1,0 +1,16 @@
+  <appender name="ROLL.HIPCHAT.NOTIFIER" class="jetbrains.buildServer.util.TCRollingFileAppender">
+    <param name="file" value="${teamcity_logs}hipchat-notifier.log"/>
+    <param name="maxBackupIndex" value="3"/>
+    <!--REPLACE PREVIOUS LINE WITH UNCOMMENTED LINE TO STORE MORE LOGS-->
+    <!-- <param name="maxBackupIndex" value="20"/> -->
+
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d - %-5p - %m %n"/>
+    </layout>
+  </appender>
+
+  <category name="com.whatsthatlight.teamcity.hipchat">
+   <!-- Set this to DEBUG to enable debug logging -->
+   <priority value="DEBUG"/>
+    <appender-ref ref="ROLL.HIPCHAT.NOTIFIER"/>
+  </category>

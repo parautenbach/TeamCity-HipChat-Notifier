@@ -21,6 +21,8 @@ On TeamCity, as an administrator, configure the generated token and other settin
 
 Clone the repository and set the `teamcity.home` property in the `build.xml` to your TeamCity server's home directory and you're good to go. 
 
+For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's root to `conf/teamcity-server-log4j.xml` and then monitor `logs/hipchat-notifier.log `.
+
 # Improvements
 
 * A button on the configuration page to test the API credentials.
