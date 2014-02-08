@@ -1,15 +1,26 @@
 package com.whatsthatlight.teamcity.hipchat;
 
+import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 
+import jetbrains.buildServer.BuildProblemData;
+import jetbrains.buildServer.serverSide.BuildRevision;
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
+import jetbrains.buildServer.serverSide.BuildStatistics;
+import jetbrains.buildServer.serverSide.SBuildAgent;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SRunningBuild;
+import jetbrains.buildServer.serverSide.TriggeredBy;
+import jetbrains.buildServer.serverSide.buildLog.BuildLog;
 import jetbrains.buildServer.users.SUser;
+import jetbrains.buildServer.users.UserSet;
+import jetbrains.buildServer.vcs.SVcsModification;
+import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
+import jetbrains.buildServer.vcs.VcsRootInstanceEntry;
 
 public class HipChatServerExtension extends BuildServerAdapter {
 
@@ -55,7 +66,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		boolean notify = this.configuration.getNotifyStatus();
 		String messageFormat = HipChatMessageFormat.TEXT;
 		String colour = HipChatMessageColour.INFO;
-		String message = "Build server started. :-)";
+		String message = "Build server started. :)";
 		HipChatRoomNotification notification = new HipChatRoomNotification(message, messageFormat, colour, notify);
 		this.processor.process(notification);
 	}
@@ -65,7 +76,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		boolean notify = this.configuration.getNotifyStatus();
 		String messageFormat = HipChatMessageFormat.TEXT;
 		String colour = HipChatMessageColour.INFO;
-		String message = "Build server shutting down. :-(";
+		String message = "Build server shutting down. :(";
 		HipChatRoomNotification notification = new HipChatRoomNotification(message, messageFormat, colour, notify);
 		this.processor.process(notification);
 	}
@@ -102,24 +113,64 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	}
 
 	private String createPlainTextBuildEventMessage(SRunningBuild build, TeamCityBuildEvent buildEvent) {
-		try {
-			// logger.debug(build.getRevisions().get(0).getRevision());
-			// logger.debug(build.getRevisions().get(0).getRevisionDisplayName());
-			logger.debug(build.getShortStatistics().getFailedTestCount()); // 0
-			logger.debug(build.getShortStatistics().getPassedTestCount()); // 0
-			logger.debug(build.isProbablyHanging()); // false
-			// build.getBranch().=
-			// build.getVcsRootEntries().get(0).
-		} catch (Exception e) {
-		}
 
+		try {
+			List<SVcsModification> changes = build.getChanges(SelectPrevBuildPolicy.SINCE_LAST_BUILD, true);
+			logger.debug("changes: " + changes.size());
+			SVcsModification change = changes.get(0);
+			logger.debug("vcs committers: " + change.getCommitters().size());
+			logger.debug("vcs username: " + change.getUserName());
+			logger.debug("vcs name: " + change.getVersionControlName());
+		} catch (Exception e) {}
+		try {
+			UserSet<SUser> committers = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
+			//logger.debug("build committers: " + );
+		} catch (Exception e) {}
+		//BuildStatistics statistics = build.getFullStatistics();
+		try {
+			logger.debug("build owner: " + build.getOwner());
+		} catch (Exception e) {}
+		try {
+			TriggeredBy triggeredBy = build.getTriggeredBy();
+			logger.debug("triggered by: " + triggeredBy.getAsString());
+		} catch (Exception e) {}
+		try {
+			BuildRevision revision = build.getRevisions().get(0);
+			logger.debug("revision: " + revision.getRevision());
+			logger.debug("revision dn: " + revision.getRevisionDisplayName());
+		} catch (Exception e) {}
+		try {
+			
+			logger.debug("ftc: " + build.getShortStatistics().getFailedTestCount()); // 0
+			logger.debug("ptc: " + build.getShortStatistics().getPassedTestCount()); // 0
+			logger.debug("hanging: " + build.isProbablyHanging()); // false
+		} catch (Exception e) {}
+		try {
+			logger.debug("branch: " + build.getBranch());
+		} catch (Exception e) {}
+		try {
+			VcsRootInstanceEntry vcsRootEntries = build.getVcsRootEntries().get(0);
+			logger.debug("vcs root name: " + vcsRootEntries.getVcsName());
+			logger.debug("vcs root entries: " + vcsRootEntries.getDisplayName());
+		} catch (Exception e) {}
+		try {
+			List<BuildProblemData> reasons = build.getFailureReasons();
+			logger.debug("reasons: " + reasons.size());
+			for (BuildProblemData reason : reasons) {
+				logger.debug("reason: " + reason.getDescription());
+			}
+
+		} catch (Exception e) {}
+		
+		//////////////////////////////////////////////////////////////////////
+		
 		String message = "(Unknown)";
 		if (buildEvent == TeamCityBuildEvent.STARTED) {
-			ST buildStartedMessage = new ST("Build \"<fullName>\" has <status>. This is build number <buildNumber>, triggered by <triggeredBy>.");
+			ST buildStartedMessage = new ST("Build \"<fullName>\" has <status>. This is build number <buildNumber>. Triggered by: <triggeredBy>.");
 			buildStartedMessage.add("fullName", build.getBuildType().getFullName());
 			buildStartedMessage.add("status", buildEvent.toString().toLowerCase());
 			buildStartedMessage.add("buildNumber", build.getBuildNumber());
-			buildStartedMessage.add("triggeredBy", tryGetTriggeredByUser(build));
+			buildStartedMessage.add("triggeredBy", build.getTriggeredBy().getAsString());
 			message = buildStartedMessage.render();
 		} else if (buildEvent == TeamCityBuildEvent.FINISHED && build.getBuildStatus().isSuccessful()) {
 			message = "SUCCEEDED " + getRandomEmoticon(HipChatEmoticonSet.POSITIVE);
@@ -138,7 +189,6 @@ public class HipChatServerExtension extends BuildServerAdapter {
 
 	private static String getRandomEmoticon(String[] set) {
 		int i = rng.nextInt(set.length);
-		logger.debug("getRandomEmoticon: " + i);
 		return set[i];
 	}
 

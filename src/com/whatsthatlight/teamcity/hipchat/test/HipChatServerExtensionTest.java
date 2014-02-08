@@ -54,10 +54,8 @@ public class HipChatServerExtensionTest {
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
 		when(buildType.getFullName()).thenReturn(expectedBuildName);
-		SUser user = mock(SUser.class);
-		when(user.getDescriptiveName()).thenReturn(expectedTriggerBy);
 		TriggeredBy triggeredBy = mock(TriggeredBy.class);
-		when(triggeredBy.getUser()).thenReturn(user);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
 		SRunningBuild build = mock(SRunningBuild.class);
 		when(build.getBuildType()).thenReturn(buildType);
 		when(build.isPersonal()).thenReturn(false);
@@ -86,6 +84,24 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains(expectedStartMessage));
 		assertTrue(actualNotification.message.contains(expectedBuildNumber));
 		assertTrue(actualNotification.message.contains(expectedTriggerBy));
+	}
+	
+	@Test
+	public void testActualServerStartupAndShutdownEvents() throws URISyntaxException {
+		// Test parameters
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl("https://api.hipchat.com/v2/");
+		configuration.setApiToken("Mi7JkzdiT5wYZ0OAMrjFQzeAP7B5DfcYQu2wXp8e");
+		configuration.setRoomId("432380");
+		configuration.setNotifyStatus(true);
+
+		// Mocks and other dependencies
+		HipChatNotificationProcessor processor = new HipChatNotificationProcessor(configuration);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		extension.serverStartup();
+		extension.serverShutdown();
 	}
 	
 	@Test
