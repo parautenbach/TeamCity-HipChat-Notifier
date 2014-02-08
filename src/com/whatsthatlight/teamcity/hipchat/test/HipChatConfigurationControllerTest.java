@@ -44,6 +44,7 @@ public class HipChatConfigurationControllerTest {
 		String expectedFileName = "hipchat.xml";
 		String expectedApiUrlKey = "apiUrl";
 		String expectedApiUrlValue = "http://example.com/";
+		String expectedApiUrlDefaultValue = "https://api.hipchat.com/v2/";
 		String expectedApiTokenKey = "apiToken";
 		String expectedApiTokenValue = "admin_token";
 		String expectedRoomIdKey = "roomId";
@@ -65,7 +66,7 @@ public class HipChatConfigurationControllerTest {
 		initialConfigFile.delete();
 		assertFalse(initialConfigFile.exists());
 		HipChatConfiguration configuration = new HipChatConfiguration();
-		assertNull(configuration.getApiUrl());
+		assertEquals(expectedApiUrlDefaultValue, configuration.getApiUrl());
 		assertNull(configuration.getApiToken());
 		assertNull(configuration.getRoomId());
 		assertFalse(configuration.getNotifyStatus());
@@ -82,14 +83,14 @@ public class HipChatConfigurationControllerTest {
 		SAXBuilder builder = new SAXBuilder();
 		Document document = builder.build(postRegistrationConfigFile);
 		Element rootElement = document.getRootElement();
-		assertNull(rootElement.getChildText(expectedApiUrlKey));
+		assertEquals(expectedApiUrlDefaultValue, rootElement.getChildText(expectedApiUrlKey));
 		assertNull(rootElement.getChildText(expectedApiTokenKey));
 		assertNull(rootElement.getChildText(expectedRoomIdKey));
 		assertFalse(Boolean.parseBoolean(rootElement.getChildText(expectedNotifyStatusKey)));
 		assertFalse(Boolean.parseBoolean(rootElement.getChildText(expectedDisabledStatusKey)));
 
 		// And the instance values must still be the defaults
-		assertNull(configuration.getApiUrl());
+		assertEquals(expectedApiUrlDefaultValue, configuration.getApiUrl());
 		assertNull(configuration.getApiToken());
 		assertNull(configuration.getRoomId());
 		assertFalse(configuration.getNotifyStatus());

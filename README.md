@@ -1,37 +1,26 @@
 TeamCity-HipChat-Notifier
 =========================
 
-TeamCity HipChat Notifier for sending build server notifications to HipChat.
+TeamCity HipChat Notifier for sending build server notifications to a HipChat room.
 
 # Installation
 
-download release, drop zip in .BuildServer/plugins/, restart
-or git clone, build with ant, drop zip
+Download the ZIP file release, drop it in your TeamCity installation's `.BuildServer/plugins/` 
+directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins/)) and restart the server. 
 
 # Configuration
 
-create a user on hipchat, with token (api v2)
+On HipChat, create a user account to represent the build server and generate a token for that user. 
+Note: There are two HipChat APIs, so ensure your token is for the v2 API and not the v1 API. 
 
-admin settings (url and token)
-user settings (notifications)
-room ID
-notification trigger
-
-limitation: mapped using email address (haven't found a way to add user settings for plugins, admin mapping ugly)
+On TeamCity, as an administrator, configure the generated token and other settings on the Administration panel.
 
 # Developers
 
-property name="teamcity.home"
-
-# TODO
-message template
-https://weblogs.java.net/blog/aberrant/archive/2010/05/25/using-stringtemplate-part-1-introduction-stringtemplate
-responsibility assigned, tests muted, etc, shutdown
-
-# Bugs
-
+Clone the repository and set the `teamcity.home` property in `build.xml` to your TeamCity server's home directory and you're good to go. 
 
 # Improvements
-Configure from user (TeamCity)
-Configure user mapping (when supported)
-Configure colour mapping
+
+* A button on the configuration page to test the API credentials.
+* Configurable notification message templates, with their colours and emoticon sets. 
+* Implement more events with per event configuration of events.  

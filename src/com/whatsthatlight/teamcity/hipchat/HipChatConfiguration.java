@@ -15,7 +15,7 @@ public class HipChatConfiguration {
 	private String apiToken = null;
 
 	@XStreamAlias(API_URL_KEY)
-	private String apiUrl = null;
+	private String apiUrl = "https://api.hipchat.com/v2/";
 
 	@XStreamAlias(DISABLED_STATUS_KEY)
 	private boolean disabled = false;
