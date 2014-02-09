@@ -10,6 +10,8 @@ A fun TeamCity HipChat Notifier for sending build server notifications to a HipC
 [Download](https://github.com/parautenbach/TeamCity-HipChat-Notifier/releases/latest) the ZIP file release, drop it in your TeamCity installation's `.BuildServer/plugins/` 
 directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins/)) and restart the server. 
 
+Note: I've tested the plugin with TeamCity 8. Support for older versions are uncertain, but I would gladly provide information and experiences by others here. 
+
 # Configuration
 
 On HipChat, create a user account to represent the build server and generate a token for that user. 
@@ -28,3 +30,4 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 * A button on the configuration page to test the API credentials.
 * Configurable notification message templates, with their colours and emoticon sets. 
 * Implement more events with per-event configuration of events.  
+* Use @ mentions to send guaranteed messages to persons that have contributed to a failed build. 
