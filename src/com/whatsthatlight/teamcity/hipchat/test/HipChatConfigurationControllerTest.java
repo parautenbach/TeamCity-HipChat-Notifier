@@ -27,6 +27,7 @@ import org.jdom.input.SAXBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.sun.source.tree.AssertTree;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController;
 
@@ -189,4 +190,46 @@ public class HipChatConfigurationControllerTest {
 		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
 	}
 
+	@Test
+	public void testConfigurationGetsUpgradedFromV0dot1toV0dot2() throws IOException {
+		// Test parameters
+		String expectedConfigDir = ".";
+		// @formatter:off
+		String v0dot1ConfigurationText = "<hipchat>\n" + 
+								   "  <apiToken>token</apiToken>\n" + 
+								   "  <apiUrl>https://api.hipchat.com/v2/</apiUrl>\n" + 
+								   "  <disabled>false</disabled>\n" + 
+								   "  <notify>true</notify>\n" + 
+								   "  <roomId>12345</roomId>\n" + 
+								   "</hipchat>";
+		// @formatter:on
+
+		// Prepare
+		File file = new File("hipchat.xml");
+		if (file.exists()) {
+			assertTrue(file.delete());
+		}
+		file.createNewFile();
+		System.out.println(String.format("Canonical path to config file for test: %s", file.getCanonicalPath()));
+		FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fileWriter);
+		bw.write(v0dot1ConfigurationText);
+		bw.close();
+		fileWriter.close();
+
+		// Mocks
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
+		SBuildServer server = mock(SBuildServer.class);
+		WebControllerManager manager = mock(WebControllerManager.class);
+		
+		// After initialisation, the config must've been upgraded
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration);
+		controller.initialise();
+		
+		// Test config object contains value for room ID
+		// Test XML was upgraded
+	}
+	
 }

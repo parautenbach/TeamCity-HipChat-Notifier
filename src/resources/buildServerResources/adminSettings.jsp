@@ -1,20 +1,22 @@
 <%@ include file="/include.jsp"%>
+<%@ taglib prefix="bs" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <jsp:useBean id="resourceRoot" type="java.lang.String" scope="request" />
 
 <c:url value="/configureHipChat.html" var="actionUrl" />
 
 <bs:linkCSS dynamic="${true}">
-  ${resourceRoot}css/hipChat.css
+  ${teamcityPluginResourcesPath}css/hipChatAdmin.css
 </bs:linkCSS>
 
 <bs:linkScript>
-    ${resourceRoot}js/hipChat.js
+    ${teamcityPluginResourcesPath}js/hipChatAdmin.js
 </bs:linkScript>
 
 <bs:refreshable containerId="hipChatComponent" pageUrl="${pageUrl}">
 <form action="${actionUrl}" id="hipChatForm" method="post"
-	onsubmit="return HipChat.save()">
+	onsubmit="return HipChatAdmin.save()">
 	<div class="editNotificatorSettingsPage">
 		<c:choose>
 			<c:when test="${disabled}">

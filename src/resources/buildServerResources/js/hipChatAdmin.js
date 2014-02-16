@@ -1,4 +1,4 @@
-var HipChat = {
+var HipChatAdmin = {
 	save : function() {
 		BS.ajaxRequest($('hipChatForm').action, {
 			parameters : 'edit=1' + 

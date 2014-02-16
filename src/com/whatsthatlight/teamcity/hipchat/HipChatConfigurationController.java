@@ -79,6 +79,7 @@ public class HipChatConfigurationController extends BaseController {
 			File file = new File(this.configFilePath);
 			if (file.exists()) {
 				logger.debug("Loading existing configuration");
+				this.upgradeConfigurationFromV0dot1ToV0dot2();
 				this.loadConfiguration();
 			} else {
 				logger.debug("No configuration file exists; creating new one");
@@ -88,6 +89,10 @@ public class HipChatConfigurationController extends BaseController {
 			logger.error("Could not load configuration", e);
 		}
 		logger.info("Controller initialised");
+	}
+
+	private void upgradeConfigurationFromV0dot1ToV0dot2() {
+		
 	}
 
 	public void loadConfiguration() throws IOException {

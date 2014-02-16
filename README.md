@@ -27,6 +27,8 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 
 # Improvements
 
+* Add a link to the build in the notification.
+* List contributors in build started notification message.
 * A button on the configuration page to test the API credentials.
 * Configurable notification message templates, with their colours and emoticon sets. 
 * Implement more events with per-event configuration of events.  

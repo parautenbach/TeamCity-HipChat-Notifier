@@ -19,7 +19,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 	private static final String AFTER_PAGE_ID = "jabber";
 	private static final String BEFORE_PAGE_ID = "clouds";
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
-	private static final String PAGE = "settings.jsp";
+	private static final String PAGE = "adminSettings.jsp";
 	private static final String PLUGIN_NAME = "hipChat";
 	private static final String RESOURCE_ROOT = "resourceRoot";
 
