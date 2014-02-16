@@ -329,7 +329,7 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
-		configuration.setRoomId(roomId);
+		configuration.setDefaultRoomId(roomId);
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
@@ -348,7 +348,7 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
-		configuration.setRoomId(roomId);
+		configuration.setDefaultRoomId(roomId);
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
@@ -376,7 +376,7 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
-		configuration.setRoomId(roomId);
+		configuration.setDefaultRoomId(roomId);
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
@@ -409,7 +409,7 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
-		configuration.setRoomId(roomId);
+		configuration.setDefaultRoomId(roomId);
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
@@ -443,7 +443,7 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
-		configuration.setRoomId(roomId);
+		configuration.setDefaultRoomId(roomId);
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies

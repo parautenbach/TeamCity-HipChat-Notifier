@@ -2,8 +2,6 @@
 <%@ taglib prefix="bs" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<jsp:useBean id="resourceRoot" type="java.lang.String" scope="request" />
-
 <c:url value="/configureHipChat.html" var="actionUrl" />
 
 <bs:linkCSS dynamic="${true}">
@@ -44,8 +42,8 @@
 				<td><forms:textField name="apiToken" value="${apiToken}" /></td>
 			</tr>
 			<tr>
-				<th><label for="roomId">Room ID: <l:star /></label></th>
-				<td><forms:textField name="roomId" value="${roomId}" /></td>
+				<th><label for="defaultRoomId">Room ID: <l:star /></label></th>
+				<td><forms:textField name="defaultRoomId" value="${defaultRoomId}" /></td>
 			</tr>
 			<tr>
 				<th><label for="notify">Trigger notifications: </label></th>

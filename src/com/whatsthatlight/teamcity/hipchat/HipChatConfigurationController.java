@@ -2,8 +2,11 @@ package com.whatsthatlight.teamcity.hipchat;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,7 +50,7 @@ public class HipChatConfigurationController extends BaseController {
 			if (request.getParameter(EDIT_PARAMETER) != null) {
 				String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
 				String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
-				String roomId = request.getParameter(HipChatConfiguration.ROOM_ID_KEY);
+				String roomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
 				String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
 				logger.debug(String.format("API URL: %s", apiUrl));
 				logger.debug(String.format("API token: %s", apiToken));
@@ -55,7 +58,7 @@ public class HipChatConfigurationController extends BaseController {
 				logger.debug(String.format("Trigger notification: %s", notify));
 				this.configuration.setApiUrl(apiUrl);
 				this.configuration.setApiToken(apiToken);
-				this.configuration.setRoomId(roomId);
+				this.configuration.setDefaultRoomId(roomId);
 				this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
 				this.getOrCreateMessages(request).addMessage("configurationSaved", "Saved");
 			}
@@ -91,8 +94,12 @@ public class HipChatConfigurationController extends BaseController {
 		logger.info("Controller initialised");
 	}
 
-	private void upgradeConfigurationFromV0dot1ToV0dot2() {
-		
+	private void upgradeConfigurationFromV0dot1ToV0dot2() throws FileNotFoundException {
+		String config = new Scanner(new File(this.configFilePath)).useDelimiter("\\A").next();
+		config = config.replace(HipChatConfiguration.DEFAULT_ROOM_ID_KEY_V0DOT1, HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
+		PrintWriter writer = new PrintWriter(this.configFilePath);
+		writer.print(config);
+		writer.close();
 	}
 
 	public void loadConfiguration() throws IOException {
@@ -106,7 +113,7 @@ public class HipChatConfigurationController extends BaseController {
 		// which is a singleton
 		this.configuration.setApiUrl(configuration.getApiUrl());
 		this.configuration.setApiToken(configuration.getApiToken());
-		this.configuration.setRoomId(configuration.getRoomId());
+		this.configuration.setDefaultRoomId(configuration.getDefaultRoomId());
 		this.configuration.setNotifyStatus(configuration.getNotifyStatus());
 		this.configuration.setDisabledStatus(configuration.getDisabledStatus());
 	}

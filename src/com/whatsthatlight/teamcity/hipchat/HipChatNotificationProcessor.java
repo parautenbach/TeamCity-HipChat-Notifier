@@ -28,7 +28,7 @@ public class HipChatNotificationProcessor {
 	
 	public void process(HipChatRoomNotification notification) {
 		try {
-			String resource = String.format("room/%s/notification", configuration.getRoomId());
+			String resource = String.format("room/%s/notification", configuration.getDefaultRoomId());
 			URI uri = new URI(String.format("%s%s", configuration.getApiUrl(), resource));
 			String authorisationHeader = String.format("Bearer %s", configuration.getApiToken());
 

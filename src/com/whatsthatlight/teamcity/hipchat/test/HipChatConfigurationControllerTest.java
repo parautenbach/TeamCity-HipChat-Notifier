@@ -27,7 +27,6 @@ import org.jdom.input.SAXBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.sun.source.tree.AssertTree;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController;
 
@@ -48,7 +47,7 @@ public class HipChatConfigurationControllerTest {
 		String expectedApiUrlDefaultValue = "https://api.hipchat.com/v2/";
 		String expectedApiTokenKey = "apiToken";
 		String expectedApiTokenValue = "admin_token";
-		String expectedRoomIdKey = "roomId";
+		String expectedRoomIdKey = "defaultRoomId";
 		String expectedRoomIdValue = "room_id";
 		String expectedNotifyStatusKey = "notify";
 		Boolean expectedNotifyStatusValue = true;
@@ -69,7 +68,7 @@ public class HipChatConfigurationControllerTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		assertEquals(expectedApiUrlDefaultValue, configuration.getApiUrl());
 		assertNull(configuration.getApiToken());
-		assertNull(configuration.getRoomId());
+		assertNull(configuration.getDefaultRoomId());
 		assertFalse(configuration.getNotifyStatus());
 		assertFalse(configuration.getDisabledStatus());
 
@@ -93,14 +92,14 @@ public class HipChatConfigurationControllerTest {
 		// And the instance values must still be the defaults
 		assertEquals(expectedApiUrlDefaultValue, configuration.getApiUrl());
 		assertNull(configuration.getApiToken());
-		assertNull(configuration.getRoomId());
+		assertNull(configuration.getDefaultRoomId());
 		assertFalse(configuration.getNotifyStatus());
 		assertFalse(configuration.getDisabledStatus());
 
 		// Now change and save the configuration
 		configuration.setApiUrl(expectedApiUrlValue);
 		configuration.setApiToken(expectedApiTokenValue);
-		configuration.setRoomId(expectedRoomIdValue);
+		configuration.setDefaultRoomId(expectedRoomIdValue);
 		configuration.setNotifyStatus(expectedNotifyStatusValue);
 		configuration.setDisabledStatus(expectedDisabledStatusValue);
 		controller.saveConfiguration();
@@ -118,7 +117,7 @@ public class HipChatConfigurationControllerTest {
 		// And also the values in memory
 		assertEquals(expectedApiUrlValue, configuration.getApiUrl());
 		assertEquals(expectedApiTokenValue, configuration.getApiToken());
-		configuration.setRoomId(expectedRoomIdValue);
+		configuration.setDefaultRoomId(expectedRoomIdValue);
 		configuration.setNotifyStatus(expectedNotifyStatusValue);
 		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
 	}
@@ -131,7 +130,7 @@ public class HipChatConfigurationControllerTest {
 		String expectedApiUrlValue = "http://example.com/";
 		String expectedApiTokenKey = "apiToken";
 		String expectedApiTokenValue = "admin_token";
-		String expectedRoomIdKey = "roomId";
+		String expectedRoomIdKey = "defaultRoomId";
 		String expectedRoomIdValue = "room_id";
 		String expectedNotifyStatusKey = "notify";
 		Boolean expectedNotifyStatusValue = true;
@@ -151,7 +150,7 @@ public class HipChatConfigurationControllerTest {
 				"<hipchat>" + 
 				"<apiToken>" + expectedApiTokenValue + "</apiToken>" + 
 				"<apiUrl>" + expectedApiUrlValue + "</apiUrl>" + 
-				"<roomId>" + expectedRoomIdValue + "</roomId>" +
+				"<defaultRoomId>" + expectedRoomIdValue + "</defaultRoomId>" +
 				"<notify>" + expectedNotifyStatusValue + "</notify>" +
 				"<disabled>" + expectedDisabledStatusValue + "</disabled>" + 
 				"</hipchat>";
@@ -185,27 +184,30 @@ public class HipChatConfigurationControllerTest {
 		// Now check the loaded configuration
 		assertEquals(expectedApiUrlValue, configuration.getApiUrl());
 		assertEquals(expectedApiTokenValue, configuration.getApiToken());
-		assertEquals(expectedRoomIdValue, configuration.getRoomId());
+		assertEquals(expectedRoomIdValue, configuration.getDefaultRoomId());
 		assertEquals(expectedNotifyStatusValue, configuration.getNotifyStatus());
 		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
 	}
 
 	@Test
-	public void testConfigurationGetsUpgradedFromV0dot1toV0dot2() throws IOException {
+	public void testConfigurationGetsUpgradedFromV0dot1toV0dot2() throws IOException, JDOMException {
 		// Test parameters
+		String expectedDefaultRoomIdKey = "defaultRoomId";
+		String expectedDefaultRoomIdValue = "12345";
 		String expectedConfigDir = ".";
+		String expectedConfigFileName = "hipchat.xml";
 		// @formatter:off
 		String v0dot1ConfigurationText = "<hipchat>\n" + 
 								   "  <apiToken>token</apiToken>\n" + 
 								   "  <apiUrl>https://api.hipchat.com/v2/</apiUrl>\n" + 
 								   "  <disabled>false</disabled>\n" + 
 								   "  <notify>true</notify>\n" + 
-								   "  <roomId>12345</roomId>\n" + 
+								   "  <roomId>" + expectedDefaultRoomIdValue + "</roomId>\n" +
 								   "</hipchat>";
 		// @formatter:on
 
 		// Prepare
-		File file = new File("hipchat.xml");
+		File file = new File(expectedConfigDir, expectedConfigFileName);
 		if (file.exists()) {
 			assertTrue(file.delete());
 		}
@@ -227,9 +229,19 @@ public class HipChatConfigurationControllerTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration);
 		controller.initialise();
+				
+		// Test XML was upgraded
+		File configFile = new File(expectedConfigDir, expectedConfigFileName);
+		SAXBuilder builder = new SAXBuilder();
+		Document document = builder.build(configFile);
+		Element rootElement = document.getRootElement();
+		assertEquals(expectedDefaultRoomIdValue, rootElement.getChildText(expectedDefaultRoomIdKey));
 		
 		// Test config object contains value for room ID
-		// Test XML was upgraded
+		assertEquals(expectedDefaultRoomIdValue, configuration.getDefaultRoomId());
+		// Re-read the config from disk
+		controller.initialise();
+		assertEquals(expectedDefaultRoomIdValue, configuration.getDefaultRoomId());
 	}
 	
 }

@@ -4,7 +4,7 @@ var HipChatAdmin = {
 			parameters : 'edit=1' + 
 			'&apiUrl=' + $('apiUrl').value + 
 			'&apiToken=' + $('apiToken').value +
-			'&roomId=' + $('roomId').value +
+			'&defaultRoomId=' + $('defaultRoomId').value +
 			'&notify=' + $('notify').checked,
 			onComplete : function(transport) {
 				if (transport.responseXML) {
