@@ -42,8 +42,16 @@
 				<td><forms:textField name="apiToken" value="${apiToken}" /></td>
 			</tr>
 			<tr>
-				<th><label for="defaultRoomId">Room ID: <l:star /></label></th>
-				<td><forms:textField name="defaultRoomId" value="${defaultRoomId}" /></td>
+				<th><label for="defaultRoomId">Room: <l:star /></label></th>
+				<td>
+				  <forms:select name="defaultRoomId">
+                    <c:forEach var="roomIdEntry" items="${roomIdList}">
+                      <forms:option value="${roomIdEntry.value}" selected="${roomIdEntry.value == defaultRoomId}">
+                        <c:out value="${roomIdEntry.key}"/>
+                      </forms:option>
+                    </c:forEach>
+                  </forms:select>
+                </td>
 			</tr>
 			<tr>
 				<th><label for="notify">Trigger notifications: </label></th>

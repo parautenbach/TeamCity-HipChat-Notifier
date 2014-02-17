@@ -5,6 +5,6 @@
   <bean id="hipChatConfiguration" class="com.whatsthatlight.teamcity.hipchat.HipChatConfiguration"/>
   <bean id="hipChatConfigurationController" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController" init-method="initialise"/>
   <bean id="hipChatAdminPage" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension"/>
-  <bean id="hipChatNotificationProcessor" class="com.whatsthatlight.teamcity.hipchat.HipChatNotificationProcessor"/>
+  <bean id="hipChatApiProcessor" class="com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor"/>
   <bean id="hipChatServerExtension" class="com.whatsthatlight.teamcity.hipchat.HipChatServerExtension" init-method="register"/>
 </beans>

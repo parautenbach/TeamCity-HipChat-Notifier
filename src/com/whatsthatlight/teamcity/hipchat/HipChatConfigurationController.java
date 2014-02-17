@@ -50,15 +50,15 @@ public class HipChatConfigurationController extends BaseController {
 			if (request.getParameter(EDIT_PARAMETER) != null) {
 				String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
 				String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
-				String roomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
+				String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
 				String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
 				logger.debug(String.format("API URL: %s", apiUrl));
 				logger.debug(String.format("API token: %s", apiToken));
-				logger.debug(String.format("Room ID: %s", roomId));
+				logger.debug(String.format("Default room ID: %s", defaultRoomId));
 				logger.debug(String.format("Trigger notification: %s", notify));
 				this.configuration.setApiUrl(apiUrl);
 				this.configuration.setApiToken(apiToken);
-				this.configuration.setDefaultRoomId(roomId);
+				this.configuration.setDefaultRoomId(defaultRoomId);
 				this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
 				this.getOrCreateMessages(request).addMessage("configurationSaved", "Saved");
 			}

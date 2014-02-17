@@ -17,12 +17,12 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private SBuildServer server;
 	private HipChatConfiguration configuration;
-	private HipChatNotificationProcessor processor;
+	private HipChatApiProcessor processor;
 	private static Random rng = new Random();
 	private String messageFormat;
 	private HashMap<TeamCityEvent, HipChatMessageBundle> eventMap;
 
-	public HipChatServerExtension(@NotNull SBuildServer server, @NotNull HipChatConfiguration configuration, @NotNull HipChatNotificationProcessor processor) {
+	public HipChatServerExtension(@NotNull SBuildServer server, @NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor) {
 		this.server = server;
 		this.configuration = configuration;
 		this.processor = processor;
@@ -100,7 +100,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		String colour = bundle.getColour();
 		String message = bundle.getTemplate();
 		HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, notify);
-		this.processor.process(notification);
+		this.processor.sendNotification(notification);
 	}
 	
 	private void processBuildEvent(SRunningBuild build, TeamCityEvent event) {
@@ -112,7 +112,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 				String colour = getBuildEventMessageColour(event);
 				boolean notify = this.configuration.getNotifyStatus();
 				HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, notify);
-				this.processor.process(notification);
+				this.processor.sendNotification(notification);
 			}
 		} catch (Exception e) {
 			logger.error("Could not process build event", e);

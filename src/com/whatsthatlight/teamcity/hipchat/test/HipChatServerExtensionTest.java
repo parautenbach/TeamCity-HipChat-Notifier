@@ -21,7 +21,7 @@ import org.junit.Test;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageColour;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageFormat;
-import com.whatsthatlight.teamcity.hipchat.HipChatNotificationProcessor;
+import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatRoomNotification;
 import com.whatsthatlight.teamcity.hipchat.HipChatServerExtension;
 
@@ -333,7 +333,7 @@ public class HipChatServerExtensionTest {
 		configuration.setNotifyStatus(true);
 
 		// Mocks and other dependencies
-		HipChatNotificationProcessor processor = new HipChatNotificationProcessor(configuration);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
@@ -358,7 +358,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildType()).thenReturn(buildType);
 		when(build.isPersonal()).thenReturn(false);
 		SBuildServer server = null;
-		HipChatNotificationProcessor processor = new HipChatNotificationProcessor(configuration);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
@@ -392,7 +392,7 @@ public class HipChatServerExtensionTest {
 		Status status = Status.NORMAL;
 		when(build.getBuildStatus()).thenReturn(status);
 		SBuildServer server = null;
-		HipChatNotificationProcessor processor = new HipChatNotificationProcessor(configuration);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
@@ -425,7 +425,7 @@ public class HipChatServerExtensionTest {
 		Status status = Status.FAILURE;
 		when(build.getBuildStatus()).thenReturn(status);
 		SBuildServer server = null;
-		HipChatNotificationProcessor processor = new HipChatNotificationProcessor(configuration);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
@@ -465,7 +465,7 @@ public class HipChatServerExtensionTest {
 		when(userModel.findUserById(0)).thenReturn(user);
 		SBuildServer server = mock(SBuildServer.class);
 		when(server.getUserModel()).thenReturn(userModel);
-		HipChatNotificationProcessor processor = new HipChatNotificationProcessor(configuration);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
@@ -496,7 +496,7 @@ public class HipChatServerExtensionTest {
 		}
 	};
 	
-	private class MockHipChatNotificationProcessor extends HipChatNotificationProcessor {
+	private class MockHipChatNotificationProcessor extends HipChatApiProcessor {
 
 		private Callback callback;
 		private final Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
@@ -511,7 +511,7 @@ public class HipChatServerExtensionTest {
 		}
 		
 		@Override
-		public void process(HipChatRoomNotification notification) {
+		public void sendNotification(HipChatRoomNotification notification) {
 			try {
 				this.callback.invoke(notification);
 			} catch (Exception e) {
