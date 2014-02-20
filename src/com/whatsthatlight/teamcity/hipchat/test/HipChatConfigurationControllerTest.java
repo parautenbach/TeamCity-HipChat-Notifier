@@ -197,6 +197,7 @@ public class HipChatConfigurationControllerTest {
 		String expectedConfigDir = ".";
 		String expectedConfigFileName = "hipchat.xml";
 		// @formatter:off
+		// roomId is the legacy key
 		String v0dot1ConfigurationText = "<hipchat>\n" + 
 								   "  <apiToken>token</apiToken>\n" + 
 								   "  <apiUrl>https://api.hipchat.com/v2/</apiUrl>\n" + 
