@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="lib/mockito-1.9.0/mockito-all-1.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.2/junit-4.11.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-1.9.11/jackson-all-1.9.11.jar"/>
-        <classpathentry kind="lib" path="lib/stringtemplate-4.0.7/stringtemplate-4.0.7.jar"/>
+	<classpathentry kind="lib" path="lib/stringtemplate-4.0.7/stringtemplate-4.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-4.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpcore-4.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/commons-codec-1.6.jar"/>
@@ -28,5 +28,7 @@
 	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/server-common-api.jar"/>
 	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/xpp3-1.1.4c.jar"/>
 	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/xstream-1.4.1.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/jstl.jar"/>
+	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/standard.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,6 +1,4 @@
 <%@ include file="/include.jsp"%>
-<%@ taglib prefix="bs" tagdir="/WEB-INF/tags"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:url value="/configureHipChat.html" var="actionUrl" />
 
@@ -12,7 +10,6 @@
     ${teamcityPluginResourcesPath}js/hipChatAdmin.js
 </bs:linkScript>
 
-<bs:refreshable containerId="hipChatComponent" pageUrl="${pageUrl}">
 <form action="${actionUrl}" id="hipChatForm" method="post"
 	onsubmit="return HipChatAdmin.save()">
 	<div class="editNotificatorSettingsPage">
@@ -67,7 +64,6 @@
 		</div>
 	</div>
 </form>
-</bs:refreshable>
 
 <script type="text/javascript">
 	(function($) {
@@ -76,6 +72,7 @@
 					function() {
 						BS.reload(true);
 					});
+			$('hipChatComponent').refresh();
 			return false;
 		};
 

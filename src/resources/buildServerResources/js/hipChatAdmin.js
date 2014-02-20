@@ -15,7 +15,7 @@ var HipChatAdmin = {
 					});
 				}
 
-				$('hipChatComponent').refresh();
+				BS.reload(true);
 			}
 		});
 		return false;
