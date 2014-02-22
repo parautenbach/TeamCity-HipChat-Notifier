@@ -11,6 +11,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -27,6 +28,7 @@ import org.jdom.input.SAXBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController;
 
@@ -39,7 +41,7 @@ public class HipChatConfigurationControllerTest {
 	}
 
 	@Test
-	public void testConfigurationFileGetsCreatedWhenNoneExists() throws IOException, JDOMException, ParserConfigurationException, TransformerException {
+	public void testConfigurationFileGetsCreatedWhenNoneExists() throws IOException, JDOMException, ParserConfigurationException, TransformerException, URISyntaxException {
 		// Test parameters
 		String expectedFileName = "hipchat.xml";
 		String expectedApiUrlKey = "apiUrl";
@@ -74,7 +76,8 @@ public class HipChatConfigurationControllerTest {
 
 		// Execute
 		// The config file must exist on disk after initialisation
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);		
 		controller.initialise();
 		File postRegistrationConfigFile = new File(expectedFileName);
 		assertTrue(postRegistrationConfigFile.exists());
@@ -123,7 +126,7 @@ public class HipChatConfigurationControllerTest {
 	}
 
 	@Test
-	public void testConfigurationGetsReadCorrectlyFromFileUponInitialisation() throws IOException, JDOMException {
+	public void testConfigurationGetsReadCorrectlyFromFileUponInitialisation() throws IOException, JDOMException, URISyntaxException {
 		// Test parameters
 		String expectedFileName = "hipchat.xml";
 		String expectedApiUrlKey = "apiUrl";
@@ -169,7 +172,8 @@ public class HipChatConfigurationControllerTest {
 		// The config file must must not have been overwritten on disk after
 		// initialisation
 		HipChatConfiguration configuration = new HipChatConfiguration();
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
 		controller.initialise();
 		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
 		SAXBuilder builder = new SAXBuilder();
@@ -190,7 +194,7 @@ public class HipChatConfigurationControllerTest {
 	}
 
 	@Test
-	public void testConfigurationGetsUpgradedFromV0dot1toV0dot2() throws IOException, JDOMException {
+	public void testConfigurationGetsUpgradedFromV0dot1toV0dot2() throws IOException, JDOMException, URISyntaxException {
 		// Test parameters
 		String expectedDefaultRoomIdKey = "defaultRoomId";
 		String expectedDefaultRoomIdValue = "12345";
@@ -228,7 +232,8 @@ public class HipChatConfigurationControllerTest {
 		
 		// After initialisation, the config must've been upgraded
 		HipChatConfiguration configuration = new HipChatConfiguration();
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
 		controller.initialise();
 				
 		// Test XML was upgraded
@@ -244,5 +249,7 @@ public class HipChatConfigurationControllerTest {
 		controller.initialise();
 		assertEquals(expectedDefaultRoomIdValue, configuration.getDefaultRoomId());
 	}
+	
+	// TODO: Test connection
 	
 }

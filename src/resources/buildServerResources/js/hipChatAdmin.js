@@ -14,10 +14,27 @@ var HipChatAdmin = {
 						}
 					});
 				}
-
 				BS.reload(true);
 			}
 		});
+		return false;
+	},
+	
+	testConnection : function() {
+		jQuery.ajax(
+				{
+					url: $('hipChatForm').action, 
+					data: {
+							test: 1, 
+							apiUrl: $('apiUrl').value,
+							apiToken: $('apiToken').value
+						  },
+					type: 'GET'
+				}).done(function() {
+					alert('Connection successful!');
+				}).fail(function() {
+					alert('Connection failed!')
+				});
 		return false;
 	}
 };

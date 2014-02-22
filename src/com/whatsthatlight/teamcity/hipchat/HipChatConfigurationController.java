@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import org.apache.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,17 +29,20 @@ public class HipChatConfigurationController extends BaseController {
 	private static final String ACTION_PARAMETER = "action";
 	private static final String CONTROLLER_PATH = "/configureHipChat.html";
 	private static final String EDIT_PARAMETER = "edit";
+	private static final String TEST_PARAMETER = "test";
 	private static final String HIPCHAT_CONFIG_FILE = "hipchat.xml";
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private String configFilePath;
 
 	private HipChatConfiguration configuration;
+	private HipChatApiProcessor processor;
 
 	public HipChatConfigurationController(@NotNull SBuildServer server, @NotNull ServerPaths serverPaths, @NotNull WebControllerManager manager,
-			@NotNull HipChatConfiguration configuration) throws IOException {
+			@NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor) throws IOException {
 		manager.registerController(CONTROLLER_PATH, this);
 		this.configuration = configuration;
 		this.configFilePath = (new File(serverPaths.getConfigDir(), HIPCHAT_CONFIG_FILE)).getCanonicalPath();
+		this.processor = processor;
 		logger.debug(String.format("Config file path: %s", this.configFilePath));
 		logger.info("Controller created");
 	}
@@ -46,8 +50,9 @@ public class HipChatConfigurationController extends BaseController {
 	@Override
 	protected ModelAndView doHandle(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			logger.debug("Handling configuration change");
+			logger.debug("Handling request");
 			if (request.getParameter(EDIT_PARAMETER) != null) {
+				logger.debug("Changing configuration");
 				String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
 				String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
 				String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
@@ -61,15 +66,34 @@ public class HipChatConfigurationController extends BaseController {
 				this.configuration.setDefaultRoomId(defaultRoomId);
 				this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
 				this.getOrCreateMessages(request).addMessage("configurationSaved", "Saved");
+				this.saveConfiguration();
 			}
 
+			if (request.getParameter(TEST_PARAMETER) != null) {
+				logger.debug("Testing authentication");
+				String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
+				String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
+				logger.debug(String.format("API URL: %s", apiUrl));
+				logger.debug(String.format("API token: %s", apiToken));
+				this.configuration.setApiUrl(apiUrl);
+				this.configuration.setApiToken(apiToken);
+				boolean result = this.processor.testAuthentication();
+				logger.debug(String.format("Authentication status: %s", result));
+				if (result) {
+					response.setStatus(HttpStatus.SC_OK);
+				} else {
+					response.setStatus(HttpStatus.SC_BAD_REQUEST);
+				}
+			}
+			
 			if (request.getParameter(ACTION_PARAMETER) != null) {
+				logger.debug("Changing status");
 				Boolean disabled = !request.getParameter(ACTION_PARAMETER).equals(ACTION_ENABLE);
 				logger.debug(String.format("Disabled status: %s", disabled));
 				this.configuration.setDisabledStatus(disabled);
+				this.saveConfiguration();
 			}
-
-			this.saveConfiguration();
+			
 		} catch (Exception e) {
 			logger.error("Could not handle request", e);
 		}

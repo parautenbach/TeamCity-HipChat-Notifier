@@ -81,4 +81,25 @@ public class HipChatApiProcessor {
 		}
 	}
 	
+	public boolean testAuthentication() {
+		try {
+			String resource = String.format("room?auth_token=%s&auth_test=true", this.configuration.getApiToken());
+			URI uri = new URI(String.format("%s%s", this.configuration.getApiUrl(), resource));
+
+			// Make request
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpGet getRequest = new HttpGet(uri.toString());
+			HttpResponse postResponse = client.execute(getRequest);
+			StatusLine status = postResponse.getStatusLine();
+			if (status.getStatusCode() != HttpStatus.SC_ACCEPTED) {
+				logger.error(String.format("Authentication failed: %s %s", status.getStatusCode(), status.getReasonPhrase()));
+				return false;
+			}
+		} catch (Exception e) {
+			logger.error("Request failed", e);
+		}
+		
+		return true;
+	}
+	
 }

@@ -1,5 +1,7 @@
 package com.whatsthatlight.teamcity.hipchat.test;
 
+import static org.junit.Assert.*;
+
 import java.net.URISyntaxException;
 
 import org.apache.log4j.BasicConfigurator;
@@ -39,4 +41,20 @@ public class HipChatApiProcessorTest {
 		}
 	}
 
+	@Test
+	@Ignore
+	public void testTestAuthentication() throws URISyntaxException {
+		
+		String apiUrl = "https://api.hipchat.com/v2/";
+		String apiToken = "token";
+		
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+		
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		
+		assertTrue(processor.testAuthentication());
+	}
+	
 }

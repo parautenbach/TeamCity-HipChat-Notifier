@@ -58,8 +58,7 @@
 		<div class="saveButtonsBlock">
 			<forms:submit label="Save" />
 			<!-- TODO: Test API connection -->
-			<!-- <forms:submit id="testConnection" type="button"
-					label="Test connection" /> -->
+			<forms:submit id="testConnection" type="button"	label="Test connection" onclick="return HipChatAdmin.testConnection()"/>
 			<forms:saving />
 		</div>
 	</div>
