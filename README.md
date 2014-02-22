@@ -25,11 +25,22 @@ Clone the repository and set the `teamcity.home` property in the `build.xml` to 
 
 For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's root to `conf/teamcity-server-log4j.xml` and then monitor `logs/hipchat-notifier.log `.
 
-# Improvements
+# Future Improvements
 
 * Add a link to the build in the notification.
 * List contributors in build started notification message.
-* A button on the configuration page to test the API credentials.
 * Configurable notification message templates, with their colours and emoticon sets. 
 * Implement more events with per-event configuration of events.  
 * Use @ mentions to send guaranteed messages to persons that have contributed to a failed build. 
+
+# Changelog
+
+## Version 0.1.0
+
+* First release.
+
+## Version 0.2.0 
+
+* Instead of entering a room ID, it can now be selected from a dropdown list of available rooms.
+* Added a button on the configuration page to test the API credentials.
+* Fixed UI bug where disabling the plugin after saving settings didn't respond.
