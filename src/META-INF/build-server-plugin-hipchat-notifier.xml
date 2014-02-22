@@ -7,4 +7,5 @@
   <bean id="hipChatAdminPage" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension"/>
   <bean id="hipChatApiProcessor" class="com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor"/>
   <bean id="hipChatServerExtension" class="com.whatsthatlight.teamcity.hipchat.HipChatServerExtension" init-method="register"/>
+  <bean id="hipChatProjectTab" class="com.whatsthatlight.teamcity.hipchat.HipChatProjectTab"/>
 </beans>

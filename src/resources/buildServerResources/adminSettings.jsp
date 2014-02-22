@@ -39,9 +39,10 @@
 				<td><forms:textField name="apiToken" value="${apiToken}" /></td>
 			</tr>
 			<tr>
-				<th><label for="defaultRoomId">Room: <l:star /></label></th>
+				<th><label for="defaultRoomId">Default room: </label></th>
 				<td>
 				  <forms:select name="defaultRoomId">
+				  	<forms:option value="">(None)</forms:option>
                     <c:forEach var="roomIdEntry" items="${roomIdList}">
                       <forms:option value="${roomIdEntry.value}" selected="${roomIdEntry.value == defaultRoomId}">
                         <c:out value="${roomIdEntry.key}"/>
@@ -57,7 +58,6 @@
 		</table>
 		<div class="saveButtonsBlock">
 			<forms:submit label="Save" />
-			<!-- TODO: Test API connection -->
 			<forms:submit id="testConnection" type="button"	label="Test connection" onclick="return HipChatAdmin.testConnection()"/>
 			<forms:saving />
 		</div>

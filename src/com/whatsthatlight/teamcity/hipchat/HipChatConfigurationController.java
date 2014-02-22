@@ -30,6 +30,7 @@ public class HipChatConfigurationController extends BaseController {
 	private static final String CONTROLLER_PATH = "/configureHipChat.html";
 	private static final String EDIT_PARAMETER = "edit";
 	private static final String TEST_PARAMETER = "test";
+	private static final String PROJECT_PARAMETER = "project";
 	private static final String HIPCHAT_CONFIG_FILE = "hipchat.xml";
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private String configFilePath;
@@ -51,6 +52,19 @@ public class HipChatConfigurationController extends BaseController {
 	protected ModelAndView doHandle(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			logger.debug("Handling request");
+			
+			if (request.getParameter(PROJECT_PARAMETER) != null) {
+				logger.debug("Changing project configuration");
+				// TODO: Project, etc.
+				String roomId = request.getParameter(HipChatConfiguration.ROOM_ID_KEY);
+				String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
+				String projectId = request.getParameter("projectId");
+				logger.debug(String.format("Room ID: %s", roomId));
+				logger.debug(String.format("Trigger notification: %s", notify));
+				logger.debug(String.format("Project ID: %s", projectId));
+				// TODO: Complete
+			}
+			
 			if (request.getParameter(EDIT_PARAMETER) != null) {
 				logger.debug("Changing configuration");
 				String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
@@ -63,7 +77,7 @@ public class HipChatConfigurationController extends BaseController {
 				logger.debug(String.format("Trigger notification: %s", notify));
 				this.configuration.setApiUrl(apiUrl);
 				this.configuration.setApiToken(apiToken);
-				this.configuration.setDefaultRoomId(defaultRoomId);
+				this.configuration.setDefaultRoomId(defaultRoomId == "" ? null : defaultRoomId);
 				this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
 				this.getOrCreateMessages(request).addMessage("configurationSaved", "Saved");
 				this.saveConfiguration();

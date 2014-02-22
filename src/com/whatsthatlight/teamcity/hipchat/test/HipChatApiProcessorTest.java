@@ -23,6 +23,24 @@ public class HipChatApiProcessorTest {
 	}
 	
 	@Test
+	public void testGetRoomsReturnsEmptyInCaseOfFailure() throws URISyntaxException {
+		
+		String apiUrl = "https://api.hipchat.com/v2/";
+		String apiToken = "invalid_token";
+		
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+		
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		
+		HipChatRooms rooms = processor.getRooms();
+		assertNotNull(rooms);
+		assertNotNull(rooms.items);
+		assertEquals(0, rooms.items.size());
+	}
+	
+	@Test
 	@Ignore
 	public void testGetRooms() throws URISyntaxException {
 		

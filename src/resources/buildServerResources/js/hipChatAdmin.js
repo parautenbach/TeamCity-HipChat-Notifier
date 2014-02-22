@@ -1,3 +1,25 @@
+var HipChatProject = {
+	save : function() {
+		BS.ajaxRequest($('hipChatProjectForm').action, {
+			parameters : 'project=1' + 
+			'&roomId=' + $('roomId').value +
+			'&notify=' + $('notify').checked + 
+			'&projectId=' + $('projectId').value,
+			onComplete : function(transport) {
+				if (transport.responseXML) {
+					BS.XMLResponse.processErrors(transport.responseXML, {
+						onProfilerProblemError : function(elem) {
+							alert(elem.firstChild.nodeValue);
+						}
+					});
+				}
+				BS.reload(true);
+			}
+		});
+		return false;
+	}
+};
+
 var HipChatAdmin = {
 	save : function() {
 		BS.ajaxRequest($('hipChatForm').action, {

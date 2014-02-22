@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -42,20 +44,22 @@ public class HipChatApiProcessor {
 			StatusLine status = getResponse.getStatusLine();
 			if (status.getStatusCode() != HttpStatus.SC_OK) {
 				logger.error(String.format("Could not retrieve rooms: %s %s", status.getStatusCode(), status.getReasonPhrase()));
+				return new HipChatRooms(new ArrayList<HipChatRoom>(), 0, 0, null);
 			}
 			
 			Reader reader = new InputStreamReader(getResponse.getEntity().getContent());		
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.readValue(reader, HipChatRooms.class);
 		} catch (Exception e) {
-			logger.error("Could not post room notification", e);
+			logger.error("Could not get rooms", e);
 		}
 		
-		return null;
+		return new HipChatRooms(new ArrayList<HipChatRoom>(), 0, 0, null);
 	}
 	
 	public void sendNotification(HipChatRoomNotification notification) {
 		try {
+			// TODO: Skip if no default room ID, else get project's room ID, else default room ID
 			String resource = String.format("room/%s/notification", this.configuration.getDefaultRoomId());
 			URI uri = new URI(String.format("%s%s", this.configuration.getApiUrl(), resource));
 			String authorisationHeader = String.format("Bearer %s", this.configuration.getApiToken());

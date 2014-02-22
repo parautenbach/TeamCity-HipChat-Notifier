@@ -11,6 +11,7 @@ public class HipChatConfiguration {
 	public static final String NOTIFY_STATUS_KEY = "notify";
 	public static final String DEFAULT_ROOM_ID_KEY = "defaultRoomId";
 	public static final String DEFAULT_ROOM_ID_KEY_V0DOT1 = "roomId";
+	public static final String ROOM_ID_KEY = "roomId";
 
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;

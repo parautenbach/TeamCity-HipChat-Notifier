@@ -59,6 +59,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		logger.debug("Configuration page variables populated");
 	}
 
+	// TODO: Refactor
 	private TreeMap<String, String> getRooms() {
 		TreeMap<String, String> map = new TreeMap<String, String>();
 		for (HipChatRoom room : this.processor.getRooms().items) {
