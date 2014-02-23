@@ -19,8 +19,8 @@
 				<th><label for="roomId">Room: </label></th>
 				<td>
 				  <forms:select name="roomId">
-				  	<forms:option value="">(None)</forms:option>
-				  	<forms:option value="default">Default</forms:option>
+				  	<forms:option value="none" selected="${'none' == roomId}">(None)</forms:option>
+				  	<forms:option value="default" selected="${'default' == roomId}">Default</forms:option>
                     <c:forEach var="roomIdEntry" items="${roomIdList}">
                       <forms:option value="${roomIdEntry.value}" selected="${roomIdEntry.value == roomId}">
                         <c:out value="${roomIdEntry.key}"/>

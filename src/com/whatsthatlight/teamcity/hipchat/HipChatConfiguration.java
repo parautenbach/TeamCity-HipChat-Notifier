@@ -16,6 +16,8 @@ public class HipChatConfiguration {
 	public static final String ROOM_ID_KEY = "roomId";
 	public static final String PROJECT_ID_KEY = "projectId";
 	public static final String PROJECT_ROOM = "projectRoom";
+	public static final String ROOM_ID_NONE = "none";
+	public static final String ROOM_ID_DEFAULT = "default";
 
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;

@@ -1,6 +1,7 @@
 package com.whatsthatlight.teamcity.hipchat;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,11 +37,20 @@ public class HipChatProjectTab extends ProjectTab {
 
 	@Override
 	protected void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request, @NotNull SProject project, @NotNull SUser user) {
-		//super.fillModel(model, request);
-		// TODO: Complete
-		model.put("projectId", project.getProjectId());
-		model.put(ROOM_ID_LIST, Utils.getRooms(this.processor));
-		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, true);
+		// Do we need this? It seems to create an infinite loop and a stack overflow: super.fillModel(model, request);
+		String projectId = project.getProjectId();
+		model.put(HipChatConfiguration.PROJECT_ID_KEY, projectId);
+		TreeMap<String, String> rooms = Utils.getRooms(this.processor);
+		model.put(ROOM_ID_LIST, rooms);
+		String roomId = this.configuration.getDefaultRoomId();
+		boolean notify = this.configuration.getNotifyStatus();
+		HipChatProjectConfiguration projectConfiguration = this.configuration.getProjectConfiguration(projectId);
+		if (projectConfiguration != null) {
+			roomId = projectConfiguration.getRoomId();
+			notify = projectConfiguration.getNotifyStatus();
+		}
+		model.put(HipChatConfiguration.ROOM_ID_KEY, roomId);
+		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, notify);
 		logger.debug("Configuration page variables populated");
 	}
 

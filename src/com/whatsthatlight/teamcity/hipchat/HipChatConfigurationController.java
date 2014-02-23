@@ -40,10 +40,12 @@ public class HipChatConfigurationController extends BaseController {
 	private static final Object ACTION_ENABLE = "enable";
 	private static final String ACTION_PARAMETER = "action";
 	private static final String CONTROLLER_PATH = "/configureHipChat.html";
-	private static final String EDIT_PARAMETER = "edit";
+	public static final String EDIT_PARAMETER = "edit";
 	private static final String TEST_PARAMETER = "test";
 	private static final String PROJECT_PARAMETER = "project";
 	private static final String HIPCHAT_CONFIG_FILE = "hipchat.xml";
+	private static final String SAVED_ID = "configurationSaved";
+	private static final String SAVED_MESSAGE = "Saved";
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private String configFilePath;
 
@@ -60,65 +62,77 @@ public class HipChatConfigurationController extends BaseController {
 		logger.info("Controller created");
 	}
 
+	private void handleProjectConfigurationChange(HttpServletRequest request) throws IOException {
+		logger.debug("Changing project configuration");
+		String roomId = request.getParameter(HipChatConfiguration.ROOM_ID_KEY);
+		boolean notify = Boolean.parseBoolean(request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY));
+		String projectId = request.getParameter("projectId");
+		logger.debug(String.format("Room ID: %s", roomId));
+		logger.debug(String.format("Trigger notification: %s", notify));
+		logger.debug(String.format("Project ID: %s", projectId));
+		HipChatProjectConfiguration projectConfiguration = new HipChatProjectConfiguration(projectId, roomId, notify);
+		this.configuration.setProjectConfiguration(projectConfiguration);
+		this.getOrCreateMessages(request).addMessage(SAVED_ID, SAVED_MESSAGE);
+		this.saveConfiguration();
+	}
+	
+	private void handleConfigurationChange(HttpServletRequest request) throws IOException {
+		logger.debug("Changing configuration");
+		String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
+		String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
+		String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
+		String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
+		logger.debug(String.format("API URL: %s", apiUrl));
+		logger.debug(String.format("API token: %s", apiToken));
+		logger.debug(String.format("Default room ID: %s", defaultRoomId));
+		logger.debug(String.format("Trigger notification: %s", notify));
+		this.configuration.setApiUrl(apiUrl);
+		this.configuration.setApiToken(apiToken);
+		this.configuration.setDefaultRoomId(defaultRoomId == "" ? null : defaultRoomId);
+		this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
+		this.getOrCreateMessages(request).addMessage(SAVED_ID, SAVED_MESSAGE);
+		this.saveConfiguration();
+	}
+	
+	private void handleTestConnection(HttpServletRequest request, HttpServletResponse response) {
+		logger.debug("Testing authentication");
+		String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
+		String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
+		logger.debug(String.format("API URL: %s", apiUrl));
+		logger.debug(String.format("API token: %s", apiToken));
+		this.configuration.setApiUrl(apiUrl);
+		this.configuration.setApiToken(apiToken);
+		boolean result = this.processor.testAuthentication();
+		logger.debug(String.format("Authentication status: %s", result));
+		if (result) {
+			response.setStatus(HttpStatus.SC_OK);
+		} else {
+			response.setStatus(HttpStatus.SC_BAD_REQUEST);
+		}
+	}
+	
+	private void handlePluginStatusChange(HttpServletRequest request) throws IOException {
+		logger.debug("Changing status");
+		Boolean disabled = !request.getParameter(ACTION_PARAMETER).equals(ACTION_ENABLE);
+		logger.debug(String.format("Disabled status: %s", disabled));
+		this.configuration.setDisabledStatus(disabled);
+		this.saveConfiguration();
+	}
+	
 	@Override
-	protected ModelAndView doHandle(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView doHandle(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			logger.debug("Handling request");
 			
 			if (request.getParameter(PROJECT_PARAMETER) != null) {
-				logger.debug("Changing project configuration");
-				String roomId = request.getParameter(HipChatConfiguration.ROOM_ID_KEY);
-				String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
-				String projectId = request.getParameter("projectId");
-				logger.debug(String.format("Room ID: %s", roomId));
-				logger.debug(String.format("Trigger notification: %s", notify));
-				logger.debug(String.format("Project ID: %s", projectId));
-				// TODO: Complete
+				this.handleProjectConfigurationChange(request);
+			} else if (request.getParameter(EDIT_PARAMETER) != null) {
+				this.handleConfigurationChange(request);
+			} else if (request.getParameter(TEST_PARAMETER) != null) {
+				this.handleTestConnection(request, response);
+			} else if (request.getParameter(ACTION_PARAMETER) != null) {
+				this.handlePluginStatusChange(request);
 			}
-			
-			if (request.getParameter(EDIT_PARAMETER) != null) {
-				logger.debug("Changing configuration");
-				String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
-				String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
-				String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
-				String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
-				logger.debug(String.format("API URL: %s", apiUrl));
-				logger.debug(String.format("API token: %s", apiToken));
-				logger.debug(String.format("Default room ID: %s", defaultRoomId));
-				logger.debug(String.format("Trigger notification: %s", notify));
-				this.configuration.setApiUrl(apiUrl);
-				this.configuration.setApiToken(apiToken);
-				this.configuration.setDefaultRoomId(defaultRoomId == "" ? null : defaultRoomId);
-				this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
-				this.getOrCreateMessages(request).addMessage("configurationSaved", "Saved");
-				this.saveConfiguration();
-			}
-
-			if (request.getParameter(TEST_PARAMETER) != null) {
-				logger.debug("Testing authentication");
-				String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
-				String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
-				logger.debug(String.format("API URL: %s", apiUrl));
-				logger.debug(String.format("API token: %s", apiToken));
-				this.configuration.setApiUrl(apiUrl);
-				this.configuration.setApiToken(apiToken);
-				boolean result = this.processor.testAuthentication();
-				logger.debug(String.format("Authentication status: %s", result));
-				if (result) {
-					response.setStatus(HttpStatus.SC_OK);
-				} else {
-					response.setStatus(HttpStatus.SC_BAD_REQUEST);
-				}
-			}
-			
-			if (request.getParameter(ACTION_PARAMETER) != null) {
-				logger.debug("Changing status");
-				Boolean disabled = !request.getParameter(ACTION_PARAMETER).equals(ACTION_ENABLE);
-				logger.debug(String.format("Disabled status: %s", disabled));
-				this.configuration.setDisabledStatus(disabled);
-				this.saveConfiguration();
-			}
-			
 		} catch (Exception e) {
 			logger.error("Could not handle request", e);
 		}

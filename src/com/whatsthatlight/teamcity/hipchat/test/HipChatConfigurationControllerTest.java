@@ -13,6 +13,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -387,6 +389,39 @@ public class HipChatConfigurationControllerTest {
 		assertEquals(expectedDefaultRoomIdValue, configuration.getDefaultRoomId());
 	}
 	
-	// TODO: Test connection
-	
+	//@Test
+	public void testHandleConfigurationChange() throws URISyntaxException, IOException {
+		// Test paramters
+		String expectedApiUrl = "http://example.com/";
+		String expectedApiToken = "token";
+		String expectedRoomId = "room1";
+		String expectedNotifyStatus = "true";
+		String expectedConfigDir = ".";
+		
+		// Mocks
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
+		SBuildServer server = mock(SBuildServer.class);
+		WebControllerManager manager = mock(WebControllerManager.class);
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getParameter(HipChatConfigurationController.EDIT_PARAMETER)).thenReturn("1");
+		when(request.getParameter(HipChatConfiguration.API_URL_KEY)).thenReturn(expectedApiUrl);
+		when(request.getParameter(HipChatConfiguration.API_TOKEN_KEY)).thenReturn(expectedApiToken);
+		when(request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY)).thenReturn(expectedRoomId);
+		when(request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY)).thenReturn(expectedNotifyStatus);
+		HttpServletResponse response = mock(HttpServletResponse.class);
+		
+		// Prepare
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		
+		// Execute
+		controller.doHandle(request , response);
+		
+		// Test
+		assertEquals(expectedApiUrl, configuration.getApiUrl());
+		
+	}
+		
 }
