@@ -31,7 +31,10 @@
 			</tr>
 			<tr>
 				<th><label for="notify">Trigger notifications: </label></th>
-				<td><forms:checkbox name="notify" checked="${notify}" value="${notify}"/></td>
+				<td>
+					<forms:checkbox name="notify" checked="${notify}" value="${notify}"/>
+					<span class="smallNote">When checked, a notification for all people in the room will be triggered, taking user preferences into account.</span>
+				</td>
 			</tr>
 		</table>
 		<div class="saveButtonsBlock">

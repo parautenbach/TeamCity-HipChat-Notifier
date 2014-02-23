@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+
 import org.apache.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -143,7 +144,8 @@ public class HipChatConfigurationController extends BaseController {
 	public void loadConfiguration() throws IOException {
 		XStream xstream = new XStream();
 		xstream.setClassLoader(this.configuration.getClass().getClassLoader());
-		xstream.processAnnotations(this.configuration.getClass());
+		xstream.setClassLoader(HipChatProjectConfiguration.class.getClassLoader());
+		xstream.processAnnotations(HipChatConfiguration.class);
 		File file = new File(this.configFilePath);
 		HipChatConfiguration configuration = (HipChatConfiguration) xstream.fromXML(file);
 		
@@ -154,6 +156,12 @@ public class HipChatConfigurationController extends BaseController {
 		this.configuration.setDefaultRoomId(configuration.getDefaultRoomId());
 		this.configuration.setNotifyStatus(configuration.getNotifyStatus());
 		this.configuration.setDisabledStatus(configuration.getDisabledStatus());
+		// TODO: Test
+		if (configuration.getProjectRoomMap() != null) {
+			for (HipChatProjectConfiguration projectConfiguration : configuration.getProjectRoomMap()) {
+				this.configuration.setProjectConfiguration(projectConfiguration);
+			}
+		}
 	}
 
 	public void saveConfiguration() throws IOException {

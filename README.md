@@ -41,6 +41,7 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 
 ## Version 0.2.0 
 
-* Instead of entering a room ID, it can now be selected from a dropdown list of available rooms.
-* Added a button on the configuration page to test the API credentials.
-* Fixed UI bug where disabling the plugin after saving settings didn't respond.
+* Feature: Allow setting different rooms for different projects.
+* Improvement: Instead of entering a room ID, it can now be selected from a dropdown list of available rooms.
+* Improvement: Added a button on the configuration page to test the API credentials.
+* Bug: Fixed UI bug where disabling the plugin after saving settings didn't respond.

@@ -31,6 +31,7 @@ import org.junit.Test;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController;
+import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
 
 public class HipChatConfigurationControllerTest {
 
@@ -40,6 +41,47 @@ public class HipChatConfigurationControllerTest {
 		BasicConfigurator.configure();
 	}
 
+	@Test
+	public void testProjectConfiguration() throws URISyntaxException, IOException {
+		// Test parameters
+		String expectedProjectId1 = "project1";
+		String expectedProjectId2 = "project2";
+		String expectedRoomId1 = "room1";
+		String expectedRoomId2 = "room2";
+		boolean expectedNotify1 = true;
+		boolean expectedNotify2 = false;
+		String expectedConfigDir = ".";
+		
+		// Mocks
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
+		SBuildServer server = mock(SBuildServer.class);
+		WebControllerManager manager = mock(WebControllerManager.class);
+		
+		// Prepare
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setProjectConfiguration(new HipChatProjectConfiguration(expectedProjectId1, expectedRoomId1, expectedNotify1));
+		configuration.setProjectConfiguration(new HipChatProjectConfiguration(expectedProjectId2, expectedRoomId2, expectedNotify2));
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		controller.saveConfiguration();
+		
+		// Execute
+		configuration = new HipChatConfiguration();
+		assertNull(configuration.getProjectConfiguration(expectedProjectId1));
+		assertNull(configuration.getProjectConfiguration(expectedProjectId2));
+		controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		controller.loadConfiguration();
+		
+		// Test
+		HipChatProjectConfiguration projectConfiguration1 = configuration.getProjectConfiguration(expectedProjectId1);
+		assertEquals(expectedRoomId1, projectConfiguration1.getRoomId());
+		assertEquals(expectedNotify1, projectConfiguration1.getNotifyStatus());
+		HipChatProjectConfiguration projectConfiguration2 = configuration.getProjectConfiguration(expectedProjectId2);
+		assertEquals(expectedRoomId2, projectConfiguration2.getRoomId());
+		assertEquals(expectedNotify2, projectConfiguration2.getNotifyStatus());
+	}
+	
 	@Test
 	public void testConfigurationFileGetsCreatedWhenNoneExists() throws IOException, JDOMException, ParserConfigurationException, TransformerException, URISyntaxException {
 		// Test parameters

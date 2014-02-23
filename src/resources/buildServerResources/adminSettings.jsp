@@ -31,12 +31,20 @@
 		<bs:messages key="configurationSaved" />
 		<table class="runnerFormTable">
 			<tr>
-				<th><label for="apiUrl">API URL: <l:star /></label></th>
-				<td><forms:textField name="apiUrl" value="${apiUrl}" /></td>
+				<th>
+					<label for="apiUrl">API URL: <l:star /></label>
+				</th>
+				<td>
+					<forms:textField name="apiUrl" value="${apiUrl}" />
+					<span class="smallNote">This must be the base URL to the <a href="https://www.hipchat.com/docs/apiv2" target="_blank">HipChat version 2 API</a>.</span>
+				</td>
 			</tr>
 			<tr>
 				<th><label for="apiUrl">API token: <l:star /></label></th>
-				<td><forms:textField name="apiToken" value="${apiToken}" /></td>
+				<td>
+					<forms:textField name="apiToken" value="${apiToken}" />
+					<span class="smallNote">A user OAuth token.</span>
+				</td>
 			</tr>
 			<tr>
 				<th><label for="defaultRoomId">Default room: </label></th>
@@ -53,7 +61,10 @@
 			</tr>
 			<tr>
 				<th><label for="notify">Trigger notifications: </label></th>
-				<td><forms:checkbox name="notify" checked="${notify}" value="${notify}"/></td>
+				<td>
+					<forms:checkbox name="notify" checked="${notify}" value="${notify}"/>
+					<span class="smallNote">When checked, a notification for all people in the room will be triggered, taking user preferences into account.</span>
+				</td>
 			</tr>
 		</table>
 		<div class="saveButtonsBlock">

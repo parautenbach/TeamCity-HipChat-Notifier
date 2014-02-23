@@ -1,5 +1,7 @@
 package com.whatsthatlight.teamcity.hipchat;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.thoughtworks.xstream.annotations.*;
 
 @XStreamAlias("hipchat")
@@ -12,6 +14,8 @@ public class HipChatConfiguration {
 	public static final String DEFAULT_ROOM_ID_KEY = "defaultRoomId";
 	public static final String DEFAULT_ROOM_ID_KEY_V0DOT1 = "roomId";
 	public static final String ROOM_ID_KEY = "roomId";
+	public static final String PROJECT_ID_KEY = "projectId";
+	public static final String PROJECT_ROOM = "projectRoom";
 
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;
@@ -27,11 +31,40 @@ public class HipChatConfiguration {
 
 	@XStreamAlias(DEFAULT_ROOM_ID_KEY)
 	private String defaultRoomId;
-
+	
+	@XStreamImplicit
+	private List<HipChatProjectConfiguration> projectRoomMap = new ArrayList<HipChatProjectConfiguration>();
+	
 	public HipChatConfiguration() {
 		// Intentionally left empty
 	}
 
+	public List<HipChatProjectConfiguration> getProjectRoomMap() {
+		return this.projectRoomMap;
+	}
+	
+	public void setProjectConfiguration(HipChatProjectConfiguration newProjectConfiguration) {
+		boolean found = false;
+		for (HipChatProjectConfiguration projectConfiguration : this.projectRoomMap) {
+			if (projectConfiguration.getProjectId().contentEquals(newProjectConfiguration.getProjectId())) {
+				projectConfiguration.setRoomId(newProjectConfiguration.getRoomId());
+				found = true;
+			}
+		}
+		if (!found) {
+			this.projectRoomMap.add(newProjectConfiguration);		
+		}
+	}
+	
+	public HipChatProjectConfiguration getProjectConfiguration(String projectId) {
+		for (HipChatProjectConfiguration projectConfiguration : this.projectRoomMap) {
+			if (projectConfiguration.getProjectId().contentEquals(projectId)) {
+				return projectConfiguration;
+			}
+		}
+		return null;
+	}
+	
 	public String getApiToken() {
 		return this.apiToken;
 	}
@@ -40,11 +73,11 @@ public class HipChatConfiguration {
 		return this.apiUrl;
 	}
 
-	public Boolean getDisabledStatus() {
+	public boolean getDisabledStatus() {
 		return this.disabled;
 	}
 
-	public Boolean getNotifyStatus() {
+	public boolean getNotifyStatus() {
 		return this.notify;
 	}
 
@@ -61,15 +94,16 @@ public class HipChatConfiguration {
 		this.apiUrl = url;
 	}
 
-	public void setDisabledStatus(Boolean status) {
+	public void setDisabledStatus(boolean status) {
 		this.disabled = status;
 	}
 
-	public void setNotifyStatus(Boolean status) {
+	public void setNotifyStatus(boolean status) {
 		this.notify = status;
 	}
 
 	public void setDefaultRoomId(String roomId) {
 		this.defaultRoomId = roomId;
 	}
+	
 }
