@@ -22,7 +22,9 @@ public class HipChatConfigurationTest {
 				
 		// Prepare
 		HipChatConfiguration configuration = new HipChatConfiguration();
+		assertEquals(0, configuration.getProjectRoomMap().size());
 		configuration.setProjectConfiguration(new HipChatProjectConfiguration(expectedProjectId, expectedRoomIdFormer, expectedNotify));
+		assertEquals(1, configuration.getProjectRoomMap().size());
 		HipChatProjectConfiguration projectConfigurationFormer = configuration.getProjectConfiguration(expectedProjectId);
 		assertEquals(expectedRoomIdFormer, projectConfigurationFormer.getRoomId());
 		assertEquals(expectedNotify, projectConfigurationFormer.getNotifyStatus());
@@ -31,6 +33,7 @@ public class HipChatConfigurationTest {
 		configuration.setProjectConfiguration(new HipChatProjectConfiguration(expectedProjectId, expectedRoomIdLatter, expectedNotify));
 		
 		// Test
+		assertEquals(1, configuration.getProjectRoomMap().size());
 		HipChatProjectConfiguration projectConfigurationLatter = configuration.getProjectConfiguration(expectedProjectId);
 		assertEquals(expectedRoomIdLatter, projectConfigurationLatter.getRoomId());
 		assertEquals(expectedNotify, projectConfigurationLatter.getNotifyStatus());

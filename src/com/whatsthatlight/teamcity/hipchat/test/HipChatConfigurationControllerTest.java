@@ -97,6 +97,7 @@ public class HipChatConfigurationControllerTest {
 		Boolean expectedNotifyStatusValue = true;
 		String expectedDisabledStatusKey = "disabled";
 		Boolean expectedDisabledStatusValue = false;
+		String expectedProjectRoomMapKey = "projectRoom";
 		String expectedConfigDir = ".";
 
 		// Mocks
@@ -115,6 +116,7 @@ public class HipChatConfigurationControllerTest {
 		assertNull(configuration.getDefaultRoomId());
 		assertFalse(configuration.getNotifyStatus());
 		assertFalse(configuration.getDisabledStatus());
+		assertEquals(0, configuration.getProjectRoomMap().size());
 
 		// Execute
 		// The config file must exist on disk after initialisation
@@ -133,6 +135,7 @@ public class HipChatConfigurationControllerTest {
 		assertNull(rootElement.getChildText(expectedRoomIdKey));
 		assertFalse(Boolean.parseBoolean(rootElement.getChildText(expectedNotifyStatusKey)));
 		assertFalse(Boolean.parseBoolean(rootElement.getChildText(expectedDisabledStatusKey)));
+		assertNull(rootElement.getChildText(expectedProjectRoomMapKey));
 
 		// And the instance values must still be the defaults
 		assertEquals(expectedApiUrlDefaultValue, configuration.getApiUrl());
@@ -140,6 +143,7 @@ public class HipChatConfigurationControllerTest {
 		assertNull(configuration.getDefaultRoomId());
 		assertFalse(configuration.getNotifyStatus());
 		assertFalse(configuration.getDisabledStatus());
+		assertEquals(0, configuration.getProjectRoomMap().size());
 
 		// Now change and save the configuration
 		configuration.setApiUrl(expectedApiUrlValue);
@@ -158,6 +162,7 @@ public class HipChatConfigurationControllerTest {
 		assertEquals(expectedRoomIdValue, rootElement.getChildText(expectedRoomIdKey));
 		assertEquals(expectedNotifyStatusValue.toString(), rootElement.getChildText(expectedNotifyStatusKey));
 		assertEquals(expectedDisabledStatusValue.toString(), rootElement.getChildText(expectedDisabledStatusKey));
+		assertNull(rootElement.getChildText(expectedProjectRoomMapKey));
 
 		// And also the values in memory
 		assertEquals(expectedApiUrlValue, configuration.getApiUrl());
@@ -165,6 +170,7 @@ public class HipChatConfigurationControllerTest {
 		configuration.setDefaultRoomId(expectedRoomIdValue);
 		configuration.setNotifyStatus(expectedNotifyStatusValue);
 		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
+		assertEquals(0, configuration.getProjectRoomMap().size());
 	}
 
 	@Test
@@ -181,6 +187,7 @@ public class HipChatConfigurationControllerTest {
 		Boolean expectedNotifyStatusValue = true;
 		String expectedDisabledStatusKey = "disabled";
 		Boolean expectedDisabledStatusValue = false;
+		String expectedProjectRoomMapKey = "projectRoom";
 		String expectedConfigDir = ".";
 
 		// Mocks
@@ -226,6 +233,7 @@ public class HipChatConfigurationControllerTest {
 		assertEquals(expectedRoomIdValue, rootElement.getChildText(expectedRoomIdKey));
 		assertEquals(expectedNotifyStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedNotifyStatusKey)));
 		assertEquals(expectedDisabledStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedDisabledStatusKey)));
+		assertNull(rootElement.getChildText(expectedProjectRoomMapKey));
 
 		// Now check the loaded configuration
 		assertEquals(expectedApiUrlValue, configuration.getApiUrl());
@@ -233,6 +241,93 @@ public class HipChatConfigurationControllerTest {
 		assertEquals(expectedRoomIdValue, configuration.getDefaultRoomId());
 		assertEquals(expectedNotifyStatusValue, configuration.getNotifyStatus());
 		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
+		assertEquals(0, configuration.getProjectRoomMap().size());
+	}
+
+	@Test
+	public void testConfigurationWithProjectRoomMapGetsReadCorrectlyFromFileUponInitialisation() throws IOException, JDOMException, URISyntaxException {
+		// Test parameters
+		String expectedFileName = "hipchat.xml";
+		String expectedApiUrlKey = "apiUrl";
+		String expectedApiUrlValue = "http://example.com/";
+		String expectedApiTokenKey = "apiToken";
+		String expectedApiTokenValue = "admin_token";
+		String expectedRoomIdKey = "defaultRoomId";
+		String expectedRoomIdValue = "room_id";
+		String expectedNotifyStatusKey = "notify";
+		Boolean expectedNotifyStatusValue = true;
+		String expectedDisabledStatusKey = "disabled";
+		Boolean expectedDisabledStatusValue = false;
+		String expectedProjectRoomMapKey = "projectRoom";
+		String expectedProjectIdKey = "projectId";
+		String expectedProjectIdValue = "project1";
+		String expectedProjectRoomIdKey = "roomId";
+		String expectedConfigDir = ".";
+
+		// Mocks
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
+		SBuildServer server = mock(SBuildServer.class);
+		WebControllerManager manager = mock(WebControllerManager.class);
+
+		// Pre-conditions
+		// @formatter:off
+		String configFileContent = 
+				"<hipchat>" + 
+				"<apiToken>" + expectedApiTokenValue + "</apiToken>" + 
+				"<apiUrl>" + expectedApiUrlValue + "</apiUrl>" + 
+				"<defaultRoomId>" + expectedRoomIdValue + "</defaultRoomId>" +
+				"<notify>" + expectedNotifyStatusValue + "</notify>" +
+				"<disabled>" + expectedDisabledStatusValue + "</disabled>" + 
+				"<projectRoom>" +
+				  "<projectId>" +  expectedProjectIdValue + "</projectId>" + 
+				  "<roomId>" +  expectedRoomIdValue + "</roomId>" + 
+				  "<notify>" +  expectedNotifyStatusValue + "</notify>" + 
+				"</projectRoom>" +
+				"</hipchat>";
+		// @formatter:on
+		File configFile = new File(expectedConfigDir, expectedFileName);
+		configFile.delete();
+		configFile.createNewFile();
+		assertTrue(configFile.exists());
+		FileWriter fileWriter = new FileWriter(configFile);
+		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+		bufferedWriter.write(configFileContent);
+		bufferedWriter.flush();
+		bufferedWriter.close();
+
+		// Execute
+		// The config file must must not have been overwritten on disk after
+		// initialisation
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		controller.initialise();
+		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
+		SAXBuilder builder = new SAXBuilder();
+		Document document = builder.build(postInitConfigFile);
+		Element rootElement = document.getRootElement();
+		assertEquals(expectedApiUrlValue, rootElement.getChildText(expectedApiUrlKey));
+		assertEquals(expectedApiTokenValue, rootElement.getChildText(expectedApiTokenKey));
+		assertEquals(expectedRoomIdValue, rootElement.getChildText(expectedRoomIdKey));
+		assertEquals(expectedNotifyStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedNotifyStatusKey)));
+		assertEquals(expectedDisabledStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedDisabledStatusKey)));
+		assertTrue(rootElement.getChildText(expectedProjectRoomMapKey) != null);
+		Element projectRoomElement = rootElement.getChild(expectedProjectRoomMapKey);
+		assertEquals(expectedProjectIdValue, projectRoomElement.getChildText(expectedProjectIdKey));
+		assertEquals(expectedRoomIdValue, projectRoomElement.getChildText(expectedProjectRoomIdKey));
+		assertEquals(expectedNotifyStatusValue, Boolean.parseBoolean(projectRoomElement.getChildText(expectedNotifyStatusKey)));
+
+		// Now check the loaded configuration
+		assertEquals(expectedApiUrlValue, configuration.getApiUrl());
+		assertEquals(expectedApiTokenValue, configuration.getApiToken());
+		assertEquals(expectedRoomIdValue, configuration.getDefaultRoomId());
+		assertEquals(expectedNotifyStatusValue, configuration.getNotifyStatus());
+		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
+		assertEquals(1, configuration.getProjectRoomMap().size());
+		HipChatProjectConfiguration projectConfiguration = configuration.getProjectConfiguration(expectedProjectIdValue);
+		assertEquals(expectedRoomIdValue, projectConfiguration.getRoomId());
+		assertEquals(expectedNotifyStatusValue, projectConfiguration.getNotifyStatus());
 	}
 
 	@Test

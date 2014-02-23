@@ -12,6 +12,18 @@ import org.apache.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import jetbrains.buildServer.controllers.BaseController;
 import jetbrains.buildServer.serverSide.SBuildServer;
@@ -21,6 +33,10 @@ import jetbrains.buildServer.web.openapi.WebControllerManager;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.ModelAndView;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -56,7 +72,6 @@ public class HipChatConfigurationController extends BaseController {
 			
 			if (request.getParameter(PROJECT_PARAMETER) != null) {
 				logger.debug("Changing project configuration");
-				// TODO: Project, etc.
 				String roomId = request.getParameter(HipChatConfiguration.ROOM_ID_KEY);
 				String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
 				String projectId = request.getParameter("projectId");
@@ -133,12 +148,25 @@ public class HipChatConfigurationController extends BaseController {
 		logger.info("Controller initialised");
 	}
 
-	private void upgradeConfigurationFromV0dot1ToV0dot2() throws FileNotFoundException {
-		String config = new Scanner(new File(this.configFilePath)).useDelimiter("\\A").next();
-		config = config.replace(HipChatConfiguration.DEFAULT_ROOM_ID_KEY_V0DOT1, HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
-		PrintWriter writer = new PrintWriter(this.configFilePath);
-		writer.print(config);
-		writer.close();
+	private void upgradeConfigurationFromV0dot1ToV0dot2() throws IOException, SAXException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException {
+		File configFile = new File(this.configFilePath);
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.parse(configFile);
+		Element rootElement = document.getDocumentElement();
+		NodeList nodes = rootElement.getChildNodes();
+		for (int i = 0; i < nodes.getLength(); i++) {
+			if (nodes.item(i).getNodeName() == HipChatConfiguration.DEFAULT_ROOM_ID_KEY_V0DOT1 && nodes.item(i) instanceof Element) {
+				Element roomElement = (Element)nodes.item(i);
+				document.renameNode(roomElement, roomElement.getNamespaceURI(), HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
+			}
+		}
+		
+		// Save
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Result output = new StreamResult(configFile);
+		Source input = new DOMSource(document);
+		transformer.transform(input, output);		
 	}
 
 	public void loadConfiguration() throws IOException {
@@ -156,7 +184,6 @@ public class HipChatConfigurationController extends BaseController {
 		this.configuration.setDefaultRoomId(configuration.getDefaultRoomId());
 		this.configuration.setNotifyStatus(configuration.getNotifyStatus());
 		this.configuration.setDisabledStatus(configuration.getDisabledStatus());
-		// TODO: Test
 		if (configuration.getProjectRoomMap() != null) {
 			for (HipChatProjectConfiguration projectConfiguration : configuration.getProjectRoomMap()) {
 				this.configuration.setProjectConfiguration(projectConfiguration);

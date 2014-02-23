@@ -1,7 +1,6 @@
 package com.whatsthatlight.teamcity.hipchat;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,17 +39,9 @@ public class HipChatProjectTab extends ProjectTab {
 		//super.fillModel(model, request);
 		// TODO: Complete
 		model.put("projectId", project.getProjectId());
-		model.put(ROOM_ID_LIST, this.getRooms());
+		model.put(ROOM_ID_LIST, Utils.getRooms(this.processor));
 		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, true);
 		logger.debug("Configuration page variables populated");
 	}
 
-	// TODO: Refactor
-	private TreeMap<String, String> getRooms() {
-		TreeMap<String, String> map = new TreeMap<String, String>();
-		for (HipChatRoom room : this.processor.getRooms().items) {
-			map.put(room.name, room.id);
-		}
-		return map;
-	}
 }
