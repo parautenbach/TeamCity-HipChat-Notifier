@@ -20,7 +20,10 @@
 				<td>
 				  <forms:select name="roomId">
 				  	<forms:option value="none" selected="${'none' == roomId}">(None)</forms:option>
-				  	<forms:option value="default" selected="${'default' == roomId}">Default</forms:option>
+				  	<forms:option value="default" selected="${'default' == roomId}">(Default)</forms:option>
+				  	<c:if test="${!isRootProject}">
+					  	<forms:option value="parent" selected="${'parent' == roomId}">(Parent)</forms:option>
+					</c:if>                    
                     <c:forEach var="roomIdEntry" items="${roomIdList}">
                       <forms:option value="${roomIdEntry.value}" selected="${roomIdEntry.value == roomId}">
                         <c:out value="${roomIdEntry.key}"/>

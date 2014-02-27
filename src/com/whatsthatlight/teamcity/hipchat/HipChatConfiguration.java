@@ -18,6 +18,8 @@ public class HipChatConfiguration {
 	public static final String PROJECT_ROOM = "projectRoom";
 	public static final String ROOM_ID_NONE = "none";
 	public static final String ROOM_ID_DEFAULT = "default";
+	public static final String PARENT_ID_DEFAULT = "parent";
+	public static final String IS_ROOT_PROJECT = "isRootProject";
 
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;
@@ -34,6 +36,7 @@ public class HipChatConfiguration {
 	@XStreamAlias(DEFAULT_ROOM_ID_KEY)
 	private String defaultRoomId;
 	
+	// We use a list for correct serialization. It causes us to perform a linear search when getting or setting, but that's ok. 
 	@XStreamImplicit
 	private List<HipChatProjectConfiguration> projectRoomMap = new ArrayList<HipChatProjectConfiguration>();
 	
@@ -50,6 +53,7 @@ public class HipChatConfiguration {
 		for (HipChatProjectConfiguration projectConfiguration : this.projectRoomMap) {
 			if (projectConfiguration.getProjectId().contentEquals(newProjectConfiguration.getProjectId())) {
 				projectConfiguration.setRoomId(newProjectConfiguration.getRoomId());
+				projectConfiguration.setNotifyStatus(newProjectConfiguration.getNotifyStatus());
 				found = true;
 			}
 		}
@@ -79,7 +83,7 @@ public class HipChatConfiguration {
 		return this.disabled;
 	}
 
-	public boolean getNotifyStatus() {
+	public boolean getDefaultNotifyStatus() {
 		return this.notify;
 	}
 

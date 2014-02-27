@@ -57,10 +57,9 @@ public class HipChatApiProcessor {
 		return new HipChatRooms(new ArrayList<HipChatRoom>(), 0, 0, null);
 	}
 	
-	public void sendNotification(HipChatRoomNotification notification) {
+	public void sendNotification(HipChatRoomNotification notification, String roomId) {
 		try {
-			// TODO: Skip if no default room ID, else get project's room ID, else default room ID
-			String resource = String.format("room/%s/notification", this.configuration.getDefaultRoomId());
+			String resource = String.format("room/%s/notification", roomId);
 			URI uri = new URI(String.format("%s%s", this.configuration.getApiUrl(), resource));
 			String authorisationHeader = String.format("Bearer %s", this.configuration.getApiToken());
 

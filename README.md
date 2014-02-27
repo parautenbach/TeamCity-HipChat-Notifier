@@ -41,7 +41,7 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 
 ## Version 0.2.0 
 
-* Feature: Allow setting different rooms for different projects.
+* Feature: Allow setting different rooms for different projects, and allow to use the default configuration or none, or inherit from the parent project. As a consequence, server up and down events are sent to only the default room, if configured.
 * Improvement: Instead of entering a room ID, it can now be selected from a dropdown list of available rooms.
 * Improvement: Added a button on the configuration page to test the API credentials.
 * Bug: Fixed UI bug where disabling the plugin after saving settings didn't respond.

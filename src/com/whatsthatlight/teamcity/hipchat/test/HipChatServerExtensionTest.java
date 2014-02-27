@@ -54,11 +54,12 @@ public class HipChatServerExtensionTest {
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.INFO;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+		String expectedDefaultRoomId = "room_id";
 
 		// Callback closure
-		final ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, notifications);
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -74,7 +75,8 @@ public class HipChatServerExtensionTest {
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
-
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
 		extension.buildStarted(build);
@@ -83,8 +85,10 @@ public class HipChatServerExtensionTest {
 		}
 		
 		// Test
-		assertEquals(1, notifications.size());
-		HipChatRoomNotification actualNotification = notifications.get(0);
+		assertEquals(1, callbacks.size());
+		CallbackObject callbackObject = callbacks.get(0);
+		HipChatRoomNotification actualNotification = callbackObject.notification;
+		String actualDefaultRoomId = callbackObject.roomId;
 		System.out.println(actualNotification);
 		assertEquals(expectedMessageColour, actualNotification.color);
 		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
@@ -93,6 +97,7 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains(expectedStartMessage));
 		assertTrue(actualNotification.message.contains(expectedBuildNumber));
 		assertTrue(actualNotification.message.contains(expectedTriggerBy));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
 
 	@Test
@@ -106,11 +111,12 @@ public class HipChatServerExtensionTest {
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.SUCCESS;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+		String expectedDefaultRoomId = "room_id";
 
 		// Callback closure
-		final ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, notifications);
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -128,6 +134,7 @@ public class HipChatServerExtensionTest {
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
 
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
@@ -137,8 +144,10 @@ public class HipChatServerExtensionTest {
 		}
 		
 		// Test
-		assertEquals(1, notifications.size());
-		HipChatRoomNotification actualNotification = notifications.get(0);
+		assertEquals(1, callbacks.size());
+		CallbackObject callbackObject = callbacks.get(0);
+		HipChatRoomNotification actualNotification = callbackObject.notification;
+		String actualDefaultRoomId = callbackObject.roomId;
 		System.out.println(actualNotification);
 		assertEquals(expectedMessageColour, actualNotification.color);
 		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
@@ -148,6 +157,7 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains(expectedBuildNumber));
 		assertTrue(actualNotification.message.contains(expectedTriggerBy));
 		assertTrue(actualNotification.message.endsWith(expectedEmoticonEndCharacter));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
 	
 	@Test
@@ -161,11 +171,12 @@ public class HipChatServerExtensionTest {
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.ERROR;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+		String expectedDefaultRoomId = "room_id";
 
 		// Callback closure
-		final ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, notifications);
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -183,6 +194,7 @@ public class HipChatServerExtensionTest {
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
 
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
@@ -192,8 +204,10 @@ public class HipChatServerExtensionTest {
 		}
 		
 		// Test
-		assertEquals(1, notifications.size());
-		HipChatRoomNotification actualNotification = notifications.get(0);
+		assertEquals(1, callbacks.size());
+		CallbackObject callbackObject = callbacks.get(0);
+		HipChatRoomNotification actualNotification = callbackObject.notification;
+		String actualDefaultRoomId = callbackObject.roomId;
 		System.out.println(actualNotification);
 		assertEquals(expectedMessageColour, actualNotification.color);
 		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
@@ -203,6 +217,7 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains(expectedBuildNumber));
 		assertTrue(actualNotification.message.contains(expectedTriggerBy));
 		assertTrue(actualNotification.message.endsWith(expectedEmoticonEndCharacter));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
 
 	@Test
@@ -217,11 +232,12 @@ public class HipChatServerExtensionTest {
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.WARNING;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
-
+		String expectedDefaultRoomId = "room_id";
+		
 		// Callback closure
-		final ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, notifications);
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
 		
 		// Mocks and other dependencies
 		CanceledInfo canceledInfo = mock(CanceledInfo.class);
@@ -246,6 +262,7 @@ public class HipChatServerExtensionTest {
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
 
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
@@ -255,8 +272,10 @@ public class HipChatServerExtensionTest {
 		}
 		
 		// Test
-		assertEquals(1, notifications.size());
-		HipChatRoomNotification actualNotification = notifications.get(0);
+		assertEquals(1, callbacks.size());
+		CallbackObject callbackObject = callbacks.get(0);
+		HipChatRoomNotification actualNotification = callbackObject.notification;
+		String actualDefaultRoomId = callbackObject.roomId;
 		System.out.println(actualNotification);
 		assertEquals(expectedMessageColour, actualNotification.color);
 		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
@@ -266,6 +285,7 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains(expectedBuildNumber));
 		assertTrue(actualNotification.message.contains(expectedTriggeredBy));
 		assertTrue(actualNotification.message.endsWith(expectedEmoticonEndCharacter));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
 
 	@Test
@@ -276,18 +296,22 @@ public class HipChatServerExtensionTest {
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.NEUTRAL;
 		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+		String expectedDefaultRoomId = "room_id";
 
 		// Callback closure
-		final ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, notifications);
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
 		
 		// Mocks and other dependencies, and the extension
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
 		HipChatRoomNotification actualNotification = null;
+		String actualDefaultRoomId = null;
+		CallbackObject callbackObject = null;
 		
 		// Execute start-up
 		extension.serverStartup();
@@ -302,22 +326,28 @@ public class HipChatServerExtensionTest {
 		}
 		
 		// Test start-up
-		assertEquals(2, notifications.size());
+		assertEquals(2, callbacks.size());
 		// Start-up
-		actualNotification = notifications.get(0);
+		callbackObject = callbacks.get(0);
+		actualNotification = callbackObject.notification;
+		actualDefaultRoomId = callbackObject.roomId;
 		System.out.println(actualNotification);
 		assertEquals(expectedMessageColour, actualNotification.color);
 		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
 		assertEquals(expectedNotificationStatus, actualNotification.notify);
 		assertTrue(actualNotification.message.contains(expectedServerStartupMessage));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 
 		// Shutdown
-		actualNotification = notifications.get(1);
+		callbackObject = callbacks.get(1);
+		actualNotification = callbackObject.notification;
+		actualDefaultRoomId = callbackObject.roomId;
 		System.out.println(actualNotification);
 		assertEquals(expectedMessageColour, actualNotification.color);
 		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
 		assertEquals(expectedNotificationStatus, actualNotification.notify);
 		assertTrue(actualNotification.message.contains(expectedServerShutdownMessage));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
 	
 	
@@ -474,22 +504,35 @@ public class HipChatServerExtensionTest {
 	
 	private interface Callback {
 		
-		void invoke(HipChatRoomNotification notification);
+		void invoke(HipChatRoomNotification notification, String roomId);
 
+	}
+	
+	private class CallbackObject {
+		
+		public HipChatRoomNotification notification;
+		public String roomId;
+
+		public CallbackObject(HipChatRoomNotification notification, String roomId) {
+			this.notification = notification;
+			this.roomId = roomId;
+		}
+		
 	}
 	
 	private class HipChatRoomNotificationCallback implements Callback {
 
-		ArrayList<HipChatRoomNotification> notifications = new ArrayList<HipChatRoomNotification>();
-		Object waitObject = new Object();
+		// TODO: Record notify status
+		ArrayList<CallbackObject> callbacks;
+		Object waitObject;
 		
-		public HipChatRoomNotificationCallback(Object waitObject, ArrayList<HipChatRoomNotification> notifications) {
+		public HipChatRoomNotificationCallback(Object waitObject, ArrayList<CallbackObject> callbacks) {
 			this.waitObject = waitObject;
-			this.notifications = notifications;
+			this.callbacks = callbacks;
 		}
 		
-		public void invoke(HipChatRoomNotification notification) {
-			notifications.add(notification);
+		public void invoke(HipChatRoomNotification notification, String roomId) {
+			callbacks.add(new CallbackObject(notification, roomId));
 			synchronized (waitObject) {
 				waitObject.notify();
 			}
@@ -511,9 +554,9 @@ public class HipChatServerExtensionTest {
 		}
 		
 		@Override
-		public void sendNotification(HipChatRoomNotification notification) {
+		public void sendNotification(HipChatRoomNotification notification, String roomId) {
 			try {
-				this.callback.invoke(notification);
+				this.callback.invoke(notification, roomId);
 			} catch (Exception e) {
 				logger.error(e);
 			}

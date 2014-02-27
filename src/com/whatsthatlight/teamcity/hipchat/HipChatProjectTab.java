@@ -42,15 +42,30 @@ public class HipChatProjectTab extends ProjectTab {
 		model.put(HipChatConfiguration.PROJECT_ID_KEY, projectId);
 		TreeMap<String, String> rooms = Utils.getRooms(this.processor);
 		model.put(ROOM_ID_LIST, rooms);
-		String roomId = this.configuration.getDefaultRoomId();
-		boolean notify = this.configuration.getNotifyStatus();
+		String roomId = HipChatConfiguration.ROOM_ID_DEFAULT;
+		boolean notify = this.configuration.getDefaultNotifyStatus();
+		boolean isRootProject = Utils.isRootProject(project);
+		logger.debug(String.format("Default configuration for project ID %s (%s, %s)", projectId, roomId, notify));
+		logger.debug(String.format("Is root project: %s"));
+		
 		HipChatProjectConfiguration projectConfiguration = this.configuration.getProjectConfiguration(projectId);
 		if (projectConfiguration != null) {
 			roomId = projectConfiguration.getRoomId();
 			notify = projectConfiguration.getNotifyStatus();
+			logger.debug(String.format("Found specific configuration for project ID %s (%s, %s)", projectId, roomId, notify));
+		} else if (!isRootProject) {
+			roomId = HipChatConfiguration.PARENT_ID_DEFAULT;
+			HipChatProjectConfiguration parentProjectConfiguration = Utils.findFirstSpecificParentConfiguration(project, configuration);
+			if (parentProjectConfiguration != null) {
+				logger.debug("Found specific configuration in hierarchy");
+				notify = parentProjectConfiguration.getNotifyStatus();
+			}
+			logger.debug(String.format("Traversed hierarchy for project ID %s (%s, %s)", projectId, roomId, notify));
 		}
+		
 		model.put(HipChatConfiguration.ROOM_ID_KEY, roomId);
 		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, notify);
+		model.put(HipChatConfiguration.IS_ROOT_PROJECT, isRootProject);
 		logger.debug("Configuration page variables populated");
 	}
 

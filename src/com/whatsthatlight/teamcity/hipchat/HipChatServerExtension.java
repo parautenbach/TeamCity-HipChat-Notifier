@@ -95,12 +95,15 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	}
 
 	private void processServerEvent(TeamCityEvent event) {
-		boolean notify = this.configuration.getNotifyStatus();
+		boolean notify = this.configuration.getDefaultNotifyStatus();
 		HipChatMessageBundle bundle = this.eventMap.get(event);
 		String colour = bundle.getColour();
 		String message = bundle.getTemplate();
 		HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, notify);
-		this.processor.sendNotification(notification);
+		String roomId = this.configuration.getDefaultRoomId();
+		if (roomId != null) {
+			this.processor.sendNotification(notification, roomId);
+		}
 	}
 	
 	private void processBuildEvent(SRunningBuild build, TeamCityEvent event) {
@@ -110,9 +113,15 @@ public class HipChatServerExtension extends BuildServerAdapter {
 				logger.info("Processing build event");
 				String message = createPlainTextBuildEventMessage(build, event);
 				String colour = getBuildEventMessageColour(event);
-				boolean notify = this.configuration.getNotifyStatus();
+				// TODO: Get specific notify status
+				// TODO: Inherit room ID from parent
+				boolean notify = this.configuration.getDefaultNotifyStatus();
 				HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, notify);
-				this.processor.sendNotification(notification);
+				// TODO: Skip if no default room ID, else get project's room ID, else default room ID
+				String roomId = this.configuration.getDefaultRoomId();
+				if (roomId != null) {
+					this.processor.sendNotification(notification, roomId);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Could not process build event", e);

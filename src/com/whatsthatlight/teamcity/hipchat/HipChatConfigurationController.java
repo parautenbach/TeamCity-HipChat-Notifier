@@ -191,7 +191,7 @@ public class HipChatConfigurationController extends BaseController {
 		this.configuration.setApiUrl(configuration.getApiUrl());
 		this.configuration.setApiToken(configuration.getApiToken());
 		this.configuration.setDefaultRoomId(configuration.getDefaultRoomId());
-		this.configuration.setNotifyStatus(configuration.getNotifyStatus());
+		this.configuration.setNotifyStatus(configuration.getDefaultNotifyStatus());
 		this.configuration.setDisabledStatus(configuration.getDisabledStatus());
 		if (configuration.getProjectRoomMap() != null) {
 			for (HipChatProjectConfiguration projectConfiguration : configuration.getProjectRoomMap()) {
