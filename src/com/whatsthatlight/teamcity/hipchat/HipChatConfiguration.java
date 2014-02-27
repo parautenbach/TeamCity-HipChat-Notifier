@@ -2,6 +2,7 @@ package com.whatsthatlight.teamcity.hipchat;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.thoughtworks.xstream.annotations.*;
 
 @XStreamAlias("hipchat")
@@ -20,6 +21,7 @@ public class HipChatConfiguration {
 	public static final String ROOM_ID_DEFAULT = "default";
 	public static final String PARENT_ID_DEFAULT = "parent";
 	public static final String IS_ROOT_PROJECT = "isRootProject";
+	public static final String ROOT_PROJECT_ID = "_Root";
 
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;

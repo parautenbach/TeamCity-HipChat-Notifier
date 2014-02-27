@@ -8,7 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
+import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuildServer;
+import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.users.SUser;
 
@@ -113,13 +115,15 @@ public class HipChatServerExtension extends BuildServerAdapter {
 				logger.info("Processing build event");
 				String message = createPlainTextBuildEventMessage(build, event);
 				String colour = getBuildEventMessageColour(event);
-				// TODO: Get specific notify status
-				// TODO: Inherit room ID from parent
-				boolean notify = this.configuration.getDefaultNotifyStatus();
-				HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, notify);
-				// TODO: Skip if no default room ID, else get project's room ID, else default room ID
-				String roomId = this.configuration.getDefaultRoomId();
+				ProjectManager projectManager = this.server.getProjectManager();
+				SProject project = projectManager.findProjectById(build.getProjectId());				
+				HipChatProjectConfiguration projectConfiguration = Utils.determineProjectConfiguration(project, configuration);				
+				HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, projectConfiguration.getNotifyStatus());
+				String roomId = projectConfiguration.getRoomId();
 				if (roomId != null) {
+					if (roomId == HipChatConfiguration.ROOM_ID_DEFAULT) {
+						roomId = configuration.getDefaultRoomId();
+					}
 					this.processor.sendNotification(notification, roomId);
 				}
 			}

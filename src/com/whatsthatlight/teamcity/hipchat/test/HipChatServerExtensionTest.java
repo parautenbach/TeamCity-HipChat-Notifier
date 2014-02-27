@@ -4,8 +4,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import jetbrains.buildServer.messages.Status;
+import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SBuildType;
+import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.serverSide.TriggeredBy;
 import jetbrains.buildServer.serverSide.userChanges.CanceledInfo;
@@ -26,8 +28,7 @@ import com.whatsthatlight.teamcity.hipchat.HipChatRoomNotification;
 import com.whatsthatlight.teamcity.hipchat.HipChatServerExtension;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class HipChatServerExtensionTest {
 
@@ -46,6 +47,145 @@ public class HipChatServerExtensionTest {
 
 	@Test
 	public void testBuildStartedEvent() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedStartMessage = "started";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Triggered by: Test User";
+		boolean expectedNotificationStatus = true;
+		String expectedMessageColour = HipChatMessageColour.INFO;
+		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildStarted(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(1, callbacks.size());
+		CallbackObject callbackObject = callbacks.get(0);
+		HipChatRoomNotification actualNotification = callbackObject.notification;
+		String actualDefaultRoomId = callbackObject.roomId;
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedBuildName));
+		assertTrue(actualNotification.message.contains(expectedStartMessage));
+		assertTrue(actualNotification.message.contains(expectedBuildNumber));
+		assertTrue(actualNotification.message.contains(expectedTriggerBy));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
+	}
+
+	@Test
+	public void testBuildStartedEventForSubprojectWithImplicitDefaultConfiguration() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Subproject :: Test Build Configuration";
+		String expectedStartMessage = "started";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Triggered by: Test User";
+		boolean expectedNotificationStatus = true;
+		String expectedMessageColour = HipChatMessageColour.INFO;
+		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+		String expectedDefaultRoomId = "room_id";
+
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		SBuildServer server = null;
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildStarted(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(1, callbacks.size());
+		CallbackObject callbackObject = callbacks.get(0);
+		HipChatRoomNotification actualNotification = callbackObject.notification;
+		String actualDefaultRoomId = callbackObject.roomId;
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedBuildName));
+		assertTrue(actualNotification.message.contains(expectedStartMessage));
+		assertTrue(actualNotification.message.contains(expectedBuildNumber));
+		assertTrue(actualNotification.message.contains(expectedTriggerBy));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
+		
+		fail("Incomplete");
+	}
+	
+	@Test
+	public void testBuildStartedEventForSubprojectWithExplicitDefaultConfiguration() {
+		fail("Incomplete");
+	}
+	
+	@Test
+	public void testBuildStartedEventForSubprojectWithImplicitNoneConfiguration() {
+		fail("Incomplete");
+	}
+
+	@Test
+	public void testBuildStartedEventForSubprojectWithExplicitNoneConfiguration() {
+		fail("Incomplete");
+	}
+
+	@Test
+	public void testBuildStartedEventForSubprojectWithImplicitParentConfiguration() throws URISyntaxException, InterruptedException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedStartMessage = "started";
@@ -100,6 +240,41 @@ public class HipChatServerExtensionTest {
 		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
 
+	@Test
+	public void testBuildStartedEventForSubprojectWithExplicitParentConfiguration() {
+		fail("Incomplete");
+	}
+	
+	@Test
+	public void testBuildStartedEventForSubsubprojectWithImplicitDefaultConfiguration() {
+		fail("Incomplete");
+	}
+	
+	@Test
+	public void testBuildStartedEventForSubsubprojectWithExplicitDefaultConfiguration() {
+		fail("Incomplete");
+	}
+	
+	@Test
+	public void testBuildStartedEventForSubsubprojectWithImplicitParentConfiguration() {
+		fail("Incomplete");
+	}
+	
+	@Test
+	public void testBuildStartedEventForSubsubprojectWithExplicitParentConfiguration() {
+		fail("Incomplete");
+	}
+	
+	@Test
+	public void testBuildStartedEventForSubsubprojectWithImplicitNoneConfiguration() {
+		fail("Incomplete");
+	}
+	
+	@Test
+	public void testBuildStartedEventForSubsubprojectWithExplicitNoneConfiguration() {
+		fail("Incomplete");
+	}
+	
 	@Test
 	public void testBuildSuccessfulEvent() throws URISyntaxException, InterruptedException {
 		// Test parameters
@@ -350,8 +525,6 @@ public class HipChatServerExtensionTest {
 		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
 	
-	
-	
 	@Test
 	@Ignore
 	public void testActualServerStartupAndShutdownEvents() throws URISyntaxException {
@@ -394,7 +567,6 @@ public class HipChatServerExtensionTest {
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
 		extension.buildStarted(build);
 	}
-	
 
 	@Test
 	@Ignore
