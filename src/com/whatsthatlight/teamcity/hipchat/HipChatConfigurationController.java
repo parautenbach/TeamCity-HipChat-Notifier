@@ -165,7 +165,7 @@ public class HipChatConfigurationController extends BaseController {
 		Element rootElement = document.getDocumentElement();
 		NodeList nodes = rootElement.getChildNodes();
 		for (int i = 0; i < nodes.getLength(); i++) {
-			if (nodes.item(i).getNodeName() == HipChatConfiguration.DEFAULT_ROOM_ID_KEY_V0DOT1 && nodes.item(i) instanceof Element) {
+			if (nodes.item(i).getNodeName().equals(HipChatConfiguration.DEFAULT_ROOM_ID_KEY_V0DOT1) && nodes.item(i) instanceof Element) {
 				Element roomElement = (Element)nodes.item(i);
 				document.renameNode(roomElement, roomElement.getNamespaceURI(), HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
 			}
