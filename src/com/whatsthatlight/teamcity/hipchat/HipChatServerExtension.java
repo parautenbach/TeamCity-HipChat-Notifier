@@ -117,7 +117,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 				String colour = getBuildEventMessageColour(event);
 				ProjectManager projectManager = this.server.getProjectManager();
 				SProject project = projectManager.findProjectById(build.getProjectId());
-				HipChatProjectConfiguration projectConfiguration = Utils.determineProjectConfiguration(project, configuration);				
+				HipChatProjectConfiguration projectConfiguration = Utils.determineProjectConfiguration(project, configuration);
 				HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, projectConfiguration.getNotifyStatus());
 				String roomId = projectConfiguration.getRoomId();
 				logger.debug(String.format("Room to be notified: %s", roomId));

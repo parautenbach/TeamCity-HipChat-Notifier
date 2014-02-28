@@ -55,7 +55,7 @@ public class Utils {
 			}
 			logger.debug(String.format("Found specific configuration for project ID %s: %s, %s", projectId, roomId, notify));
 		} else if (!isRootProject) {
-			roomId = HipChatConfiguration.ROOM_ID_PARENT;
+			roomId = configuration.getDefaultRoomId();
 			HipChatProjectConfiguration parentProjectConfiguration = Utils.findFirstSpecificParentConfiguration(project, configuration);
 			if (parentProjectConfiguration != null) {
 				logger.debug("Found specific configuration in hierarchy");
