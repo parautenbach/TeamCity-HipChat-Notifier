@@ -30,8 +30,6 @@ import static org.mockito.Mockito.when;
 
 public class UtilsTest {
 
-	// TODO: Add copyright notices and license file.
-	
 	@Test
 	public void testParentsParentHasConfiguration() {
 		// Test parameters

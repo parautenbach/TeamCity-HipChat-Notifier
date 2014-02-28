@@ -59,7 +59,7 @@ public class HipChatProjectTab extends ProjectTab {
 		TreeMap<String, String> rooms = Utils.getRooms(this.processor);
 		model.put(ROOM_ID_LIST, rooms);
 		boolean isRootProject = Utils.isRootProject(project);
-		HipChatProjectConfiguration projectConfiguration = Utils.determineProjectConfiguration(project, configuration, false);
+		HipChatProjectConfiguration projectConfiguration = Utils.determineProjectConfiguration(project, configuration);
 		model.put(HipChatConfiguration.ROOM_ID_KEY, projectConfiguration.getRoomId());
 		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, projectConfiguration.getNotifyStatus());
 		model.put(HipChatConfiguration.IS_ROOT_PROJECT, isRootProject);
