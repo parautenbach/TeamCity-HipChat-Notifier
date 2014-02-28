@@ -19,7 +19,7 @@ public class HipChatConfiguration {
 	public static final String PROJECT_ROOM = "projectRoom";
 	public static final String ROOM_ID_NONE = "none";
 	public static final String ROOM_ID_DEFAULT = "default";
-	public static final String PARENT_ID_DEFAULT = "parent";
+	public static final String ROOM_ID_PARENT = "parent";
 	public static final String IS_ROOT_PROJECT = "isRootProject";
 	public static final String ROOT_PROJECT_ID = "_Root";
 
