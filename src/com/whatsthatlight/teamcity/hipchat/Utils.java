@@ -75,5 +75,9 @@ public class Utils {
 		
 		return new HipChatProjectConfiguration(projectId, roomId, notify);
 	}
+	
+	public static boolean IsRoomIdNullOrNone(String roomId) {
+		return roomId == null || roomId.equals(HipChatConfiguration.ROOM_ID_NONE);
+	}
 		
 }
