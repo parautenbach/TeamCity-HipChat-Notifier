@@ -121,7 +121,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 				HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, projectConfiguration.getNotifyStatus());
 				String roomId = projectConfiguration.getRoomId();
 				logger.debug(String.format("Room to be notified: %s", roomId));
-				if (roomId != null && roomId != HipChatConfiguration.ROOM_ID_NONE) {
+				if (roomId != null && roomId.equals(HipChatConfiguration.ROOM_ID_NONE)) {
 					if (roomId == HipChatConfiguration.ROOM_ID_DEFAULT) {
 						roomId = configuration.getDefaultRoomId();
 					}
