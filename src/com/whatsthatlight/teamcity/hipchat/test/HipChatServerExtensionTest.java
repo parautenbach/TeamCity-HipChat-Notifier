@@ -779,8 +779,62 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubsubprojectWithExplicitNoneConfiguration() {
-		fail("Incomplete");
+	public void testBuildStartedEventForSubsubprojectWithExplicitNoneConfiguration() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Subproject :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Triggered by: Test User";
+		String expectedDefaultRoomId = null;
+		String expectedProjectId = "project1";
+		String rootProjectId = "_Root";
+		String parentProjectId = "parent_project";
+		String configuredRoomId = "none";
+		boolean expectedNotificationStatus = true;
+
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		SProject parentParentProject = mock(SProject.class);
+		when(parentParentProject.getProjectId()).thenReturn(rootProjectId);
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(parentProjectId);
+		when(parentProject.getParentProjectId()).thenReturn(rootProjectId);
+		when(parentProject.getParentProject()).thenReturn(parentParentProject);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		// We set the configuration for the project explicitly
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		HipChatProjectConfiguration projectConfiguration = new HipChatProjectConfiguration(expectedProjectId, configuredRoomId, expectedNotificationStatus);
+		configuration.setProjectConfiguration(projectConfiguration);
+		
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildStarted(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+				
+		// Test
+		assertEquals(0, callbacks.size());
 	}
 	
 	@Test
