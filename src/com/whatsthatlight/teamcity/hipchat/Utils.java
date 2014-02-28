@@ -34,6 +34,10 @@ public class Utils {
 	}
 	
 	public static HipChatProjectConfiguration determineProjectConfiguration(SProject project, HipChatConfiguration configuration) {
+		return determineProjectConfiguration(project, configuration, true);
+	}
+	
+	public static HipChatProjectConfiguration determineProjectConfiguration(SProject project, HipChatConfiguration configuration, boolean resolveParent) {
 		String projectId = project.getProjectId();
 		String roomId = configuration.getDefaultRoomId();
 		boolean notify = configuration.getDefaultNotifyStatus();
@@ -45,7 +49,7 @@ public class Utils {
 		if (projectConfiguration != null) {
 			roomId = projectConfiguration.getRoomId();
 			notify = projectConfiguration.getNotifyStatus();
-			if (roomId.equals(HipChatConfiguration.ROOM_ID_PARENT)) {
+			if (roomId.equals(HipChatConfiguration.ROOM_ID_PARENT) && resolveParent) {
 				HipChatProjectConfiguration parentProjectConfiguration = Utils.findFirstSpecificParentConfiguration(project, configuration);
 				if (parentProjectConfiguration != null) {
 					logger.debug("Using specific configuration in hierarchy determined implicitly");
