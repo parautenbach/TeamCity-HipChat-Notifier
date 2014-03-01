@@ -1348,7 +1348,7 @@ public class HipChatServerExtensionTest {
 	
 	private class HipChatRoomNotificationCallback implements Callback {
 
-		// TODO: Record notify status
+		// TODO: Record and test notify status
 		ArrayList<CallbackObject> callbacks;
 		Object waitObject;
 		

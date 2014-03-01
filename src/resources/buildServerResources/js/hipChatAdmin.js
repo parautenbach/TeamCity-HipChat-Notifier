@@ -16,11 +16,11 @@ limitations under the License.
 
 var HipChatProject = {
 	save : function() {
-		BS.ajaxRequest($('hipChatProjectForm').action, {
-			parameters : 'project=1' + 
-			'&roomId=' + $('roomId').value +
-			'&notify=' + $('notify').checked + 
-			'&projectId=' + $('projectId').value,
+		BS.ajaxRequest($("hipChatProjectForm").action, {
+			parameters : "project=1" + 
+			"&roomId=" + $("roomId").value +
+			"&notify=" + $("notify").checked + 
+			"&projectId=" + $("projectId").value,
 			onComplete : function(transport) {
 				if (transport.responseXML) {
 					BS.XMLResponse.processErrors(transport.responseXML, {
@@ -37,13 +37,27 @@ var HipChatProject = {
 };
 
 var HipChatAdmin = {
+	validate : function() {
+		var apiUrl = document.forms["hipChatForm"]["apiUrl"].value;
+		var apiToken = document.forms["hipChatForm"]["apiToken"].value;                  
+		if (apiUrl == null || apiUrl == "" || apiToken == null || apiToken == "") {
+			alert("You must specify a value for both the API URL and token.");
+			return false;
+		}
+		return true;
+	},
+		
 	save : function() {
-		BS.ajaxRequest($('hipChatForm').action, {
-			parameters : 'edit=1' + 
-			'&apiUrl=' + $('apiUrl').value + 
-			'&apiToken=' + $('apiToken').value +
-			'&defaultRoomId=' + $('defaultRoomId').value +
-			'&notify=' + $('notify').checked,
+		if (!HipChatAdmin.validate()) {
+			return false;
+		}
+		
+		BS.ajaxRequest($("hipChatForm").action, {
+			parameters : "edit=1" + 
+			"&apiUrl=" + $("apiUrl").value + 
+			"&apiToken=" + $("apiToken").value +
+			"&defaultRoomId=" + $("defaultRoomId").value +
+			"&notify=" + $("notify").checked,
 			onComplete : function(transport) {
 				if (transport.responseXML) {
 					BS.XMLResponse.processErrors(transport.responseXML, {
@@ -59,19 +73,23 @@ var HipChatAdmin = {
 	},
 	
 	testConnection : function() {
+		if (!HipChatAdmin.validate()) {
+			return false;
+		}
+		
 		jQuery.ajax(
 				{
-					url: $('hipChatForm').action, 
+					url: $("hipChatForm").action, 
 					data: {
 							test: 1, 
-							apiUrl: $('apiUrl').value,
-							apiToken: $('apiToken').value
+							apiUrl: $("apiUrl").value,
+							apiToken: $("apiToken").value
 						  },
-					type: 'GET'
+					type: "GET"
 				}).done(function() {
-					alert('Connection successful!');
+					alert("Connection successful!");
 				}).fail(function() {
-					alert('Connection failed!')
+					alert("Connection failed!")
 				});
 		return false;
 	}
