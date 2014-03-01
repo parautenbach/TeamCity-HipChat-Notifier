@@ -127,7 +127,7 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains(expectedTriggerBy));
 		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
-
+	
 	@Test
 	public void testBuildStartedEventForSubprojectWithImplicitDefaultConfiguration() throws URISyntaxException, InterruptedException {
 		// Test parameters
