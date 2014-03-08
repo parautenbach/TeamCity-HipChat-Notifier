@@ -35,13 +35,13 @@ public class Utils {
 	}
 	
 	public static boolean isRootProject(SProject project) {
-		return project.getParentProject().getProjectId().equals(HipChatConfiguration.ROOT_PROJECT_ID);
+		return project.getParentProject().getProjectId().equals(HipChatConfiguration.ROOT_PROJECT_ID_VALUE);
 	}
 
 	public static HipChatProjectConfiguration findFirstSpecificParentConfiguration(SProject project, HipChatConfiguration configuration) {
 		HipChatProjectConfiguration projectConfiguration = configuration.getProjectConfiguration(project.getParentProjectId());
 		if ((!isRootProject(project) && projectConfiguration == null) ||
-				(projectConfiguration != null && projectConfiguration.getRoomId().equals(HipChatConfiguration.ROOM_ID_PARENT))) {
+				(projectConfiguration != null && projectConfiguration.getRoomId().equals(HipChatConfiguration.ROOM_ID_PARENT_VALUE))) {
 			return findFirstSpecificParentConfiguration(project.getParentProject(), configuration);
 		} else if (projectConfiguration != null) {
 			return projectConfiguration;
@@ -77,7 +77,7 @@ public class Utils {
 	}
 	
 	public static boolean IsRoomIdNullOrNone(String roomId) {
-		return roomId == null || roomId.equals(HipChatConfiguration.ROOM_ID_NONE);
+		return roomId == null || roomId.equals(HipChatConfiguration.ROOM_ID_NONE_VALUE);
 	}
 		
 }

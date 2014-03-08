@@ -62,7 +62,7 @@ public class HipChatProjectTab extends ProjectTab {
 		HipChatProjectConfiguration projectConfiguration = Utils.determineProjectConfiguration(project, configuration);
 		model.put(HipChatConfiguration.ROOM_ID_KEY, projectConfiguration.getRoomId());
 		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, projectConfiguration.getNotifyStatus());
-		model.put(HipChatConfiguration.IS_ROOT_PROJECT, isRootProject);
+		model.put(HipChatConfiguration.IS_ROOT_PROJECT_KEY, isRootProject);
 		logger.debug("Configuration page variables populated");
 	}
 

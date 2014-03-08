@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -303,8 +302,8 @@ public class HipChatConfigurationControllerTest {
 				"</hipchat>";
 		// @formatter:on
 		File configFile = new File(expectedConfigDir, expectedFileName);
-		configFile.delete();
-		configFile.createNewFile();
+		assertTrue(configFile.delete());
+		assertTrue(configFile.createNewFile());
 		assertTrue(configFile.exists());
 		FileWriter fileWriter = new FileWriter(configFile);
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -344,6 +343,110 @@ public class HipChatConfigurationControllerTest {
 		HipChatProjectConfiguration projectConfiguration = configuration.getProjectConfiguration(expectedProjectIdValue);
 		assertEquals(expectedRoomIdValue, projectConfiguration.getRoomId());
 		assertEquals(expectedNotifyStatusValue, projectConfiguration.getNotifyStatus());
+	}
+
+	@Test
+	public void testConfigurationWithEventsGetsReadCorrectlyFromFileUponInitialisation() throws IOException, JDOMException, URISyntaxException {
+		// Test parameters
+		String expectedFileName = "hipchat.xml";
+		String expectedApiUrlKey = "apiUrl";
+		String expectedApiUrlValue = "http://example.com/";
+		String expectedApiTokenKey = "apiToken";
+		String expectedApiTokenValue = "admin_token";
+		String expectedRoomIdKey = "defaultRoomId";
+		String expectedRoomIdValue = "room_id";
+		String expectedNotifyStatusKey = "notify";
+		Boolean expectedNotifyStatusValue = true;
+		String expectedDisabledStatusKey = "disabled";
+		Boolean expectedDisabledStatusValue = false;
+		String expectedEventsKey = "events";
+		String expectedbuildStartedKey = "buildStarted";
+		String expectedbuildSuccessfulKey = "buildSuccessful";
+		String expectedbuildFailedKey = "buildFailed";
+		String expectedBuildInterruptedKey = "buildInterrupted";
+		String expectedServerStartupKey = "serverStartup";
+		String expectedServerShutdownKey = "serverShutdown";
+		String expectedConfigDir = ".";
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		boolean expectedBuildStartedValue = !configuration.getEvents().getBuildStartedStatus();
+		boolean expectedBuildSuccessfulValue = !configuration.getEvents().getBuildSuccessfulStatus();
+		boolean expectedBuildFailedValue = !configuration.getEvents().getBuildFailedStatus();
+		boolean expectedBuildInterruptedValue = !configuration.getEvents().getBuildInterruptedStatus();
+		boolean expectedServerStartupValue = !configuration.getEvents().getServerStartupStatus();
+		boolean expectedServerShutdownValue = !configuration.getEvents().getServerShutdownStatus();
+
+		// Mocks
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
+		SBuildServer server = mock(SBuildServer.class);
+		WebControllerManager manager = mock(WebControllerManager.class);
+
+		// Pre-conditions
+		// @formatter:off
+		String configFileContent = 
+				"<hipchat>" + 
+				"<apiToken>" + expectedApiTokenValue + "</apiToken>" + 
+				"<apiUrl>" + expectedApiUrlValue + "</apiUrl>" + 
+				"<defaultRoomId>" + expectedRoomIdValue + "</defaultRoomId>" +
+				"<notify>" + expectedNotifyStatusValue + "</notify>" +
+				"<disabled>" + expectedDisabledStatusValue + "</disabled>" + 
+				"<events>" +
+				  "<buildStarted>" +  expectedBuildStartedValue + "</buildStarted>" + 
+				  "<buildSuccessful>" +  expectedBuildSuccessfulValue + "</buildSuccessful>" + 
+				  "<buildFailed>" +  expectedBuildFailedValue + "</buildFailed>" + 
+				  "<buildInterrupted>" +  expectedBuildInterruptedValue + "</buildInterrupted>" + 
+				  "<serverStartup>" +  expectedServerStartupValue + "</serverStartup>" + 
+				  "<serverShutdown>" +  expectedServerShutdownValue + "</serverShutdown>" + 
+				"</events>" +
+				"</hipchat>";
+		// @formatter:on
+		File configFile = new File(expectedConfigDir, expectedFileName);
+		configFile.delete();
+		configFile.createNewFile();
+		assertTrue(configFile.exists());
+		FileWriter fileWriter = new FileWriter(configFile);
+		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+		bufferedWriter.write(configFileContent);
+		bufferedWriter.flush();
+		bufferedWriter.close();
+
+		// Execute
+		// The config file must must not have been overwritten on disk after
+		// initialisation
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		controller.initialise();
+		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
+		SAXBuilder builder = new SAXBuilder();
+		Document document = builder.build(postInitConfigFile);
+		Element rootElement = document.getRootElement();
+		assertEquals(expectedApiUrlValue, rootElement.getChildText(expectedApiUrlKey));
+		assertEquals(expectedApiTokenValue, rootElement.getChildText(expectedApiTokenKey));
+		assertEquals(expectedRoomIdValue, rootElement.getChildText(expectedRoomIdKey));
+		assertEquals(expectedNotifyStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedNotifyStatusKey)));
+		assertEquals(expectedDisabledStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedDisabledStatusKey)));
+		// Events
+		Element eventsElement = rootElement.getChild(expectedEventsKey);
+		assertEquals(expectedBuildStartedValue, Boolean.parseBoolean(eventsElement.getChildText(expectedbuildStartedKey)));
+		assertEquals(expectedBuildSuccessfulValue, Boolean.parseBoolean(eventsElement.getChildText(expectedbuildSuccessfulKey)));
+		assertEquals(expectedBuildFailedValue, Boolean.parseBoolean(eventsElement.getChildText(expectedbuildFailedKey)));
+		assertEquals(expectedBuildInterruptedValue, Boolean.parseBoolean(eventsElement.getChildText(expectedBuildInterruptedKey)));
+		assertEquals(expectedServerStartupValue, Boolean.parseBoolean(eventsElement.getChildText(expectedServerStartupKey)));
+		assertEquals(expectedServerShutdownValue, Boolean.parseBoolean(eventsElement.getChildText(expectedServerShutdownKey)));
+
+		// Now check the loaded configuration
+		assertEquals(expectedApiUrlValue, configuration.getApiUrl());
+		assertEquals(expectedApiTokenValue, configuration.getApiToken());
+		assertEquals(expectedRoomIdValue, configuration.getDefaultRoomId());
+		assertEquals(expectedNotifyStatusValue, configuration.getDefaultNotifyStatus());
+		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
+		// Events
+		assertEquals(expectedBuildStartedValue, configuration.getEvents().getBuildStartedStatus());
+		assertEquals(expectedBuildSuccessfulValue, configuration.getEvents().getBuildSuccessfulStatus());
+		assertEquals(expectedBuildFailedValue, configuration.getEvents().getBuildFailedStatus());
+		assertEquals(expectedBuildInterruptedValue, configuration.getEvents().getBuildInterruptedStatus());
+		assertEquals(expectedServerStartupValue, configuration.getEvents().getServerStartupStatus());
+		assertEquals(expectedServerShutdownValue, configuration.getEvents().getServerShutdownStatus());
 	}
 
 	@Test

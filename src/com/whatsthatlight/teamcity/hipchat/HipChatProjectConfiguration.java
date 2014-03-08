@@ -18,7 +18,7 @@ package com.whatsthatlight.teamcity.hipchat;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias(HipChatConfiguration.PROJECT_ROOM)
+@XStreamAlias(HipChatConfiguration.PROJECT_ROOM_KEY)
 public class HipChatProjectConfiguration {
 	
 	@XStreamAlias(HipChatConfiguration.PROJECT_ID_KEY)

@@ -32,12 +32,20 @@ public class HipChatConfiguration {
 	public static final String DEFAULT_ROOM_ID_KEY_V0DOT1 = "roomId";
 	public static final String ROOM_ID_KEY = "roomId";
 	public static final String PROJECT_ID_KEY = "projectId";
-	public static final String PROJECT_ROOM = "projectRoom";
-	public static final String ROOM_ID_NONE = "none";
-	public static final String ROOM_ID_DEFAULT = "default";
-	public static final String ROOM_ID_PARENT = "parent";
-	public static final String IS_ROOT_PROJECT = "isRootProject";
-	public static final String ROOT_PROJECT_ID = "_Root";
+	public static final String PROJECT_ROOM_KEY = "projectRoom";
+	public static final String ROOM_ID_NONE_VALUE = "none";
+	public static final String ROOM_ID_DEFAULT_VALUE = "default";
+	public static final String ROOM_ID_PARENT_VALUE = "parent";
+	public static final String IS_ROOT_PROJECT_KEY = "isRootProject";
+	public static final String ROOT_PROJECT_ID_VALUE = "_Root";
+	public static final String EVENTS_KEY = "events";
+	public static final String BUILD_STARTED_KEY = "buildStarted";
+	public static final String BUILD_SUCCESSFUL_KEY = "buildSuccessful";
+	public static final String BUILD_FAILED_KEY = "buildFailed";
+	public static final String BUILD_INTERRUPTED_KEY = "buildInterrupted";
+	public static final String SERVER_STARTUP_KEY = "serverStartup";
+	public static final String SERVER_SHUTDOWN_KEY = "serverShutdown";
+	
 
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;
@@ -58,10 +66,21 @@ public class HipChatConfiguration {
 	@XStreamImplicit
 	private List<HipChatProjectConfiguration> projectRoomMap = new ArrayList<HipChatProjectConfiguration>();
 	
+	@XStreamAlias(HipChatConfiguration.EVENTS_KEY)
+	private HipChatEventConfiguration events = new HipChatEventConfiguration();
+	
 	public HipChatConfiguration() {
 		// Intentionally left empty
 	}
 
+	public HipChatEventConfiguration getEvents() {
+		return this.events;
+	}
+	
+	public void setEvents(HipChatEventConfiguration events) {
+		this.events = events;
+	}
+	
 	public List<HipChatProjectConfiguration> getProjectRoomMap() {
 		return this.projectRoomMap;
 	}

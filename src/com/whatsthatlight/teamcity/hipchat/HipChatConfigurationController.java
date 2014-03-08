@@ -209,6 +209,14 @@ public class HipChatConfigurationController extends BaseController {
 		this.configuration.setDefaultRoomId(configuration.getDefaultRoomId());
 		this.configuration.setNotifyStatus(configuration.getDefaultNotifyStatus());
 		this.configuration.setDisabledStatus(configuration.getDisabledStatus());
+		if (configuration.getEvents() != null) {
+			this.configuration.getEvents().setBuildStartedStatus(configuration.getEvents().getBuildStartedStatus());
+			this.configuration.getEvents().setBuildSuccessfulStatus(configuration.getEvents().getBuildSuccessfulStatus());
+			this.configuration.getEvents().setBuildFailedStatus(configuration.getEvents().getBuildFailedStatus());
+			this.configuration.getEvents().setBuildInterruptedStatus(configuration.getEvents().getBuildInterruptedStatus());
+			this.configuration.getEvents().setServerStartupStatus(configuration.getEvents().getServerStartupStatus());
+			this.configuration.getEvents().setServerShutdownStatus(configuration.getEvents().getServerShutdownStatus());
+		}
 		if (configuration.getProjectRoomMap() != null) {
 			for (HipChatProjectConfiguration projectConfiguration : configuration.getProjectRoomMap()) {
 				this.configuration.setProjectConfiguration(projectConfiguration);

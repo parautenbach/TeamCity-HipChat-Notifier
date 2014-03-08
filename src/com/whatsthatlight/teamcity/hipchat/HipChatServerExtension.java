@@ -138,9 +138,9 @@ public class HipChatServerExtension extends BuildServerAdapter {
 				String roomId = projectConfiguration.getRoomId();
 				logger.debug(String.format("Room to be notified: %s", roomId));
 				if (!Utils.IsRoomIdNullOrNone(roomId)) {
-					if (roomId.equals(HipChatConfiguration.ROOM_ID_DEFAULT)) {
+					if (roomId.equals(HipChatConfiguration.ROOM_ID_DEFAULT_VALUE)) {
 						roomId = configuration.getDefaultRoomId();
-					} else if (roomId.equals(HipChatConfiguration.ROOM_ID_PARENT)) {
+					} else if (roomId.equals(HipChatConfiguration.ROOM_ID_PARENT_VALUE)) {
 						HipChatProjectConfiguration parentProjectConfiguration = Utils.findFirstSpecificParentConfiguration(project, configuration);
 						if (parentProjectConfiguration != null) {
 							logger.debug("Using specific configuration in hierarchy determined implicitly");
