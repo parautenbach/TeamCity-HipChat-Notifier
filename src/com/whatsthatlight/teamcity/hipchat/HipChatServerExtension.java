@@ -82,16 +82,17 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	public void buildStarted(SRunningBuild build) {
 		logger.debug(String.format("Build started: %s", build.getBuildType().getName()));
 		super.buildStarted(build);
-		this.processBuildEvent(build, TeamCityEvent.BUILD_STARTED);
+		if (this.configuration.getEvents() != null && this.configuration.getEvents().getBuildStartedStatus()) {
+			this.processBuildEvent(build, TeamCityEvent.BUILD_STARTED);
+		}
 	}
-
+	
 	@Override
 	public void buildFinished(SRunningBuild build) {
 		super.buildFinished(build);
-		if (build.getBuildStatus().isSuccessful()) {
+		if (build.getBuildStatus().isSuccessful() && this.configuration.getEvents() != null && this.configuration.getEvents().getBuildSuccessfulStatus()) {
 			this.processBuildEvent(build, TeamCityEvent.BUILD_SUCCESSFUL);
-		}
-		else if (build.getBuildStatus().isFailed()) {
+		} else if (build.getBuildStatus().isFailed() && this.configuration.getEvents() != null && this.configuration.getEvents().getBuildFailedStatus()) {
 			this.processBuildEvent(build, TeamCityEvent.BUILD_FAILED);
 		}
 	}
@@ -99,19 +100,25 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	@Override
 	public void buildInterrupted(SRunningBuild build) {
 		super.buildInterrupted(build);
-		this.processBuildEvent(build, TeamCityEvent.BUILD_INTERRUPTED);
+		if (this.configuration.getEvents() != null && this.configuration.getEvents().getBuildInterruptedStatus()) {
+			this.processBuildEvent(build, TeamCityEvent.BUILD_INTERRUPTED);
+		}
 	}
-
+	
 	@Override
 	public void serverStartup() {
-		this.processServerEvent(TeamCityEvent.SERVER_STARTUP);
+		if (this.configuration.getEvents() != null && this.configuration.getEvents().getServerStartupStatus()) {
+			this.processServerEvent(TeamCityEvent.SERVER_STARTUP);
+		}
 	}
 
 	@Override
 	public void serverShutdown() {
-		this.processServerEvent(TeamCityEvent.SERVER_SHUTDOWN);
+		if (this.configuration.getEvents() != null && this.configuration.getEvents().getServerShutdownStatus()) {
+			this.processServerEvent(TeamCityEvent.SERVER_SHUTDOWN);
+		}
 	}
-
+	
 	private void processServerEvent(TeamCityEvent event) {
 		boolean notify = this.configuration.getDefaultNotifyStatus();
 		HipChatMessageBundle bundle = this.eventMap.get(event);

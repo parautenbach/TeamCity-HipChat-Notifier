@@ -45,7 +45,11 @@ limitations under the License.
 			</c:otherwise>
 		</c:choose>
 		<bs:messages key="configurationSaved" />
+       	<br>		
 		<table class="runnerFormTable">
+			<tr class="groupingTitle">
+          		<td colspan="2">General Configuration</td>
+        	</tr>
 			<tr>
 				<th>
 					<label for="apiUrl">API URL: <l:star /></label>
@@ -84,7 +88,51 @@ limitations under the License.
 					<span class="smallNote">When checked, a notification for all people in the room will be triggered, taking user preferences into account.</span>
 				</td>
 			</tr>
-		</table>
+			<tr class="groupingTitle">
+          		<td colspan="2">Build Events Configuration</td>
+        	</tr>
+			<tr>
+				<th><label for="buildStarted">Build started: </label></th>
+				<td>
+					<forms:checkbox name="buildStarted" checked="${buildStarted}" value="${buildStarted}"/>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="buildSuccessful">Build successful: </label></th>
+				<td>
+					<forms:checkbox name="buildSuccessful" checked="${buildSuccessful}" value="${buildSuccessful}"/>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="buildFailed">Build failed: </label></th>
+				<td>
+					<forms:checkbox name="buildFailed" checked="${buildFailed}" value="${buildFailed}"/>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="buildInterrupted">Build interrupted: </label></th>
+				<td>
+					<forms:checkbox name="buildInterrupted" checked="${buildInterrupted}" value="${buildInterrupted}"/>
+				</td>
+			</tr>
+			<tr class="groupingTitle">
+          		<td colspan="2">Server Events Configuration</td>
+        	</tr>
+			<tr>
+				<th><label for="serverStartup">Server startup: </label></th>
+				<td>
+					<forms:checkbox name="serverStartup" checked="${serverStartup}" value="${serverStartup}"/>
+					<span class="smallNote">When checked, a message will be sent to the default room.</span>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="serverShutdown">Server shutdown: </label></th>
+				<td>
+					<forms:checkbox name="serverShutdown" checked="${serverShutdown}" value="${serverShutdown}"/>
+					<span class="smallNote">When checked, a message will be sent to the default room.</span>
+				</td>
+			</tr>
+			</table>
 		<div class="saveButtonsBlock">
 			<forms:submit label="Save" />
 			<forms:submit id="testConnection" type="button"	label="Test connection" onclick="return HipChatAdmin.testConnection()"/>

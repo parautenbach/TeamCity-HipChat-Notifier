@@ -63,6 +63,142 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
+	public void testServerStartupEvent() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedStartMessage = "Build server started.";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedMessageColour = HipChatMessageColour.NEUTRAL;
+		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+		
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		extension.serverStartup();
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(1, callbacks.size());
+		CallbackObject callbackObject = callbacks.get(0);
+		HipChatRoomNotification actualNotification = callbackObject.notification;
+		System.out.println(actualNotification);
+		assertEquals(expectedDefaultRoomId, callbackObject.roomId);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedStartMessage));
+	}
+
+	@Test
+	public void testServerStartupEventDisabled() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.getEvents().setServerStartupStatus(false);
+		
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		extension.serverStartup();
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(0, callbacks.size());
+	}
+	
+	@Test
+	public void testServerShutdownEvent() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedStartMessage = "Build server shutting down.";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedMessageColour = HipChatMessageColour.NEUTRAL;
+		String expectedMessageFormat = HipChatMessageFormat.TEXT;
+		
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		extension.serverShutdown();
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(1, callbacks.size());
+		CallbackObject callbackObject = callbacks.get(0);
+		HipChatRoomNotification actualNotification = callbackObject.notification;
+		System.out.println(actualNotification);
+		assertEquals(expectedDefaultRoomId, callbackObject.roomId);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedStartMessage));
+	}
+	
+	@Test
+	public void testServerShutdownEventDisabled() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.getEvents().setServerShutdownStatus(false);
+		
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		extension.serverShutdown();
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(0, callbacks.size());
+	}
+	
+	@Test
 	public void testBuildStartedEvent() throws URISyntaxException, InterruptedException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
@@ -126,6 +262,58 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains(expectedBuildNumber));
 		assertTrue(actualNotification.message.contains(expectedTriggerBy));
 		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
+	}
+
+	@Test
+	public void testBuildStartedEventDisabled() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Triggered by: Test User";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.getEvents().setBuildStartedStatus(false);
+		
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildStarted(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(0, callbacks.size());
 	}
 	
 	@Test
@@ -922,7 +1110,61 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.endsWith(expectedEmoticonEndCharacter));
 		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
-	
+
+	@Test
+	public void testBuildSuccessfulEventDisabled() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Triggered by: Test User";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		Status status = Status.NORMAL;
+		when(build.getBuildStatus()).thenReturn(status);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.getEvents().setBuildSuccessfulStatus(false);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildFinished(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(0, callbacks.size());
+	}
+
 	@Test
 	public void testBuildFailedEvent() throws URISyntaxException, InterruptedException {
 		// Test parameters
@@ -991,6 +1233,60 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains(expectedTriggerBy));
 		assertTrue(actualNotification.message.endsWith(expectedEmoticonEndCharacter));
 		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
+	}
+
+	@Test
+	public void testBuildFailedEventDisabled() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Triggered by: Test User";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		Status status = Status.FAILURE;
+		when(build.getBuildStatus()).thenReturn(status);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.getEvents().setBuildFailedStatus(false);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildFinished(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(0, callbacks.size());
 	}
 
 	@Test
@@ -1365,6 +1661,69 @@ public class HipChatServerExtensionTest {
 		}
 	};
 	
+
+	@Test
+	public void testBuildInterruptedEventDisabled() throws URISyntaxException, InterruptedException {
+		// Test parameters
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggeredBy = "Test User";
+		String expectedCanceledBy = "Cancelled by: Test User";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+		
+		// Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Object waitObject = new Object();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		
+		// Mocks and other dependencies
+		CanceledInfo canceledInfo = mock(CanceledInfo.class);
+		when(canceledInfo.getUserId()).thenReturn((long) 0);
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggeredBy);
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getCanceledInfo()).thenReturn(canceledInfo);
+		SUser user = mock(SUser.class);
+		when(user.getDescriptiveName()).thenReturn(expectedCanceledBy);
+		UserModel userModel = mock(UserModel.class);
+		when(userModel.findUserById(0)).thenReturn(user);
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getUserModel()).thenReturn(userModel);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.getEvents().setBuildInterruptedStatus(false);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.buildInterrupted(build);
+		synchronized (waitObject) {
+			waitObject.wait(1000);
+		}
+		
+		// Test
+		assertEquals(0, callbacks.size());
+	}
+
 	private class MockHipChatNotificationProcessor extends HipChatApiProcessor {
 
 		private Callback callback;
