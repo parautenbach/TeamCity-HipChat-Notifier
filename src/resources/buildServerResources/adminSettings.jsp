@@ -26,7 +26,7 @@ limitations under the License.
     ${teamcityPluginResourcesPath}js/hipChatAdmin.js
 </bs:linkScript>
 
-<form action="${actionUrl}" id="hipChatForm" method="post"
+<form action="${actionUrl}" id="hipChatForm" method="POST"
 	onsubmit="return HipChatAdmin.save()">
 	<div class="editNotificatorSettingsPage">
 		<c:choose>
@@ -65,7 +65,7 @@ limitations under the License.
 				</th>
 				<td>
 					<forms:textField name="apiToken" value="${apiToken}" />
-					<span class="smallNote">A user OAuth token.</span>
+					<span class="smallNote">A user OAuth token for a dedicated build server user on HipChat.</span>
 				</td>
 			</tr>
 			<tr>
@@ -82,7 +82,7 @@ limitations under the License.
                 </td>
 			</tr>
 			<tr>
-				<th><label for="notify">Trigger notifications: </label></th>
+				<th><label for="notifyLabel">Trigger notifications: </label></th>
 				<td>
 					<forms:checkbox name="notify" checked="${notify}" value="${notify}"/>
 					<span class="smallNote">When checked, a notification for all people in the room will be triggered, taking user preferences into account.</span>
@@ -92,47 +92,51 @@ limitations under the License.
           		<td colspan="2">Build Events Configuration</td>
         	</tr>
 			<tr>
-				<th><label for="buildStarted">Build started: </label></th>
+				<th><label for="buildStartedLabel">Build started: </label></th>
 				<td>
 					<forms:checkbox name="buildStarted" checked="${buildStarted}" value="${buildStarted}"/>
+					<span class="smallNote">When checked, a message will be sent when the build starts.</span>					
 				</td>
 			</tr>
 			<tr>
-				<th><label for="buildSuccessful">Build successful: </label></th>
+				<th><label for="buildSuccessfulLabel">Build successful: </label></th>
 				<td>
 					<forms:checkbox name="buildSuccessful" checked="${buildSuccessful}" value="${buildSuccessful}"/>
+					<span class="smallNote">When checked, a message will be sent when a finished build is successful.</span>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="buildFailed">Build failed: </label></th>
+				<th><label for="buildFailedLabel">Build failed: </label></th>
 				<td>
 					<forms:checkbox name="buildFailed" checked="${buildFailed}" value="${buildFailed}"/>
+					<span class="smallNote">When checked, a message will be sent when a finished build failed.</span>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="buildInterrupted">Build interrupted: </label></th>
+				<th><label for="buildInterruptedLabel">Build interrupted: </label></th>
 				<td>
 					<forms:checkbox name="buildInterrupted" checked="${buildInterrupted}" value="${buildInterrupted}"/>
+					<span class="smallNote">When checked, a message will be sent when the build gets interrupted (i.e. cancelled).</span>
 				</td>
 			</tr>
 			<tr class="groupingTitle">
           		<td colspan="2">Server Events Configuration</td>
         	</tr>
 			<tr>
-				<th><label for="serverStartup">Server startup: </label></th>
+				<th><label for="serverStartupLabel">Server startup: </label></th>
 				<td>
 					<forms:checkbox name="serverStartup" checked="${serverStartup}" value="${serverStartup}"/>
-					<span class="smallNote">When checked, a message will be sent to the default room.</span>
+					<span class="smallNote">When checked, a message will be sent to the <b>default</b> room.</span>
 				</td>
 			</tr>
 			<tr>
-				<th><label for="serverShutdown">Server shutdown: </label></th>
+				<th><label for="serverShutdownLabel">Server shutdown: </label></th>
 				<td>
 					<forms:checkbox name="serverShutdown" checked="${serverShutdown}" value="${serverShutdown}"/>
-					<span class="smallNote">When checked, a message will be sent to the default room.</span>
+					<span class="smallNote">When checked, a message will be sent to the <b>default</b> room.</span>
 				</td>
 			</tr>
-			</table>
+		</table>
 		<div class="saveButtonsBlock">
 			<forms:submit label="Save" />
 			<forms:submit id="testConnection" type="button"	label="Test connection" onclick="return HipChatAdmin.testConnection()"/>

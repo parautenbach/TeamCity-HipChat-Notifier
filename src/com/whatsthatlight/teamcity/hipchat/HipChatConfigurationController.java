@@ -94,18 +94,40 @@ public class HipChatConfigurationController extends BaseController {
 	
 	private void handleConfigurationChange(HttpServletRequest request) throws IOException {
 		logger.debug("Changing configuration");
+		logger.debug(String.format("Query string: '%s'", request.getQueryString()));
 		String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
 		String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
 		String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
 		String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
+		String buildStarted = request.getParameter(HipChatConfiguration.BUILD_STARTED_KEY);
+		String buildSuccessful = request.getParameter(HipChatConfiguration.BUILD_SUCCESSFUL_KEY);
+		String buildFailed = request.getParameter(HipChatConfiguration.BUILD_FAILED_KEY);
+		String buildInterrupted = request.getParameter(HipChatConfiguration.BUILD_INTERRUPTED_KEY);
+		String serverStartup = request.getParameter(HipChatConfiguration.SERVER_STARTUP_KEY);
+		String serverShutdown = request.getParameter(HipChatConfiguration.SERVER_SHUTDOWN_KEY);
 		logger.debug(String.format("API URL: %s", apiUrl));
 		logger.debug(String.format("API token: %s", apiToken));
 		logger.debug(String.format("Default room ID: %s", defaultRoomId));
 		logger.debug(String.format("Trigger notification: %s", notify));
+		logger.debug("Events:");
+		logger.debug(String.format("\tBuild started: %s", buildStarted));
+		logger.debug(String.format("\tBuild successful: %s", buildSuccessful));
+		logger.debug(String.format("\tBuild failed: %s", buildFailed));
+		logger.debug(String.format("\tBuild interrupted: %s", buildInterrupted));
+		logger.debug(String.format("\tServer startup: %s", serverStartup));
+		logger.debug(String.format("\tServer shutdown: %s", serverShutdown));
 		this.configuration.setApiUrl(apiUrl);
 		this.configuration.setApiToken(apiToken);
 		this.configuration.setDefaultRoomId(defaultRoomId == "" ? null : defaultRoomId);
 		this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
+		HipChatEventConfiguration events = new HipChatEventConfiguration();
+		events.setBuildStartedStatus(Boolean.parseBoolean(buildStarted));
+		events.setBuildSuccessfulStatus(Boolean.parseBoolean(buildSuccessful));
+		events.setBuildFailedStatus(Boolean.parseBoolean(buildFailed));
+		events.setBuildInterruptedStatus(Boolean.parseBoolean(buildInterrupted));
+		events.setServerStartupStatus(Boolean.parseBoolean(serverStartup));
+		events.setServerShutdownStatus(Boolean.parseBoolean(serverShutdown));
+		this.configuration.setEvents(events);
 		this.getOrCreateMessages(request).addMessage(SAVED_ID, SAVED_MESSAGE);
 		this.saveConfiguration();
 	}
@@ -139,7 +161,6 @@ public class HipChatConfigurationController extends BaseController {
 	public ModelAndView doHandle(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			logger.debug("Handling request");
-			
 			if (request.getParameter(PROJECT_PARAMETER) != null) {
 				this.handleProjectConfigurationChange(request);
 			} else if (request.getParameter(EDIT_PARAMETER) != null) {

@@ -54,10 +54,16 @@ var HipChatAdmin = {
 		
 		BS.ajaxRequest($("hipChatForm").action, {
 			parameters : "edit=1" + 
-			"&apiUrl=" + $("apiUrl").value + 
-			"&apiToken=" + $("apiToken").value +
-			"&defaultRoomId=" + $("defaultRoomId").value +
-			"&notify=" + $("notify").checked,
+			"&apiUrl="           + $("apiUrl").value + 
+			"&apiToken="         + $("apiToken").value +
+			"&defaultRoomId="    + $("defaultRoomId").value +
+			"&notify="           + $("notify").checked + 
+			"&buildStarted="     + $("buildStarted").checked +
+			"&buildSuccessful="  + $("buildSuccessful").checked +
+			"&buildFailed="      + $("buildFailed").checked +
+			"&buildInterrupted=" + $("buildInterrupted").checked +
+			"&serverStartup="    + $("serverStartup").checked +
+			"&serverShutdown="   + $("serverShutdown").checked,
 			onComplete : function(transport) {
 				if (transport.responseXML) {
 					BS.XMLResponse.processErrors(transport.responseXML, {

@@ -71,6 +71,14 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		model.put(ROOM_ID_LIST, Utils.getRooms(this.processor));
 		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, this.configuration.getDefaultNotifyStatus());
 		model.put(HipChatConfiguration.DISABLED_STATUS_KEY, this.configuration.getDisabledStatus());
+		if (this.configuration.getEvents() != null) {
+			model.put(HipChatConfiguration.BUILD_STARTED_KEY, this.configuration.getEvents().getBuildStartedStatus());
+			model.put(HipChatConfiguration.BUILD_SUCCESSFUL_KEY, this.configuration.getEvents().getBuildSuccessfulStatus());
+			model.put(HipChatConfiguration.BUILD_FAILED_KEY, this.configuration.getEvents().getBuildFailedStatus());
+			model.put(HipChatConfiguration.BUILD_INTERRUPTED_KEY, this.configuration.getEvents().getBuildInterruptedStatus());
+			model.put(HipChatConfiguration.SERVER_STARTUP_KEY, this.configuration.getEvents().getServerStartupStatus());
+			model.put(HipChatConfiguration.SERVER_SHUTDOWN_KEY, this.configuration.getEvents().getServerShutdownStatus());
+		}
 		logger.debug("Configuration page variables populated");
 	}
 	
