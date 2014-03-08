@@ -35,9 +35,9 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 
 # Changelog
 
-## Version 0.1.0
+## Version 0.3.0 
 
-* First release.
+* Feature: Disable or enable build and server events. 
 
 ## Version 0.2.0 
 
@@ -45,3 +45,7 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 * Improvement: Instead of entering a room ID, it can now be selected from a dropdown list of available rooms.
 * Improvement: Added a button on the configuration page to test the API credentials.
 * Bug: Fixed UI bug where disabling the plugin after saving settings didn't respond.
+
+## Version 0.1.0
+
+* First release.
