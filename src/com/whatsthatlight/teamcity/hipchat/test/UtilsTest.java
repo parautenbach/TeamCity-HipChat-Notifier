@@ -19,6 +19,8 @@ package com.whatsthatlight.teamcity.hipchat.test;
 import static org.junit.Assert.*;
 import jetbrains.buildServer.serverSide.SProject;
 
+import org.apache.log4j.BasicConfigurator;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
@@ -29,6 +31,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UtilsTest {
+	
+	@BeforeClass
+	public static void ClassSetup() {
+		// Set up a basic logger for debugging purposes
+		BasicConfigurator.configure();
+	}
 	
 	@Test
 	public void testParentsParentHasConfiguration() {
@@ -130,4 +138,25 @@ public class UtilsTest {
 		HipChatProjectConfiguration actualParentConfiguration = Utils.findFirstSpecificParentConfiguration(project, configuration);
 		assertNull(actualParentConfiguration);
 	}
+	
+	@Test
+	public void testProjectUsesDefaultRoomIdWhenRoomConfigurationAbsent() {
+		// Test parameters
+		String expectedProjectId = "project_id";
+		String expectedParentProjectId = "_Root";
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setDefaultRoomId(expectedProjectId);
+		
+		// Mocks
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		when(project.getParentProjectId()).thenReturn(expectedParentProjectId);
+		
+		HipChatProjectConfiguration projectConfiguration = Utils.determineProjectConfiguration(project, configuration);
+		assertEquals(expectedProjectId, projectConfiguration.getRoomId());
+	}
+	
 }

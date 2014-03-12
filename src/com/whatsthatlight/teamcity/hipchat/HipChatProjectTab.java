@@ -39,7 +39,7 @@ public class HipChatProjectTab extends ProjectTab {
 	private HipChatApiProcessor processor;
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	
-	protected HipChatProjectTab(
+	public HipChatProjectTab(
 			@NotNull PagePlaces pagePlaces, 
 			@NotNull ProjectManager projectManager,
 			@NotNull PluginDescriptor descriptor,
@@ -52,16 +52,24 @@ public class HipChatProjectTab extends ProjectTab {
 	}
 
 	@Override
-	protected void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request, @NotNull SProject project, @NotNull SUser user) {
+	public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request, @NotNull SProject project, @NotNull SUser user) {
 		// Do we need this? It seems to create an infinite loop and a stack overflow: super.fillModel(model, request);
 		String projectId = project.getProjectId();
 		model.put(HipChatConfiguration.PROJECT_ID_KEY, projectId);
 		TreeMap<String, String> rooms = Utils.getRooms(this.processor);
 		model.put(ROOM_ID_LIST, rooms);
 		boolean isRootProject = Utils.isRootProject(project);
-		HipChatProjectConfiguration projectConfiguration = Utils.determineProjectConfiguration(project, configuration);
-		model.put(HipChatConfiguration.ROOM_ID_KEY, projectConfiguration.getRoomId());
-		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, projectConfiguration.getNotifyStatus());
+		HipChatProjectConfiguration projectConfiguration = this.configuration.getProjectConfiguration(projectId);
+		if (projectConfiguration != null) {
+			model.put(HipChatConfiguration.ROOM_ID_KEY, projectConfiguration.getRoomId());
+			model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, projectConfiguration.getNotifyStatus());
+		} else if (isRootProject) {
+			model.put(HipChatConfiguration.ROOM_ID_KEY, HipChatConfiguration.ROOM_ID_DEFAULT_VALUE);
+			model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, configuration.getDefaultNotifyStatus());
+		} else {
+			model.put(HipChatConfiguration.ROOM_ID_KEY, HipChatConfiguration.ROOM_ID_PARENT_VALUE);
+			model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, configuration.getDefaultNotifyStatus());			
+		}
 		model.put(HipChatConfiguration.IS_ROOT_PROJECT_KEY, isRootProject);
 		logger.debug("Configuration page variables populated");
 	}

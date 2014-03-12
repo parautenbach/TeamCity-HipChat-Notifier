@@ -258,7 +258,7 @@ public class HipChatConfigurationControllerTest {
 		assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
 		assertEquals(0, configuration.getProjectRoomMap().size());
 	}
-
+	
 	@Test
 	public void testConfigurationWithProjectRoomMapGetsReadCorrectlyFromFileUponInitialisation() throws IOException, JDOMException, URISyntaxException {
 		// Test parameters
