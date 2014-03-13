@@ -35,6 +35,9 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 
 # Changelog
 
+## Version 0.3.1
+* Bug: Project configuration tab didn't use room ID aliases when inheriting from the default or parent configuration. 
+
 ## Version 0.3.0 
 
 * Feature: Disable or enable build and server events. 
