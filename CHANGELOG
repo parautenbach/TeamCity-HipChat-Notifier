@@ -1,0 +1,17 @@
+Version 0.3.1
+* Bug: Project configuration tab didn't use room ID aliases when inheriting from the default or parent configuration. 
+
+Version 0.3.0 
+
+* Feature: Disable or enable build and server events. 
+
+Version 0.2.0 
+
+* Feature: Allow setting different rooms for different projects, and allow to use the default configuration or none, or inherit from the parent project. As a consequence, server up and down events are sent to only the default room, if configured.
+* Improvement: Instead of entering a room ID, it can now be selected from a dropdown list of available rooms.
+* Improvement: Added a button on the configuration page to test the API credentials.
+* Bug: Fixed UI bug where disabling the plugin after saving settings didn't respond.
+
+Version 0.1.0
+
+* First release.
