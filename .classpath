@@ -15,21 +15,21 @@
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/fluent-hc-4.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-cache-4.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpmime-4.3.2.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/lib/servlet-api.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/annotations.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/common-api.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/commons-logging.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/jdom.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/log4j-1.2.12.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/server-api.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/spring-webmvc.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/spring.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/util.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/server-common-api.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/xpp3-1.1.4c.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/xstream-1.4.1.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/jstl.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/standard.jar"/>
-	<classpathentry kind="var" path="USER_HOME/TeamCity/webapps/ROOT/WEB-INF/lib/trove4j.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/lib/servlet-api.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/annotations.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/common-api.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/commons-logging.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/jdom.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/log4j-1.2.12.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/server-api.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/spring-webmvc.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/spring.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/util.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/server-common-api.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/xstream-1.4.1.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/jstl.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/standard.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/trove4j.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

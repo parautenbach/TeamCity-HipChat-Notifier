@@ -23,7 +23,10 @@ On TeamCity, as an administrator, configure the generated token and other settin
 
 # Developers
 
-Clone the repository and set the `teamcity.home` property in the `build.xml` to your TeamCity server's home directory and you're good to go. 
+* This is an Eclipse project.
+* Clone the repository and set the `teamcity.home` property in the `build.xml` to your TeamCity server's home directory (Windows users, use forward slashes in the path). 
+* Set the `TEAMCITY_HOME` classpath variable under Eclipse preferences to the same location as above. 
+* Check that Eclipse knows where to find a JDK (under Installed JREs in the Java section of Eclipse preferences). 
 
 For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's root to `conf/teamcity-server-log4j.xml` and then monitor `logs/hipchat-notifier.log `.
 
