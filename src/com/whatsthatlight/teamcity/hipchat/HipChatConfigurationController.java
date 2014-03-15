@@ -17,8 +17,9 @@ limitations under the License.
 package com.whatsthatlight.teamcity.hipchat;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+
 import org.apache.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -249,10 +250,10 @@ public class HipChatConfigurationController extends BaseController {
 		xstream.processAnnotations(this.configuration.getClass());
 		File file = new File(this.configFilePath);
 		file.createNewFile();
-		FileWriter fileWriter = new FileWriter(file);
-		xstream.toXML(this.configuration, fileWriter);
-		fileWriter.flush();
-		fileWriter.close();
+		FileOutputStream fileOutputStream = new FileOutputStream(file);
+		xstream.toXML(this.configuration, fileOutputStream);
+		fileOutputStream.flush();
+		fileOutputStream.close();
 	}
 
 }
