@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -227,10 +226,9 @@ public class HipChatConfigurationControllerTest {
 		configFile.createNewFile();
 		assertTrue(configFile.exists());
 		FileWriter fileWriter = new FileWriter(configFile);
-		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-		bufferedWriter.write(configFileContent);
-		bufferedWriter.flush();
-		bufferedWriter.close();
+		fileWriter.write(configFileContent);
+		fileWriter.flush();
+		fileWriter.close();
 
 		// Execute
 		// The config file must must not have been overwritten on disk after
@@ -306,10 +304,9 @@ public class HipChatConfigurationControllerTest {
 		assertTrue(configFile.createNewFile());
 		assertTrue(configFile.exists());
 		FileWriter fileWriter = new FileWriter(configFile);
-		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-		bufferedWriter.write(configFileContent);
-		bufferedWriter.flush();
-		bufferedWriter.close();
+		fileWriter.write(configFileContent);
+		fileWriter.flush();
+		fileWriter.close();
 
 		// Execute
 		// The config file must must not have been overwritten on disk after
@@ -405,10 +402,9 @@ public class HipChatConfigurationControllerTest {
 		configFile.createNewFile();
 		assertTrue(configFile.exists());
 		FileWriter fileWriter = new FileWriter(configFile);
-		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-		bufferedWriter.write(configFileContent);
-		bufferedWriter.flush();
-		bufferedWriter.close();
+		fileWriter.write(configFileContent);
+		fileWriter.flush();
+		fileWriter.close();
 
 		// Execute
 		// The config file must must not have been overwritten on disk after
@@ -475,9 +471,8 @@ public class HipChatConfigurationControllerTest {
 		file.createNewFile();
 		System.out.println(String.format("Canonical path to config file for test: %s", file.getCanonicalPath()));
 		FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fileWriter);
-		bw.write(v0dot1ConfigurationText);
-		bw.close();
+		fileWriter.write(v0dot1ConfigurationText);
+		fileWriter.flush();
 		fileWriter.close();
 
 		// Mocks
