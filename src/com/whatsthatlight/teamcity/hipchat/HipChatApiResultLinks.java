@@ -16,9 +16,27 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat;
 
-public class HipChatMessageFormat {
-	
-	public static final String TEXT = "text";
-	public static final String HTML = "html";
+import org.codehaus.jackson.annotate.JsonProperty;
 
+public class HipChatApiResultLinks {
+
+	@JsonProperty("self")
+	public String self;
+	
+	@JsonProperty("prev")
+	public String prev;
+	
+	@JsonProperty("next")
+	public String next;
+	
+	public HipChatApiResultLinks() {
+		// Intentionally left empty
+	}
+	
+	public HipChatApiResultLinks(String self, String prev, String next) {
+		this.self = self;
+		this.prev = prev;
+		this.next = next;
+	}
+	
 }

@@ -39,12 +39,13 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	private static Random rng = new Random();
 	private String messageFormat;
 	private HashMap<TeamCityEvent, HipChatMessageBundle> eventMap;
+	private HashMap<String, String> emoticonCache;
 
 	public HipChatServerExtension(@NotNull SBuildServer server, @NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor) {
 		this.server = server;
 		this.configuration = configuration;
 		this.processor = processor;
-		this.messageFormat = HipChatMessageFormat.TEXT;
+		this.messageFormat = HipChatMessageFormat.HTML;
 		this.eventMap = new HashMap<TeamCityEvent, HipChatMessageBundle>();
 		this.eventMap.put(TeamCityEvent.BUILD_STARTED, 
 				new HipChatMessageBundle(HipChatNotificationMessageTemplate.BUILD_STARTED, 
@@ -70,10 +71,24 @@ public class HipChatServerExtension extends BuildServerAdapter {
 				new HipChatMessageBundle(HipChatNotificationMessageTemplate.SERVER_SHUTDOWN, 
 						null, 
 						HipChatMessageColour.NEUTRAL));
+		this.emoticonCache = new HashMap<String, String>();
 		logger.debug("Server extension created");
 	}
 
 	public void register() {
+		logger.debug("Caching all available emoticons");
+
+		int startIndex = 0;
+		HipChatEmoticons emoticons;
+		do {
+			emoticons = this.processor.getEmoticons(startIndex);
+			for (HipChatEmoticon emoticon : emoticons.items) {
+				logger.debug(String.format("Adding emoticon: %s - %s", emoticon.shortcut, emoticon.url));
+				this.emoticonCache.put(emoticon.shortcut, emoticon.url);
+			}
+			startIndex = startIndex + emoticons.maxResults;
+		} while (emoticons.links.next != null);
+		
 		this.server.addListener(this);
 		logger.debug("Server extension registered");
 	}
@@ -136,7 +151,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 			logger.info(String.format("Received %s build event", event));
 			if (!this.configuration.getDisabledStatus() && !build.isPersonal()) {
 				logger.info("Processing build event");
-				String message = createPlainTextBuildEventMessage(build, event);
+				String message = createHtmlBuildEventMessage(build, event);
 				String colour = getBuildEventMessageColour(event);
 				ProjectManager projectManager = this.server.getProjectManager();
 				SProject project = projectManager.findProjectById(build.getProjectId());
@@ -171,14 +186,24 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		return this.eventMap.get(buildEvent).getColour();
 	}
 
-	private String createPlainTextBuildEventMessage(SRunningBuild build, TeamCityEvent buildEvent) {
+	private String createHtmlBuildEventMessage(SRunningBuild build, TeamCityEvent buildEvent) {
 		HipChatMessageBundle bundle = this.eventMap.get(buildEvent);
 		ST template = new ST(bundle.getTemplate());
+		
 		String emoticon = getRandomEmoticon(bundle.getEmoticonSet());
+		logger.debug(String.format("Emoticon: %s", emoticon));
+		String emoticonUrl = this.emoticonCache.get(emoticon);
+		String emoticonImgTag = String.format("<img src=\"%s\">", emoticonUrl);
+				
+		String buildUrl = String.format("%s/viewLog.html?buildId=%s&tab=buildResultsDiv&buildTypeId=%s", 
+				this.server.getRootUrl(),
+				build.getBuildId(),
+				build.getBuildTypeId());	
+		String buildNumberATag = String.format("<a href=\"%s\">%s</a>", buildUrl, build.getBuildNumber());
 
-		template.add(HipChatNotificationMessageTemplate.Parameters.EMOTICON, emoticon);		
+		template.add(HipChatNotificationMessageTemplate.Parameters.EMOTICON, emoticonImgTag);		
 		template.add(HipChatNotificationMessageTemplate.Parameters.FULL_NAME_PARAM, build.getBuildType().getFullName());
-		template.add(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, build.getBuildNumber());
+		template.add(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, buildNumberATag);
 		template.add(HipChatNotificationMessageTemplate.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
 		if (buildEvent == TeamCityEvent.BUILD_INTERRUPTED) {
 			long userId = build.getCanceledInfo().getUserId();

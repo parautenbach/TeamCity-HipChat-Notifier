@@ -18,25 +18,29 @@ package com.whatsthatlight.teamcity.hipchat;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class HipChatRoomsLinks {
+public class HipChatEmoticon {
+	
+	@JsonProperty("id")
+	public String id;
 
-	@JsonProperty("self")
-	public String self;
+	@JsonProperty("links")
+	public HipChatRoomLinks links;
 	
-	@JsonProperty("prev")
-	public String prev;
+	@JsonProperty("shortcut")
+	public String shortcut;
+
+	@JsonProperty("url")
+	public String url;
 	
-	@JsonProperty("next")
-	public String next;
-	
-	public HipChatRoomsLinks() {
+	public HipChatEmoticon() {
 		// Intentionally left empty
 	}
 	
-	public HipChatRoomsLinks(String self, String prev, String next) {
-		this.self = self;
-		this.prev = prev;
-		this.next = next;
+	public HipChatEmoticon(String id, HipChatRoomLinks links, String shortcut, String url) {
+		this.id = id;
+		this.links = links;
+		this.shortcut = shortcut;
+		this.url = url;
 	}
 	
 }

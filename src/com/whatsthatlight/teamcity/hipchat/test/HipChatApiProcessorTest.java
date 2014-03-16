@@ -27,6 +27,8 @@ import org.junit.Test;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
+import com.whatsthatlight.teamcity.hipchat.HipChatEmoticon;
+import com.whatsthatlight.teamcity.hipchat.HipChatEmoticons;
 import com.whatsthatlight.teamcity.hipchat.HipChatRoom;
 import com.whatsthatlight.teamcity.hipchat.HipChatRooms;
 
@@ -36,6 +38,41 @@ public class HipChatApiProcessorTest {
 	public static void ClassSetup() {
 		// Set up a basic logger for debugging purposes
 		BasicConfigurator.configure();
+	}
+	
+	@Test
+	@Ignore
+	public void testGetEmoticons() throws URISyntaxException {
+		String apiUrl = "https://api.hipchat.com/v2/";
+		String apiToken = "token";
+		
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+		
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		
+		HipChatEmoticons emoticons = processor.getEmoticons(0);
+		for (HipChatEmoticon emoticon : emoticons.items) {
+			System.out.println(String.format("%s: %s - %s", emoticon.id, emoticon.shortcut, emoticon.url));
+		}
+	}
+	
+	@Test
+	public void testGetEmoticonsReturnsEmptyInCaseOfFailure() throws URISyntaxException {
+		String apiUrl = "https://api.hipchat.com/v2/";
+		String apiToken = "invalid_token";
+		
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+		
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		
+		HipChatEmoticons emoticons = processor.getEmoticons(0);
+		assertNotNull(emoticons);
+		assertNotNull(emoticons.items);
+		assertEquals(0, emoticons.items.size());
 	}
 	
 	@Test

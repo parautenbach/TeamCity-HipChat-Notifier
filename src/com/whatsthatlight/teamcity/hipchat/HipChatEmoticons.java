@@ -21,10 +21,10 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 // See: https://www.hipchat.com/docs/apiv2/method/get_all_rooms
-public class HipChatRooms {
+public class HipChatEmoticons {
 
 	@JsonProperty("items")
-	public List<HipChatRoom> items;
+	public List<HipChatEmoticon> items;
 
 	@JsonProperty("startIndex")
 	public int startIndex;
@@ -35,11 +35,11 @@ public class HipChatRooms {
 	@JsonProperty("links")
 	public HipChatApiResultLinks links;
 
-	public HipChatRooms() {
+	public HipChatEmoticons() {
 		// Intentionally left empty
 	}
 
-	public HipChatRooms(List<HipChatRoom> items, int startIndex, int maxResults, HipChatApiResultLinks links) {
+	public HipChatEmoticons(List<HipChatEmoticon> items, int startIndex, int maxResults, HipChatApiResultLinks links) {
 		this.items = items;
 		this.startIndex = startIndex;
 		this.maxResults = maxResults;

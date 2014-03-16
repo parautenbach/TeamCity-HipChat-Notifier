@@ -1,3 +1,6 @@
+Version 0.4.0
+* Feature: Clickable links in messages to the build.
+
 Version 0.3.1
 * Bug: Project configuration tab didn't use room ID aliases when inheriting from the default or parent configuration. 
 

@@ -46,6 +46,33 @@ public class HipChatApiProcessor {
 		this.configuration = configuration;
 	}
 	
+	public HipChatEmoticons getEmoticons(int startIndex) {
+		try {
+			URI uri = new URI(String.format("%s%s?start-index=%s", this.configuration.getApiUrl(), "emoticon", startIndex));
+			String authorisationHeader = String.format("Bearer %s", this.configuration.getApiToken());
+
+			// Make request
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpGet getRequest = new HttpGet(uri.toString());
+			getRequest.addHeader(HttpHeaders.AUTHORIZATION, authorisationHeader);
+			getRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+			HttpResponse getResponse = client.execute(getRequest);
+			StatusLine status = getResponse.getStatusLine();
+			if (status.getStatusCode() != HttpStatus.SC_OK) {
+				logger.error(String.format("Could not retrieve emoticons: %s %s", status.getStatusCode(), status.getReasonPhrase()));
+				return new HipChatEmoticons(new ArrayList<HipChatEmoticon>(), 0, 0, null);
+			}
+			
+			Reader reader = new InputStreamReader(getResponse.getEntity().getContent());		
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.readValue(reader, HipChatEmoticons.class);
+		} catch (Exception e) {
+			logger.error("Could not get emoticons", e);
+		}
+		
+		return new HipChatEmoticons(new ArrayList<HipChatEmoticon>(), 0, 0, null);
+	}
+	
 	public HipChatRooms getRooms() {
 		try {
 			URI uri = new URI(String.format("%s%s", this.configuration.getApiUrl(), "room"));
