@@ -32,9 +32,9 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 
 # Future Improvements
 
-* Add a link to the build in the notification: Messages are currently sent as text format, as it supports emoticons and mentions. To use links, one must use the HTML format, but then [emoticons aren't supported](https://www.hipchat.com/docs/apiv2/method/send_room_notification). 
+* Add a [link to the build](https://github.com/parautenbach/TeamCity-HipChat-Notifier/issues/5) in the notification: Messages are currently sent as text format, as it supports emoticons and mentions. To use links, one must use the HTML format, but then [emoticons aren't supported directly](https://www.hipchat.com/docs/apiv2/method/send_room_notification). 
 * List contributors in build started notification message: This could potentially add a lot of clutter. Still thinking about this one. 
-* Configurable notification message templates, with their colours and emoticon sets: It could be nice for users to customise these. 
+* Configurable notification message templates, with their colours and emoticon sets: It could be nice for users to customise these, or translate them into the language of their choice. 
 * Implement more events: Right now the supported events seem sufficient. 
 * Use @ mentions to send guaranteed messages to persons that have contributed to a failed build: This could add a lot of clutter. 
 
