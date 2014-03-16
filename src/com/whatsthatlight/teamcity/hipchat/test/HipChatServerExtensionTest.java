@@ -211,7 +211,7 @@ public class HipChatServerExtensionTest {
 		String expectedDefaultRoomId = "room_id";
 		String expectedProjectId = "project1";
 		String expectedParentProjectId = "_Root";
-		String rootUrl = "http://example.com/";
+		String rootUrl = "http://example.com";
 		String expectedBuildTypeId = "42";
 		long expectedBuildId = 24;
 		
@@ -335,7 +335,7 @@ public class HipChatServerExtensionTest {
 		String expectedDefaultRoomId = "room_id";
 		String expectedProjectId = "project1";
 		String expectedParentProjectId = "_Root";
-		String rootUrl = "http://example.com/";
+		String rootUrl = "http://example.com";
 		
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
@@ -395,7 +395,7 @@ public class HipChatServerExtensionTest {
 		String expectedProjectId = "project1";
 		String expectedParentProjectId = "_Root";
 		String configuredRoomId = "default";
-		String rootUrl = "http://example.com/";
+		String rootUrl = "http://example.com";
 		// If they match we can't tell that the correct one was used.
 		assertNotEquals(configuredRoomId, expectedDefaultRoomId);
 
@@ -565,7 +565,7 @@ public class HipChatServerExtensionTest {
 		String expectedRoomId = "parent_room_id";
 		String parentProjectId = "parent_project";
 		String projectId = "project";
-		String rootUrl = "http://example.com/";
+		String rootUrl = "http://example.com";
 		
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
@@ -693,7 +693,7 @@ public class HipChatServerExtensionTest {
 		String expectedProjectId = "project1";
 		String rootProjectId = "_Root";
 		String parentProjectId = "parent";
-		String rootUrl = "http://example.com/";
+		String rootUrl = "http://example.com";
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
@@ -1199,7 +1199,7 @@ public class HipChatServerExtensionTest {
 		String expectedDefaultRoomId = "room_id";
 		String expectedProjectId = "project1";
 		String expectedParentProjectId = "_Root";
-		String rootUrl = "http://example.com/";
+		String rootUrl = "http://example.com";
 		
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
@@ -1326,7 +1326,7 @@ public class HipChatServerExtensionTest {
 		String expectedDefaultRoomId = "room_id";
 		String expectedProjectId = "project1";
 		String expectedParentProjectId = "_Root";
-		String rootUrl = "http://example.com/";
+		String rootUrl = "http://example.com";
 		
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
