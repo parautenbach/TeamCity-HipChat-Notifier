@@ -16,6 +16,8 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
@@ -25,6 +27,20 @@ import jetbrains.buildServer.serverSide.SProject;
 public class Utils {
 	
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
+	
+	public static String join(Collection<String> items) {
+		String separator = ", ";
+		Iterator<String> iterator = items.iterator();
+		StringBuilder stringBuilder = new StringBuilder();
+		if (iterator.hasNext()) {
+		  stringBuilder.append(iterator.next());
+		  while (iterator.hasNext()) {
+		    stringBuilder.append(separator).append(iterator.next());
+		  }
+		}
+		
+		return stringBuilder.toString();
+	}
 	
 	public static TreeMap<String, String> getRooms(HipChatApiProcessor processor) {
 		TreeMap<String, String> map = new TreeMap<String, String>();

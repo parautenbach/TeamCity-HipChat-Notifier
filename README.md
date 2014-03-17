@@ -40,6 +40,9 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 
 # Changelog
 
+## Version 0.4.1
+* Enhancement: List the contributors to a build (if available).
+
 ## Version 0.4.0
 * Feature: Clickable links in messages to the build.
 

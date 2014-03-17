@@ -16,6 +16,8 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -29,6 +31,8 @@ import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.users.SUser;
+import jetbrains.buildServer.users.UserSet;
+import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
 
 public class HipChatServerExtension extends BuildServerAdapter {
 
@@ -185,26 +189,39 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	private String getBuildEventMessageColour(TeamCityEvent buildEvent) {
 		return this.eventMap.get(buildEvent).getColour();
 	}
-
-	private String createHtmlBuildEventMessage(SRunningBuild build, TeamCityEvent buildEvent) {
+		
+	private String createHtmlBuildEventMessage(SRunningBuild build, TeamCityEvent buildEvent) {	
 		HipChatMessageBundle bundle = this.eventMap.get(buildEvent);
 		ST template = new ST(bundle.getTemplate());
 		
+		// Add the emoticon with an img tag.
 		String emoticon = getRandomEmoticon(bundle.getEmoticonSet());
 		logger.debug(String.format("Emoticon: %s", emoticon));
 		String emoticonUrl = this.emoticonCache.get(emoticon);
 		String emoticonImgTag = String.format("<img src=\"%s\">", emoticonUrl);
 				
+		// Add a link to the build.
 		String buildUrl = String.format("%s/viewLog.html?buildId=%s&tab=buildResultsDiv&buildTypeId=%s", 
 				this.server.getRootUrl(),
 				build.getBuildId(),
 				build.getBuildTypeId());	
 		String buildNumberATag = String.format("<a href=\"%s\">%s</a>", buildUrl, build.getBuildNumber());
 
+		// Add the contributors (committers).
+		UserSet<SUser> users = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
+		Collection<String> userCollection = new ArrayList<String>();
+		for (SUser user : users.getUsers()) {
+			userCollection.add(user.getName());
+		}
+		String contributors = Utils.join(userCollection);
+		
+		// Fill the template.
 		template.add(HipChatNotificationMessageTemplate.Parameters.EMOTICON, emoticonImgTag);		
 		template.add(HipChatNotificationMessageTemplate.Parameters.FULL_NAME_PARAM, build.getBuildType().getFullName());
 		template.add(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, buildNumberATag);
 		template.add(HipChatNotificationMessageTemplate.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
+		template.add(HipChatNotificationMessageTemplate.Attributes.HAS_CONTRIBUTORS, !contributors.isEmpty());
+		template.add(HipChatNotificationMessageTemplate.Parameters.CONTRIBUTORS, contributors);
 		if (buildEvent == TeamCityEvent.BUILD_INTERRUPTED) {
 			long userId = build.getCanceledInfo().getUserId();
 			SUser user = this.server.getUserModel().findUserById(userId);

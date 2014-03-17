@@ -25,12 +25,19 @@ public class HipChatNotificationMessageTemplate {
 		public static final String TRIGGERED_BY = "triggeredBy";
 		public static final String EMOTICON = "emoticon";
 		public static final String CANCELLED_BY = "cancelledBy";
+		public static final String CONTRIBUTORS = "contributors";
 		
 	}
 	
-	public static final String BUILD_STARTED = "Build \"<fullName>\" has started. This is build number #<buildNumber>. Triggered by <triggeredBy>. <emoticon>";
-	public static final String BUILD_SUCCESSFUL = "Build \"<fullName>\" was successful. It was build number #<buildNumber>. Triggered by <triggeredBy>. <emoticon>";
-	public static final String BUILD_FAILED = "Build \"<fullName>\" failed. It was build number #<buildNumber>. Triggered by <triggeredBy>. <emoticon>";
+	public class Attributes {
+		
+		public static final String HAS_CONTRIBUTORS = "hasContributors";
+		
+	}
+
+	public static final String BUILD_STARTED = "Build \"<fullName>\" has started. This is build number #<buildNumber>. Triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
+	public static final String BUILD_SUCCESSFUL = "Build \"<fullName>\" was successful. It was build number #<buildNumber>. Triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
+	public static final String BUILD_FAILED = "Build \"<fullName>\" failed. It was build number #<buildNumber>. Triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
 	public static final String BUILD_INTERRUPTED = "Build \"<fullName>\" was cancelled. It was build number #<buildNumber>. Cancelled by <cancelledBy>. <emoticon>";
 	public static final String SERVER_STARTUP = "Build server started.";
 	public static final String SERVER_SHUTDOWN = "Build server shutting down.";

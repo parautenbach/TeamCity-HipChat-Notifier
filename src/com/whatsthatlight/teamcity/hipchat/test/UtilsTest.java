@@ -17,6 +17,10 @@ limitations under the License.
 package com.whatsthatlight.teamcity.hipchat.test;
 
 import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 import jetbrains.buildServer.serverSide.SProject;
 
 import org.apache.log4j.BasicConfigurator;
@@ -36,6 +40,15 @@ public class UtilsTest {
 	public static void ClassSetup() {
 		// Set up a basic logger for debugging purposes
 		BasicConfigurator.configure();
+	}
+	
+	@Test
+	public void testJoin() {
+		Collection<String> arrayListItems = new ArrayList<String>();
+		arrayListItems.add("foo");
+		arrayListItems.add("bar");
+		arrayListItems.add("baz");
+		assertEquals("foo, bar, baz", Utils.join(arrayListItems));
 	}
 	
 	@Test
