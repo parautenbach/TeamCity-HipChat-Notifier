@@ -1,3 +1,6 @@
+Version 0.4.2
+* Enhancement: Made the project/build configuration a clickable link.
+
 Version 0.4.1
 * Enhancement: List the contributors to a build (if available).
 
