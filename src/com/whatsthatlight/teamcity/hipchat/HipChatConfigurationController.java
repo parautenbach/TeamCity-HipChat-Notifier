@@ -18,6 +18,7 @@ package com.whatsthatlight.teamcity.hipchat;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 
 import org.apache.http.HttpStatus;
@@ -220,8 +221,9 @@ public class HipChatConfigurationController extends BaseController {
 		xstream.setClassLoader(this.configuration.getClass().getClassLoader());
 		xstream.setClassLoader(HipChatProjectConfiguration.class.getClassLoader());
 		xstream.processAnnotations(HipChatConfiguration.class);
-		File file = new File(this.configFilePath);
-		HipChatConfiguration configuration = (HipChatConfiguration) xstream.fromXML(file);
+		FileReader fileReader = new FileReader(this.configFilePath);
+		HipChatConfiguration configuration = (HipChatConfiguration) xstream.fromXML(fileReader);
+		fileReader.close();
 		
 		// Copy the values, because we need it on the original shared (bean),
 		// which is a singleton
