@@ -32,7 +32,6 @@ For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's
 
 # Future Improvements
 
-* List contributors in build started notification message: This could potentially add a lot of clutter. Still thinking about this one. 
 * Configurable notification message templates, with their colours and emoticon sets: It could be nice for users to customise these, or translate them into the language of their choice. 
 * Implement more events: Right now the supported events seem sufficient. 
 * Use @ mentions to send guaranteed messages to persons that have contributed to a failed build: This could add a lot of clutter. 
