@@ -379,7 +379,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);
@@ -442,9 +442,10 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getProjectExternalId()).thenReturn(expectedProjectId);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);
@@ -504,6 +505,11 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+
+		@SuppressWarnings("unchecked")
+		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);		
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
+		
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);
@@ -558,6 +564,10 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		@SuppressWarnings("unchecked")
+		UserSet<SUser> userSet = (UserSet<SUser>)
+		mock(UserSet.class);
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);
@@ -615,7 +625,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(parentProjectId);
 		SProject project = mock(SProject.class);
@@ -682,7 +692,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(parentProjectId);
 		SProject project = mock(SProject.class);
@@ -749,7 +759,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentParentProject = mock(SProject.class);
 		when(parentParentProject.getProjectId()).thenReturn(rootProjectId);
 		SProject parentProject = mock(SProject.class);
@@ -815,7 +825,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentParentProject = mock(SProject.class);
 		when(parentParentProject.getProjectId()).thenReturn(rootProjectId);
 		SProject parentProject = mock(SProject.class);
@@ -882,7 +892,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentParentProject = mock(SProject.class);
 		when(parentParentProject.getProjectId()).thenReturn(parentParentProjectId);
 		SProject parentProject = mock(SProject.class);
@@ -952,7 +962,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentParentProject = mock(SProject.class);
 		when(parentParentProject.getProjectId()).thenReturn(parentParentProjectId);
 		SProject parentProject = mock(SProject.class);
@@ -1019,6 +1029,10 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		@SuppressWarnings("unchecked")
+		UserSet<SUser> userSet = (UserSet<SUser>)
+		mock(UserSet.class);
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentParentProject = mock(SProject.class);
 		when(parentParentProject.getProjectId()).thenReturn(rootProjectId);
 		SProject parentProject = mock(SProject.class);
@@ -1079,6 +1093,10 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		@SuppressWarnings("unchecked")
+		UserSet<SUser> userSet = (UserSet<SUser>)
+		mock(UserSet.class);
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentParentProject = mock(SProject.class);
 		when(parentParentProject.getProjectId()).thenReturn(rootProjectId);
 		SProject parentProject = mock(SProject.class);
@@ -1142,7 +1160,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);
@@ -1270,7 +1288,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);
@@ -1403,7 +1421,7 @@ public class HipChatServerExtensionTest {
 		when(build.getCanceledInfo()).thenReturn(canceledInfo);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SUser user = mock(SUser.class);
 		when(user.getDescriptiveName()).thenReturn(expectedCanceledBy);
 		UserModel userModel = mock(UserModel.class);
@@ -1561,7 +1579,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);
@@ -1614,7 +1632,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);
@@ -1663,7 +1681,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		Status status = Status.FAILURE;
 		when(build.getBuildStatus()).thenReturn(status);
 		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
@@ -1722,7 +1740,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
-		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet );
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SUser user = mock(SUser.class);
 		when(user.getDescriptiveName()).thenReturn(expectedCanceledBy);
 		UserModel userModel = mock(UserModel.class);

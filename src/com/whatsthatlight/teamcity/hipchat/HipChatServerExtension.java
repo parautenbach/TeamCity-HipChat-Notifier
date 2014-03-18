@@ -194,30 +194,34 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		HipChatMessageBundle bundle = this.eventMap.get(buildEvent);
 		ST template = new ST(bundle.getTemplate());
 		
-		// Add the emoticon with an img tag.
+		// Emoticon
 		String emoticon = getRandomEmoticon(bundle.getEmoticonSet());
 		logger.debug(String.format("Emoticon: %s", emoticon));
 		String emoticonUrl = this.emoticonCache.get(emoticon);
 		String emoticonImgTag = String.format("<img src=\"%s\">", emoticonUrl);
 				
-		// Add a link to the build.
+		// Build
 		String buildUrl = String.format("%s/viewLog.html?buildId=%s&tab=buildResultsDiv&buildTypeId=%s", 
 				this.server.getRootUrl(),
 				build.getBuildId(),
 				build.getBuildTypeId());	
 		String buildNumberATag = String.format("<a href=\"%s\">%s</a>", buildUrl, build.getBuildNumber());
 
-		// Add the contributors (committers).
+		// Project
+		String projectUrl = String.format("%s/project.html?projectId=%s", this.server.getRootUrl(), build.getProjectExternalId());
+		String fullNameATag = String.format("<a href=\"%s\">%s</a>", projectUrl, build.getBuildType().getFullName());	
+
+		// Contributors (committers).
 		UserSet<SUser> users = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
 		Collection<String> userCollection = new ArrayList<String>();
 		for (SUser user : users.getUsers()) {
 			userCollection.add(user.getName());
 		}
-		String contributors = Utils.join(userCollection);
-		
+		String contributors = Utils.join(userCollection);		
+				
 		// Fill the template.
 		template.add(HipChatNotificationMessageTemplate.Parameters.EMOTICON, emoticonImgTag);		
-		template.add(HipChatNotificationMessageTemplate.Parameters.FULL_NAME_PARAM, build.getBuildType().getFullName());
+		template.add(HipChatNotificationMessageTemplate.Parameters.FULL_NAME, fullNameATag);
 		template.add(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, buildNumberATag);
 		template.add(HipChatNotificationMessageTemplate.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
 		template.add(HipChatNotificationMessageTemplate.Attributes.HAS_CONTRIBUTORS, !contributors.isEmpty());
