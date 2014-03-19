@@ -23,12 +23,12 @@ On TeamCity, as an administrator, configure the generated token and other settin
 
 # Developers
 
-* This is an Eclipse project. To open the project in Eclipse go to File -> Import -> General -> Existing Project into Workspace -> Select Root directory -> Navigate to the folder with HipChat Notifier source code 
-* Clone the repository and set the `teamcity.home` property in the `build.xml` to your TeamCity server's home directory (Windows users, use forward slashes in the path, e.g. C:/TeamCity). 
+* This is an Eclipse project. To open the project in Eclipse go to _File -> Import -> General -> Existing Projects into Workspace -> Select root directory_. Navigate to the folder with HipChat Notifier source code. You can consider to use the Mylyn Github connector for Eclipse.  
+* Clone the repository and set the `teamcity.home` property in the `build.xml` to your TeamCity server's home directory (Windows users, use forward slashes in the path, e.g. `C:/TeamCity`). 
 * Set the `TEAMCITY_HOME` classpath variable under Eclipse preferences to the same location as above. 
 * Check that Eclipse knows where to find a JDK (under Installed JREs in the Java section of Eclipse preferences). 
-* On Windows make sure that you have JAVA_HOME variable set to where your JDK is installed, e.g. C:\Program Files\Java\jdk1.7.0_51
-* To release the project as a Team City plugin right click on build.xml and select Run As -> 2 Ant Build -> Check Release target, the plugin package will be created under build folder.
+* On Windows make sure that you have `JAVA_HOME` variable set to where your JDK is installed, e.g. `C:\Program Files\Java\jdk1.7.0_51`.
+* To release the project as a TeamCity plugin right click on `build.xml` and select _Run As -> 2 Ant Build_. Check the release target and run. The plugin package will be created under a `build` folder.
 
 For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's root to `conf/teamcity-server-log4j.xml` and then monitor `logs/hipchat-notifier.log `.
 
