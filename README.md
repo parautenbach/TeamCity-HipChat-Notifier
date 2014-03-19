@@ -23,6 +23,7 @@ On TeamCity, as an administrator, configure the generated token and other settin
 
 # Developers
 
+
 * This is an Eclipse project. To open the project in Eclipse go to _File -> Import -> General -> Existing Projects into Workspace -> Select root directory_. Navigate to the folder with HipChat Notifier source code. You can consider to use the Mylyn Github connector for Eclipse.  
 * Clone the repository and set the `teamcity.home` property in the `build.xml` to your TeamCity server's home directory (Windows users, use forward slashes in the path, e.g. `C:/TeamCity`). 
 * Set the `TEAMCITY_HOME` classpath variable under Eclipse preferences to the same location as above. 
