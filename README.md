@@ -42,6 +42,9 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 # Changelog
 
+## Version 0.4.3
+* Bug: If emoticons can't be retrieved during plugin initialisation, the server extension's registration will fail.
+
 ## Version 0.4.2
 * Enhancement: Made the project/build configuration a clickable link.
 
