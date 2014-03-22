@@ -70,9 +70,7 @@ public class HipChatApiProcessorTest {
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		
 		HipChatEmoticons emoticons = processor.getEmoticons(0);
-		assertNotNull(emoticons);
-		assertNotNull(emoticons.items);
-		assertEquals(0, emoticons.items.size());
+		assertNull(emoticons);
 	}
 	
 	@Test

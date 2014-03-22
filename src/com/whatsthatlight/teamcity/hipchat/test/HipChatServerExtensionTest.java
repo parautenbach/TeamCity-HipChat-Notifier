@@ -67,6 +67,17 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
+	public void testRegisterDoesNotRaiseExceptionWhenEmoticonRetrievalFails() throws URISyntaxException {		
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl("http://example.com");
+		configuration.setApiToken("no_such_token");
+		SBuildServer server = mock(SBuildServer.class);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		extension.register();
+	}
+	
+	@Test
 	public void testServerStartupEvent() throws URISyntaxException, InterruptedException {
 		// Test parameters
 		String expectedStartMessage = "Build server started.";

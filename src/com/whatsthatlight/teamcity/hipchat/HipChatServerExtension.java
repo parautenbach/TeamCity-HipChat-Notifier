@@ -83,9 +83,13 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		logger.debug("Caching all available emoticons");
 
 		int startIndex = 0;
-		HipChatEmoticons emoticons;
+		HipChatEmoticons emoticons = null;
 		do {
+			logger.debug(String.format("Start index: %s", startIndex));
 			emoticons = this.processor.getEmoticons(startIndex);
+			if (emoticons == null) {
+				break;
+			}
 			for (HipChatEmoticon emoticon : emoticons.items) {
 				logger.debug(String.format("Adding emoticon: %s - %s", emoticon.shortcut, emoticon.url));
 				this.emoticonCache.put(emoticon.shortcut, emoticon.url);

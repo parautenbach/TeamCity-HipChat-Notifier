@@ -31,7 +31,7 @@ On TeamCity, as an administrator, configure the generated token and other settin
 * On Windows make sure that you have `JAVA_HOME` variable set to where your JDK is installed, e.g. `C:\Program Files\Java\jdk1.7.0_51`.
 * To release the project as a TeamCity plugin right click on `build.xml` and select _Run As -> 2 Ant Build_. Check the release target and run. The plugin package will be created under a `build` folder.
 
-For debugging, add the snippets in `teamcity-server-log4j.xml` in this project's root to `conf/teamcity-server-log4j.xml` and then monitor `logs/hipchat-notifier.log `.
+For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.com/parautenbach/TeamCity-HipChat-Notifier/blob/master/teamcity-server-log4j.xml) in this project's root to `conf/teamcity-server-log4j.xml` and then monitor `logs/hipchat-notifier.log `.
 
 # Future Improvements
 

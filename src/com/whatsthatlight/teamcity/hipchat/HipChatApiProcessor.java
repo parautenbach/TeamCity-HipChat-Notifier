@@ -60,7 +60,7 @@ public class HipChatApiProcessor {
 			StatusLine status = getResponse.getStatusLine();
 			if (status.getStatusCode() != HttpStatus.SC_OK) {
 				logger.error(String.format("Could not retrieve emoticons: %s %s", status.getStatusCode(), status.getReasonPhrase()));
-				return new HipChatEmoticons(new ArrayList<HipChatEmoticon>(), 0, 0, null);
+				return null;
 			}
 			
 			Reader reader = new InputStreamReader(getResponse.getEntity().getContent());		
@@ -70,7 +70,7 @@ public class HipChatApiProcessor {
 			logger.error("Could not get emoticons", e);
 		}
 		
-		return new HipChatEmoticons(new ArrayList<HipChatEmoticon>(), 0, 0, null);
+		return null;
 	}
 	
 	public HipChatRooms getRooms() {
