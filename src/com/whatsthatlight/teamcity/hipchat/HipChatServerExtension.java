@@ -215,14 +215,14 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		String projectUrl = String.format("%s/project.html?projectId=%s", this.server.getRootUrl(), build.getProjectExternalId());
 		String fullNameATag = String.format("<a href=\"%s\">%s</a>", projectUrl, build.getBuildType().getFullName());	
 
-		// Contributors (committers).
+		// Contributors (committers)
 		UserSet<SUser> users = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
 		Collection<String> userCollection = new ArrayList<String>();
 		for (SUser user : users.getUsers()) {
 			userCollection.add(user.getName());
 		}
 		String contributors = Utils.join(userCollection);		
-				
+
 		// Fill the template.
 		template.add(HipChatNotificationMessageTemplate.Parameters.EMOTICON, emoticonImgTag);		
 		template.add(HipChatNotificationMessageTemplate.Parameters.FULL_NAME, fullNameATag);
