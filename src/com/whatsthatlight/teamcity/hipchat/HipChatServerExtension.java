@@ -18,7 +18,9 @@ package com.whatsthatlight.teamcity.hipchat;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -32,7 +34,6 @@ import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.users.SUser;
-import jetbrains.buildServer.users.UserSet;
 import jetbrains.buildServer.vcs.SVcsModification;
 import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
 
@@ -218,17 +219,23 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		String fullNameATag = String.format("<a href=\"%s\">%s</a>", projectUrl, build.getBuildType().getFullName());	
 
 		// Contributors (committers)
-		try {
-			List<SVcsModification> changes = build.getChanges(SelectPrevBuildPolicy.SINCE_LAST_BUILD, true);
-			logger.debug(String.format("Number of changes: %s", changes.size()));
-		} catch (Exception e) {}
-		UserSet<SUser> users = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
-		logger.debug(String.format("Initial contributors: %s, %s", !users.getUsers().isEmpty(), users != UserSet.EMPTY));
-		Collection<String> userCollection = new ArrayList<String>();
-		for (SUser user : users.getUsers()) {
-			userCollection.add(user.getName());
+		List<SVcsModification> changes = build.getChanges(SelectPrevBuildPolicy.SINCE_LAST_BUILD, true);
+		logger.debug(String.format("Number of changes: %s", changes.size()));
+		// Use a set to ensure each user is added only once
+		Collection<String> userSet = new HashSet<String>();
+		for (SVcsModification modification : changes) {
+			String name = modification.getUserName();
+			List<Long> ids = modification.getCommitterIds();
+			if (!ids.isEmpty()) {
+				// There should be only one user ID per commit.
+				name = this.server.getUserModel().findUserById(ids.get(0)).getDescriptiveName();
+			}
+			logger.debug(String.format("Adding contributor: %s", name));
+			userSet.add(name);
 		}
-		String contributors = Utils.join(userCollection);
+		List<String> userList = new ArrayList<String>(userSet);
+		Collections.sort(userList, String.CASE_INSENSITIVE_ORDER);
+		String contributors = Utils.join(userList);
 		boolean hasContributors = !contributors.isEmpty();
 		logger.debug(String.format("Has contributors: %s", hasContributors));
 

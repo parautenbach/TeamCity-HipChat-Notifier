@@ -69,6 +69,7 @@ limitations under the License.
 				</td>
 			</tr>
 			<tr>
+				<!-- TODO: Refresh this on URL or token change. -->
 				<th><label for="defaultRoomId">Default room: </label></th>
 				<td>
 				  <forms:select name="defaultRoomId">

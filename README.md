@@ -12,7 +12,12 @@ directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins
 
 [Visit](http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/) my website for more detailled instructions and information.
 
-Note: I've tested the plugin with TeamCity 8. Support for older versions are uncertain, but I would gladly provide information and experiences by others here. 
+Compatibility:
+* Releases v0.1.0 to v0.4.3 was tested against TeamCity 8.0.5.
+* Release v0.4.4 was tested against TeamCity 8.1.1.
+* Support for older TeamCity versions is uncertain.
+
+Note: I would gladly provide information and experiences by others here. 
 
 # Configuration
 
@@ -41,6 +46,9 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 * Add more build statistics, such as the number of tests passed and failed.
 
 # Changelog
+
+## Version 0.4.4
+* Bug: Contributors would only be included if they have a name (and not only a username) on the build server.
 
 ## Version 0.4.3
 * Bug: If emoticons can't be retrieved during plugin initialisation, the server extension's registration will fail.

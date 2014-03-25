@@ -1,3 +1,6 @@
+Version 0.4.4
+* Bug: Contributors would only be included if they have a name (and not only a username) on the build server.
+
 Version 0.4.3
 * Bug: If emoticons can't be retrieved during plugin initialisation, the server extension's registration will fail.
 
