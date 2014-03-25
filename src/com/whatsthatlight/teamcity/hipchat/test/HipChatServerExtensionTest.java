@@ -266,7 +266,7 @@ public class HipChatServerExtensionTest {
 		users.add(user3);
 		when(userSet.getUsers()).thenReturn(users);
 		
-		when(build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD)).thenReturn(userSet);
+		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);

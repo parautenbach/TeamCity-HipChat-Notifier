@@ -217,18 +217,21 @@ public class HipChatServerExtension extends BuildServerAdapter {
 
 		// Contributors (committers)
 		UserSet<SUser> users = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
+		logger.debug(String.format("Initial contributors: %s", users.getUsers().isEmpty()));
 		Collection<String> userCollection = new ArrayList<String>();
 		for (SUser user : users.getUsers()) {
 			userCollection.add(user.getName());
 		}
-		String contributors = Utils.join(userCollection);		
+		String contributors = Utils.join(userCollection);
+		boolean hasContributors = !contributors.isEmpty();
+		logger.debug(String.format("Has contributors: %s", hasContributors));
 
 		// Fill the template.
 		template.add(HipChatNotificationMessageTemplate.Parameters.EMOTICON, emoticonImgTag);		
 		template.add(HipChatNotificationMessageTemplate.Parameters.FULL_NAME, fullNameATag);
 		template.add(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, buildNumberATag);
 		template.add(HipChatNotificationMessageTemplate.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
-		template.add(HipChatNotificationMessageTemplate.Attributes.HAS_CONTRIBUTORS, !contributors.isEmpty());
+		template.add(HipChatNotificationMessageTemplate.Attributes.HAS_CONTRIBUTORS, hasContributors);
 		template.add(HipChatNotificationMessageTemplate.Parameters.CONTRIBUTORS, contributors);
 		if (buildEvent == TeamCityEvent.BUILD_INTERRUPTED) {
 			long userId = build.getCanceledInfo().getUserId();
