@@ -19,6 +19,7 @@ package com.whatsthatlight.teamcity.hipchat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
@@ -32,6 +33,7 @@ import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.users.UserSet;
+import jetbrains.buildServer.vcs.SVcsModification;
 import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
 
 public class HipChatServerExtension extends BuildServerAdapter {
@@ -216,8 +218,12 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		String fullNameATag = String.format("<a href=\"%s\">%s</a>", projectUrl, build.getBuildType().getFullName());	
 
 		// Contributors (committers)
+		try {
+			List<SVcsModification> changes = build.getChanges(SelectPrevBuildPolicy.SINCE_LAST_BUILD, true);
+			logger.debug(String.format("Number of changes: %s", changes.size()));
+		} catch (Exception e) {}
 		UserSet<SUser> users = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
-		logger.debug(String.format("Initial contributors: %s", users.getUsers().isEmpty()));
+		logger.debug(String.format("Initial contributors: %s, %s", !users.getUsers().isEmpty(), users != UserSet.EMPTY));
 		Collection<String> userCollection = new ArrayList<String>();
 		for (SUser user : users.getUsers()) {
 			userCollection.add(user.getName());
