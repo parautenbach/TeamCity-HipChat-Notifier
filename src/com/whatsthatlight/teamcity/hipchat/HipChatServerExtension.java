@@ -34,7 +34,7 @@ import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.users.SUser;
-import jetbrains.buildServer.vcs.SVcsModification;
+import jetbrains.buildServer.users.UserSet;
 import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
 
 public class HipChatServerExtension extends BuildServerAdapter {
@@ -219,19 +219,10 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		String fullNameATag = String.format("<a href=\"%s\">%s</a>", projectUrl, build.getBuildType().getFullName());	
 
 		// Contributors (committers)
-		List<SVcsModification> changes = build.getChanges(SelectPrevBuildPolicy.SINCE_LAST_BUILD, true);
-		logger.debug(String.format("Number of changes: %s", changes.size()));
-		// Use a set to ensure each user is added only once
+		UserSet<SUser> committers = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);	
 		Collection<String> userSet = new HashSet<String>();
-		for (SVcsModification modification : changes) {
-			String name = modification.getUserName();
-			List<Long> ids = modification.getCommitterIds();
-			if (!ids.isEmpty()) {
-				// There should be only one user ID per commit.
-				name = this.server.getUserModel().findUserById(ids.get(0)).getDescriptiveName();
-			}
-			logger.debug(String.format("Adding contributor: %s", name));
-			userSet.add(name);
+		for (SUser committer : committers.getUsers()) {
+			userSet.add(committer.getDescriptiveName());
 		}
 		List<String> userList = new ArrayList<String>(userSet);
 		Collections.sort(userList, String.CASE_INSENSITIVE_ORDER);

@@ -35,6 +35,7 @@ public class HipChatNotificationMessageTemplate {
 		
 	}
 
+	// Must we remove contributors from the start event?
 	public static final String BUILD_STARTED = "Build <fullName> has started. This is build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
 	public static final String BUILD_SUCCESSFUL = "Build <fullName> was successful. It was build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
 	public static final String BUILD_FAILED = "Build <fullName> failed. It was build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";

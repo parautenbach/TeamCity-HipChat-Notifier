@@ -19,7 +19,6 @@ package com.whatsthatlight.teamcity.hipchat.test;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import jetbrains.buildServer.messages.Status;
@@ -33,7 +32,6 @@ import jetbrains.buildServer.serverSide.userChanges.CanceledInfo;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.users.UserModel;
 import jetbrains.buildServer.users.UserSet;
-import jetbrains.buildServer.vcs.SVcsModification;
 import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
 
 import org.apache.log4j.BasicConfigurator;
@@ -234,9 +232,7 @@ public class HipChatServerExtensionTest {
 		String expectedUser1Name = "foo";
 		String expectedUser2Name = "bar";
 		String expectedUser3Name = "baz";
-		String expectedContributors = String.format("%s, %s, %s", expectedUser2Name.toUpperCase(), expectedUser3Name, expectedUser1Name.toUpperCase());
-		long expectedUserId1 = 0;
-		long expectedUserId2 = 1;
+		String expectedContributors = String.format("%s, %s, %s", expectedUser2Name, expectedUser3Name, expectedUser1Name);
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
@@ -255,49 +251,22 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
-		
+				
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		Set<SUser> users = new LinkedHashSet<SUser>();
 		SUser user1 = mock(SUser.class);
-		when(user1.getDescriptiveName()).thenReturn(expectedUser1Name.toUpperCase());
+		when(user1.getDescriptiveName()).thenReturn(expectedUser1Name);
 		users.add(user1);
 		SUser user2 = mock(SUser.class);
-		when(user2.getDescriptiveName()).thenReturn(expectedUser2Name.toUpperCase());
+		when(user2.getDescriptiveName()).thenReturn(expectedUser2Name);
 		users.add(user2);
 		SUser user3 = mock(SUser.class);
-		when(user3.getDescriptiveName()).thenReturn(expectedUser3Name.toUpperCase());
+		when(user3.getDescriptiveName()).thenReturn(expectedUser3Name);
 		users.add(user3);
 		when(userSet.getUsers()).thenReturn(users);
+		when(build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD)).thenReturn(userSet);
 				
-		List<Long> commiterIdsList1 = new ArrayList<Long>();
-		commiterIdsList1.add(expectedUserId1);
-		List<Long> commiterIdsList2 = new ArrayList<Long>();
-		commiterIdsList2.add(expectedUserId2);
-		List<Long> commiterIdsList3 = new ArrayList<Long>();
-		
-		SVcsModification modification1 = mock(SVcsModification.class);
-		when(modification1.getUserName()).thenReturn(expectedUser1Name);
-		when(modification1.getCommitterIds()).thenReturn(commiterIdsList1);
-		SVcsModification modification2 = mock(SVcsModification.class);
-		when(modification2.getUserName()).thenReturn(expectedUser2Name);
-		when(modification2.getCommitterIds()).thenReturn(commiterIdsList2);
-		SVcsModification modification3 = mock(SVcsModification.class);
-		when(modification3.getUserName()).thenReturn(expectedUser3Name);
-		when(modification3.getCommitterIds()).thenReturn(commiterIdsList3);
-		
-		List<SVcsModification> changes = new ArrayList<SVcsModification>();
-		// TODO: Test sorting
-		changes.add(modification1);
-		changes.add(modification3);
-		changes.add(modification2);
-		
-		when(build.getChanges(any(SelectPrevBuildPolicy.class), any(Boolean.class))).thenReturn(changes);
-
-		UserModel userModel = mock(UserModel.class);
-		when(userModel.findUserById(expectedUserId1)).thenReturn(user1);
-		when(userModel.findUserById(expectedUserId2)).thenReturn(user2);
-		
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
 		SProject project = mock(SProject.class);
@@ -308,7 +277,6 @@ public class HipChatServerExtensionTest {
 		SBuildServer server = mock(SBuildServer.class);
 		when(server.getProjectManager()).thenReturn(projectManager);
 		when(server.getRootUrl()).thenReturn(rootUrl);
-		when(server.getUserModel()).thenReturn(userModel);
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
