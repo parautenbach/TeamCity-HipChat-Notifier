@@ -284,7 +284,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -353,7 +353,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -410,7 +410,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -478,7 +478,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -538,7 +538,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -598,7 +598,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -659,7 +659,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -727,7 +727,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -793,7 +793,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -860,7 +860,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -929,7 +929,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -1001,7 +1001,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -1065,7 +1065,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -1131,7 +1131,7 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
 		}
@@ -1607,7 +1607,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
 		extension.register();
-		extension.buildStarted(build);
+		extension.changesLoaded(build);
 	}
 
 	@Test

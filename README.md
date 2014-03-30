@@ -47,6 +47,9 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 # Changelog
 
+## Version 0.5.0
+* 
+
 ## Version 0.4.4
 * Bug: Contributors would only be included if they have a name (and not only a username) on the build server.
 

@@ -69,7 +69,7 @@ limitations under the License.
 				</td>
 			</tr>
 			<tr>
-				<!-- TODO: Refresh this on URL or token change. -->
+				<!-- TODO: Automatically refresh this on URL or token change. -->
 				<th><label for="defaultRoomId">Default room: </label></th>
 				<td>
 				  <forms:select name="defaultRoomId">
@@ -80,6 +80,8 @@ limitations under the License.
                       </forms:option>
                     </c:forEach>
                   </forms:select>
+                  &nbsp;
+                  <a href="#" onclick="return HipChatAdmin.save()">Save to reload</a>
                 </td>
 			</tr>
 			<tr>
@@ -140,7 +142,7 @@ limitations under the License.
 		</table>
 		<div class="saveButtonsBlock">
 			<forms:submit label="Save" />
-			<forms:submit id="testConnection" type="button"	label="Test connection" onclick="return HipChatAdmin.testConnection()"/>
+			<forms:submit id="testConnection" type="button" label="Test connection" onclick="return HipChatAdmin.testConnection()"/>
 			<forms:saving />
 		</div>
 	</div>

@@ -25,21 +25,23 @@ public class HipChatNotificationMessageTemplate {
 		public static final String TRIGGERED_BY = "triggeredBy";
 		public static final String EMOTICON = "emoticon";
 		public static final String CANCELLED_BY = "cancelledBy";
-		public static final String CONTRIBUTORS = "contributors";
+		public static final String CONTRIBUTORS = "contributors";		
+		public static final String BRANCH = "branch";
 		
 	}
 	
 	public class Attributes {
 		
+		public static final String HAS_BRANCH = "hasBranch";
 		public static final String HAS_CONTRIBUTORS = "hasContributors";
 		
 	}
 
 	// Must we remove contributors from the start event?
-	public static final String BUILD_STARTED = "Build <fullName> has started. This is build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
-	public static final String BUILD_SUCCESSFUL = "Build <fullName> was successful. It was build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
-	public static final String BUILD_FAILED = "Build <fullName> failed. It was build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
-	public static final String BUILD_INTERRUPTED = "Build <fullName> was cancelled. It was build number #<buildNumber> and was cancelled by <cancelledBy>. <emoticon>";
+	public static final String BUILD_STARTED = "Build <fullName> <if(hasBranch)>on branch <branch><endif> has started. This is build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
+	public static final String BUILD_SUCCESSFUL = "Build <fullName> <if(hasBranch)>on branch <branch><endif> was successful. It was build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
+	public static final String BUILD_FAILED = "Build <fullName> <if(hasBranch)>on branch <branch><endif> failed. It was build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
+	public static final String BUILD_INTERRUPTED = "Build <fullName> <if(hasBranch)>on branch <branch><endif> was cancelled. It was build number #<buildNumber> and was cancelled by <cancelledBy>. <emoticon>";
 	public static final String SERVER_STARTUP = "Build server started.";
 	public static final String SERVER_SHUTDOWN = "Build server shutting down.";
 

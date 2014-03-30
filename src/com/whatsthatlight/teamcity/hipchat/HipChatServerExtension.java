@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 
+import jetbrains.buildServer.serverSide.Branch;
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuildServer;
@@ -105,9 +106,9 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	}
 
 	@Override
-	public void buildStarted(SRunningBuild build) {
+	public void changesLoaded(SRunningBuild build) {
 		logger.debug(String.format("Build started: %s", build.getBuildType().getName()));
-		super.buildStarted(build);
+		super.changesLoaded(build);
 		if (this.configuration.getEvents() != null && this.configuration.getEvents().getBuildStartedStatus()) {
 			this.processBuildEvent(build, TeamCityEvent.BUILD_STARTED);
 		}
@@ -216,8 +217,18 @@ public class HipChatServerExtension extends BuildServerAdapter {
 
 		// Project
 		String projectUrl = String.format("%s/project.html?projectId=%s", this.server.getRootUrl(), build.getProjectExternalId());
-		String fullNameATag = String.format("<a href=\"%s\">%s</a>", projectUrl, build.getBuildType().getFullName());	
+		String fullNameATag = String.format("<a href=\"%s\">%s</a>", projectUrl, build.getBuildType().getFullName());
 
+		// Branch
+		Branch branch = build.getBranch();
+		boolean hasBranch = branch != null;
+		logger.debug(String.format("Has branch: %s", hasBranch));
+		String branchDisplayName = "";
+		if (hasBranch) {
+			branchDisplayName = branch.getDisplayName();
+			logger.debug(String.format("Branch: %s", branchDisplayName));
+		}
+		
 		// Contributors (committers)
 		UserSet<SUser> committers = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);	
 		Collection<String> userSet = new HashSet<String>();
@@ -237,6 +248,8 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		template.add(HipChatNotificationMessageTemplate.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
 		template.add(HipChatNotificationMessageTemplate.Attributes.HAS_CONTRIBUTORS, hasContributors);
 		template.add(HipChatNotificationMessageTemplate.Parameters.CONTRIBUTORS, contributors);
+		template.add(HipChatNotificationMessageTemplate.Attributes.HAS_BRANCH, hasBranch);
+		template.add(HipChatNotificationMessageTemplate.Parameters.BRANCH, branchDisplayName);		
 		if (buildEvent == TeamCityEvent.BUILD_INTERRUPTED) {
 			long userId = build.getCanceledInfo().getUserId();
 			SUser user = this.server.getUserModel().findUserById(userId);
