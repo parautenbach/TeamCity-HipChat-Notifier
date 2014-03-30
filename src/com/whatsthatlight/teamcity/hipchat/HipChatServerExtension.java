@@ -38,6 +38,7 @@ import freemarker.template.TemplateException;
 import jetbrains.buildServer.serverSide.Branch;
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.ProjectManager;
+import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
@@ -225,14 +226,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		}
 		
 		// Contributors (committers)
-		UserSet<SUser> committers = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);	
-		Collection<String> userSet = new HashSet<String>();
-		for (SUser committer : committers.getUsers()) {
-			userSet.add(committer.getDescriptiveName());
-		}
-		List<String> userList = new ArrayList<String>(userSet);
-		Collections.sort(userList, String.CASE_INSENSITIVE_ORDER);
-		String contributors = Utils.join(userList);
+		String contributors = getContributors(build);
 		boolean hasContributors = !contributors.isEmpty();
 		logger.debug(String.format("Has contributors: %s", hasContributors));
 
@@ -259,6 +253,18 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		return renderTemplate(template, templateMap);
 	}
 
+	private static String getContributors(SBuild build) {
+		UserSet<SUser> committers = build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);	
+		Collection<String> userSet = new HashSet<String>();
+		for (SUser committer : committers.getUsers()) {
+			userSet.add(committer.getDescriptiveName());
+		}
+		List<String> userList = new ArrayList<String>(userSet);
+		Collections.sort(userList, String.CASE_INSENSITIVE_ORDER);
+		String contributors = Utils.join(userList);
+		return contributors;
+	}
+	
 	private static Template createTemplate(String templateString) throws IOException {
 		String templateName = "template";
 		StringTemplateLoader loader = new StringTemplateLoader();
