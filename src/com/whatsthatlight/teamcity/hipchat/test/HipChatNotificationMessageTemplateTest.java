@@ -39,7 +39,11 @@ public class HipChatNotificationMessageTemplateTest {
 		templateMap.put("hasBranch", false);
 		templateMap.put("buildNumber", "");
 		templateMap.put("triggeredBy", "");
-		templateMap.put("emoticon", "");
+		templateMap.put("emoticonUrl", "");
+		templateMap.put("serverUrl", "");
+		templateMap.put("projectId", "");
+		templateMap.put("buildId", "");
+		templateMap.put("buildTypeId", "");
 		
 		// Render
 		Writer writer = new StringWriter();
@@ -72,7 +76,11 @@ public class HipChatNotificationMessageTemplateTest {
 		templateMap.put("hasBranch", false);
 		templateMap.put("buildNumber", "");
 		templateMap.put("triggeredBy", "");
-		templateMap.put("emoticon", "");
+		templateMap.put("emoticonUrl", "");
+		templateMap.put("serverUrl", "");
+		templateMap.put("projectId", "");		
+		templateMap.put("buildId", "");
+		templateMap.put("buildTypeId", "");
 		
 		// Render
 		Writer writer = new StringWriter();

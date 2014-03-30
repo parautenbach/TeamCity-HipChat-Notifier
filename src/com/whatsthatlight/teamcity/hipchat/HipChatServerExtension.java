@@ -207,31 +207,12 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		
 	private String createHtmlBuildEventMessage(SRunningBuild build, TeamCityEvent buildEvent) throws TemplateException, IOException {	
 		HipChatMessageBundle bundle = this.eventMap.get(buildEvent);
-
-		// Get a template object
-		String templateName = "template";
-		StringTemplateLoader loader = new StringTemplateLoader();
-		loader.putTemplate(templateName, bundle.getTemplate());
-		Configuration config = new Configuration();
-		config.setTemplateLoader(loader);
-		Template template = config.getTemplate(templateName);
+		Template template = createTemplate(bundle.getTemplate());
 		
 		// Emoticon
 		String emoticon = getRandomEmoticon(bundle.getEmoticonSet());
 		logger.debug(String.format("Emoticon: %s", emoticon));
 		String emoticonUrl = this.emoticonCache.get(emoticon);
-		String emoticonImgTag = String.format("<img src=\"%s\">", emoticonUrl);
-				
-		// Build
-		String buildUrl = String.format("%s/viewLog.html?buildId=%s&tab=buildResultsDiv&buildTypeId=%s", 
-				this.server.getRootUrl(),
-				build.getBuildId(),
-				build.getBuildTypeId());	
-		String buildNumberATag = String.format("<a href=\"%s\">%s</a>", buildUrl, build.getBuildNumber());
-
-		// Project
-		String projectUrl = String.format("%s/project.html?projectId=%s", this.server.getRootUrl(), build.getProjectExternalId());
-		String fullNameATag = String.format("<a href=\"%s\">%s</a>", projectUrl, build.getBuildType().getFullName());
 
 		// Branch
 		Branch branch = build.getBranch();
@@ -257,29 +238,45 @@ public class HipChatServerExtension extends BuildServerAdapter {
 
 		// Fill the template.
 		Map<String, Object> templateMap = new HashMap<String, Object>();
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.EMOTICON, emoticonImgTag);		
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.FULL_NAME, fullNameATag);
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, buildNumberATag);
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.EMOTICON_URL, emoticonUrl == null ? "" : emoticonUrl);		
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.FULL_NAME, build.getBuildType().getFullName());
 	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
 	    templateMap.put(HipChatNotificationMessageTemplate.Attributes.HAS_CONTRIBUTORS, hasContributors);
 	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.CONTRIBUTORS, contributors);
 	    templateMap.put(HipChatNotificationMessageTemplate.Attributes.HAS_BRANCH, hasBranch);
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BRANCH, branchDisplayName);		
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BRANCH, branchDisplayName);
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.SERVER_URL, this.server.getRootUrl());
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.PROJECT_ID, build.getProjectExternalId());
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BUILD_ID, build.getBuildId());
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BUILD_TYPE_ID, build.getBuildTypeId());
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, build.getBuildNumber());
 		if (buildEvent == TeamCityEvent.BUILD_INTERRUPTED) {
 			long userId = build.getCanceledInfo().getUserId();
 			SUser user = this.server.getUserModel().findUserById(userId);
 			templateMap.put(HipChatNotificationMessageTemplate.Parameters.CANCELLED_BY, user.getDescriptiveName());
 		}
 		
-		// Render
+		return renderTemplate(template, templateMap);
+	}
+
+	private static Template createTemplate(String templateString) throws IOException {
+		String templateName = "template";
+		StringTemplateLoader loader = new StringTemplateLoader();
+		loader.putTemplate(templateName, templateString);
+		Configuration config = new Configuration();
+		config.setTemplateLoader(loader);
+		return config.getTemplate(templateName);
+	}
+	
+	private static String renderTemplate(Template template, Map<String, Object> templateMap) throws TemplateException, IOException {
 		Writer writer = new StringWriter();
 	    template.process(templateMap, writer);
 	    writer.flush();
 	    String renderedTemplate = writer.toString();
 	    writer.close();
-	    return renderedTemplate;
+	    return renderedTemplate;		
 	}
-
+	
 	private static String getRandomEmoticon(String[] set) {
 		int i = rng.nextInt(set.length);
 		return set[i];
