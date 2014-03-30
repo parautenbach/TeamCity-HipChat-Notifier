@@ -38,10 +38,10 @@ public class HipChatNotificationMessageTemplate {
 	}
 
 	// Must we remove contributors from the start event?
-	public static final String BUILD_STARTED = "Build <fullName> <if(hasBranch)>on branch <branch><endif> has started. This is build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
-	public static final String BUILD_SUCCESSFUL = "Build <fullName> <if(hasBranch)>on branch <branch><endif> was successful. It was build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
-	public static final String BUILD_FAILED = "Build <fullName> <if(hasBranch)>on branch <branch><endif> failed. It was build number #<buildNumber> and was triggered by <triggeredBy>. <if(hasContributors)>Contributors: <contributors>.<endif> <emoticon>";
-	public static final String BUILD_INTERRUPTED = "Build <fullName> <if(hasBranch)>on branch <branch><endif> was cancelled. It was build number #<buildNumber> and was cancelled by <cancelledBy>. <emoticon>";
+	public static final String BUILD_STARTED = "Build ${fullName} <#if hasBranch>on branch <b>${branch}</b></#if> has started. This is build number #${buildNumber} and was triggered by ${triggeredBy}. <#if hasContributors>Contributors: ${contributors}.</#if> ${emoticon}";
+	public static final String BUILD_SUCCESSFUL = "Build ${fullName} <#if hasBranch>on branch <b>${branch}</b></#if> was successful. It was build number #${buildNumber} and was triggered by ${triggeredBy}. <#if hasContributors>Contributors: ${contributors}.</#if> ${emoticon}";
+	public static final String BUILD_FAILED = "Build ${fullName} <#if hasBranch>on branch <b>${branch}</b></#if> failed. It was build number #${buildNumber} and was triggered by ${triggeredBy}. <#if hasContributors>Contributors: ${contributors}.</#if> ${emoticon}";
+	public static final String BUILD_INTERRUPTED = "Build ${fullName} <#if hasBranch>on branch <b>${branch}</b></#if> was cancelled. It was build number #${buildNumber} and was cancelled by ${cancelledBy}. ${emoticon}";
 	public static final String SERVER_STARTUP = "Build server started.";
 	public static final String SERVER_SHUTDOWN = "Build server shutting down.";
 

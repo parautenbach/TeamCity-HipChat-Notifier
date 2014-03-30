@@ -16,18 +16,25 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.stringtemplate.v4.ST;
 
+import freemarker.cache.StringTemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import jetbrains.buildServer.serverSide.Branch;
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.ProjectManager;
@@ -198,9 +205,16 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		return this.eventMap.get(buildEvent).getColour();
 	}
 		
-	private String createHtmlBuildEventMessage(SRunningBuild build, TeamCityEvent buildEvent) {	
+	private String createHtmlBuildEventMessage(SRunningBuild build, TeamCityEvent buildEvent) throws TemplateException, IOException {	
 		HipChatMessageBundle bundle = this.eventMap.get(buildEvent);
-		ST template = new ST(bundle.getTemplate());
+
+		// Get a template object
+		String templateName = "template";
+		StringTemplateLoader loader = new StringTemplateLoader();
+		loader.putTemplate(templateName, bundle.getTemplate());
+		Configuration config = new Configuration();
+		config.setTemplateLoader(loader);
+		Template template = config.getTemplate(templateName);
 		
 		// Emoticon
 		String emoticon = getRandomEmoticon(bundle.getEmoticonSet());
@@ -242,21 +256,28 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		logger.debug(String.format("Has contributors: %s", hasContributors));
 
 		// Fill the template.
-		template.add(HipChatNotificationMessageTemplate.Parameters.EMOTICON, emoticonImgTag);		
-		template.add(HipChatNotificationMessageTemplate.Parameters.FULL_NAME, fullNameATag);
-		template.add(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, buildNumberATag);
-		template.add(HipChatNotificationMessageTemplate.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
-		template.add(HipChatNotificationMessageTemplate.Attributes.HAS_CONTRIBUTORS, hasContributors);
-		template.add(HipChatNotificationMessageTemplate.Parameters.CONTRIBUTORS, contributors);
-		template.add(HipChatNotificationMessageTemplate.Attributes.HAS_BRANCH, hasBranch);
-		template.add(HipChatNotificationMessageTemplate.Parameters.BRANCH, branchDisplayName);		
+		Map<String, Object> templateMap = new HashMap<String, Object>();
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.EMOTICON, emoticonImgTag);		
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.FULL_NAME, fullNameATag);
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, buildNumberATag);
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
+	    templateMap.put(HipChatNotificationMessageTemplate.Attributes.HAS_CONTRIBUTORS, hasContributors);
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.CONTRIBUTORS, contributors);
+	    templateMap.put(HipChatNotificationMessageTemplate.Attributes.HAS_BRANCH, hasBranch);
+	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BRANCH, branchDisplayName);		
 		if (buildEvent == TeamCityEvent.BUILD_INTERRUPTED) {
 			long userId = build.getCanceledInfo().getUserId();
 			SUser user = this.server.getUserModel().findUserById(userId);
-			template.add(HipChatNotificationMessageTemplate.Parameters.CANCELLED_BY, user.getDescriptiveName());
+			templateMap.put(HipChatNotificationMessageTemplate.Parameters.CANCELLED_BY, user.getDescriptiveName());
 		}
 		
-		return template.render();
+		// Render
+		Writer writer = new StringWriter();
+	    template.process(templateMap, writer);
+	    writer.flush();
+	    String renderedTemplate = writer.toString();
+	    writer.close();
+	    return renderedTemplate;
 	}
 
 	private static String getRandomEmoticon(String[] set) {

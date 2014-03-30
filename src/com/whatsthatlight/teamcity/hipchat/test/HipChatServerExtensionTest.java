@@ -22,6 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import jetbrains.buildServer.messages.Status;
+import jetbrains.buildServer.serverSide.Branch;
 import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SBuildType;
@@ -219,7 +220,7 @@ public class HipChatServerExtensionTest {
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedStartMessage = "started";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Triggered by: Test User";
+		String expectedTriggerBy = "Test User";
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.INFO;
 		String expectedMessageFormat = HipChatMessageFormat.HTML;
@@ -233,6 +234,7 @@ public class HipChatServerExtensionTest {
 		String expectedUser2Name = "bar";
 		String expectedUser3Name = "baz";
 		String expectedContributors = String.format("%s, %s, %s", expectedUser2Name, expectedUser3Name, expectedUser1Name);
+		String expectedBranchName = "feature1";
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
@@ -240,6 +242,8 @@ public class HipChatServerExtensionTest {
 		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
 		
 		// Mocks and other dependencies
+		Branch branch = mock(Branch.class);
+		when(branch.getDisplayName()).thenReturn(expectedBranchName);
 		SBuildType buildType = mock(SBuildType.class);
 		when(buildType.getFullName()).thenReturn(expectedBuildName);	
 		TriggeredBy triggeredBy = mock(TriggeredBy.class);
@@ -251,6 +255,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
+		when(build.getBranch()).thenReturn(branch);
 				
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
@@ -307,6 +312,7 @@ public class HipChatServerExtensionTest {
 		System.out.println(String.format("Expected: %s", expectedContributors));
 		assertTrue(actualNotification.message.contains(expectedContributors));
 		assertTrue(actualNotification.message.contains("<img"));
+		assertTrue(actualNotification.message.contains(expectedBranchName));
 		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
 	}
 
