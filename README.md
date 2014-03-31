@@ -14,7 +14,7 @@ directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins
 
 Compatibility:
 * Releases v0.1.0 to v0.4.3 was tested against TeamCity 8.0.5.
-* Release v0.4.4 was tested against TeamCity 8.1.1.
+* Release v0.4.4 to v0.5.0 was tested against TeamCity 8.1.1.
 * Support for older TeamCity versions is uncertain.
 
 Note: I would gladly provide information and experiences by others here. 
