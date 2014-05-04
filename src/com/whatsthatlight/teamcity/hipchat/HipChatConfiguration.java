@@ -45,7 +45,6 @@ public class HipChatConfiguration {
 	public static final String BUILD_INTERRUPTED_KEY = "buildInterrupted";
 	public static final String SERVER_STARTUP_KEY = "serverStartup";
 	public static final String SERVER_SHUTDOWN_KEY = "serverShutdown";
-	
 
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;

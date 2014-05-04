@@ -24,9 +24,11 @@ import jetbrains.buildServer.web.openapi.PositionConstraint;
 
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -42,11 +44,13 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 	private static final String ROOM_ID_LIST = "roomIdList";
 	private HipChatConfiguration configuration;
 	private HipChatApiProcessor processor;
+	private HipChatNotificationMessageTemplates templates;
 
 	public HipChatConfigurationPageExtension(@NotNull PagePlaces pagePlaces, 
 			@NotNull PluginDescriptor descriptor, 
 			@NotNull HipChatConfiguration configuration, 
-			@NotNull HipChatApiProcessor processor) {
+			@NotNull HipChatApiProcessor processor,
+			@NotNull HipChatNotificationMessageTemplates templates) {
 		super(pagePlaces);
 		setPluginName(PLUGIN_NAME);
 		setIncludeUrl(descriptor.getPluginResourcesPath(PAGE));
@@ -58,6 +62,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		setPosition(PositionConstraint.between(after, before));
 		this.configuration = configuration;
 		this.processor = processor;
+		this.templates = templates;
 		register();
 		logger.info("Global configuration page registered");
 	}
@@ -72,13 +77,31 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, this.configuration.getDefaultNotifyStatus());
 		model.put(HipChatConfiguration.DISABLED_STATUS_KEY, this.configuration.getDisabledStatus());
 		if (this.configuration.getEvents() != null) {
-			model.put(HipChatConfiguration.BUILD_STARTED_KEY, this.configuration.getEvents().getBuildStartedStatus());
+			model.put(HipChatConfiguration.BUILD_STARTED_KEY, this.configuration.getEvents().getBuildStartedStatus());			
 			model.put(HipChatConfiguration.BUILD_SUCCESSFUL_KEY, this.configuration.getEvents().getBuildSuccessfulStatus());
 			model.put(HipChatConfiguration.BUILD_FAILED_KEY, this.configuration.getEvents().getBuildFailedStatus());
 			model.put(HipChatConfiguration.BUILD_INTERRUPTED_KEY, this.configuration.getEvents().getBuildInterruptedStatus());
 			model.put(HipChatConfiguration.SERVER_STARTUP_KEY, this.configuration.getEvents().getServerStartupStatus());
 			model.put(HipChatConfiguration.SERVER_SHUTDOWN_KEY, this.configuration.getEvents().getServerShutdownStatus());
 		}
+		
+		try {
+			model.put(HipChatNotificationMessageTemplates.BUILD_STARTED_TEMPLATE_KEY, this.templates.readTemplate(TeamCityEvent.BUILD_STARTED).toString());
+			model.put(HipChatNotificationMessageTemplates.BUILD_STARTED_TEMPLATE_DEFAULT_KEY, HtmlUtils.htmlEscape(HipChatNotificationMessageTemplates.BUILD_STARTED_DEFAULT_TEMPLATE));
+			model.put(HipChatNotificationMessageTemplates.BUILD_SUCCESSFUL_TEMPLATE_KEY, this.templates.readTemplate(TeamCityEvent.BUILD_SUCCESSFUL).toString());
+			model.put(HipChatNotificationMessageTemplates.BUILD_SUCCESSFUL_TEMPLATE_DEFAULT_KEY, HtmlUtils.htmlEscape(HipChatNotificationMessageTemplates.BUILD_SUCCESSFUL_DEFAULT_TEMPLATE));
+			model.put(HipChatNotificationMessageTemplates.BUILD_FAILED_TEMPLATE_KEY, this.templates.readTemplate(TeamCityEvent.BUILD_FAILED).toString());
+			model.put(HipChatNotificationMessageTemplates.BUILD_FAILED_TEMPLATE_DEFAULT_KEY, HtmlUtils.htmlEscape(HipChatNotificationMessageTemplates.BUILD_FAILED_DEFAULT_TEMPLATE));
+			model.put(HipChatNotificationMessageTemplates.BUILD_INTERRUPTED_TEMPLATE_KEY, this.templates.readTemplate(TeamCityEvent.BUILD_INTERRUPTED).toString());
+			model.put(HipChatNotificationMessageTemplates.BUILD_INTERRUPTED_TEMPLATE_DEFAULT_KEY, HtmlUtils.htmlEscape(HipChatNotificationMessageTemplates.BUILD_INTERRUPTED_DEFAULT_TEMPLATE));
+			model.put(HipChatNotificationMessageTemplates.SERVER_STARTUP_TEMPLATE_KEY, this.templates.readTemplate(TeamCityEvent.SERVER_STARTUP).toString());
+			model.put(HipChatNotificationMessageTemplates.SERVER_STARTUP_TEMPLATE_DEFAULT_KEY, HtmlUtils.htmlEscape(HipChatNotificationMessageTemplates.SERVER_STARTUP_DEFAULT_TEMPLATE));
+			model.put(HipChatNotificationMessageTemplates.SERVER_SHUTDOWN_TEMPLATE_KEY, this.templates.readTemplate(TeamCityEvent.SERVER_SHUTDOWN).toString());
+			model.put(HipChatNotificationMessageTemplates.SERVER_SHUTDOWN_TEMPLATE_DEFAULT_KEY, HtmlUtils.htmlEscape(HipChatNotificationMessageTemplates.SERVER_SHUTDOWN_DEFAULT_TEMPLATE));
+		} catch (IOException e) {
+			logger.error("Exception", e);
+		}
+				
 		logger.debug("Configuration page variables populated");
 	}
 	

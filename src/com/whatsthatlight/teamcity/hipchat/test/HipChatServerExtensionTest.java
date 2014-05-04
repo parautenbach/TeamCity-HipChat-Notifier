@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat.test;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -28,6 +29,7 @@ import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SBuildType;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
+import jetbrains.buildServer.serverSide.ServerPaths;
 import jetbrains.buildServer.serverSide.TriggeredBy;
 import jetbrains.buildServer.serverSide.userChanges.CanceledInfo;
 import jetbrains.buildServer.users.SUser;
@@ -45,6 +47,7 @@ import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageColour;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageFormat;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
+import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatRoomNotification;
 import com.whatsthatlight.teamcity.hipchat.HipChatServerExtension;
@@ -68,18 +71,21 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testRegisterDoesNotRaiseExceptionWhenEmoticonRetrievalFails() throws URISyntaxException {		
+	public void testRegisterDoesNotRaiseExceptionWhenEmoticonRetrievalFails() throws URISyntaxException, IOException {
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		when(serverPaths.getConfigDir()).thenReturn(".");			
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl("http://example.com");
 		configuration.setApiToken("no_such_token");
 		SBuildServer server = mock(SBuildServer.class);
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.register();
 	}
 	
 	@Test
-	public void testServerStartupEvent() throws URISyntaxException, InterruptedException {
+	public void testServerStartupEvent() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedStartMessage = "Build server started.";
 		boolean expectedNotificationStatus = true;
@@ -97,9 +103,12 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		when(serverPaths.getConfigDir()).thenReturn(".");			
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		extension.serverStartup();
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -118,7 +127,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testServerStartupEventDisabled() throws URISyntaxException, InterruptedException {
+	public void testServerStartupEventDisabled() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		boolean expectedNotificationStatus = true;
 		String expectedDefaultRoomId = "room_id";
@@ -134,9 +143,12 @@ public class HipChatServerExtensionTest {
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		configuration.getEvents().setServerStartupStatus(false);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		extension.serverStartup();
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -147,7 +159,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testServerShutdownEvent() throws URISyntaxException, InterruptedException {
+	public void testServerShutdownEvent() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedStartMessage = "Build server shutting down.";
 		boolean expectedNotificationStatus = true;
@@ -165,9 +177,12 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		extension.serverShutdown();
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -186,7 +201,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testServerShutdownEventDisabled() throws URISyntaxException, InterruptedException {
+	public void testServerShutdownEventDisabled() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		boolean expectedNotificationStatus = true;
 		String expectedDefaultRoomId = "room_id";
@@ -202,9 +217,12 @@ public class HipChatServerExtensionTest {
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		configuration.getEvents().setServerShutdownStatus(false);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		extension.serverShutdown();
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -215,7 +233,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventAndMessageDetails() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventAndMessageDetails() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedStartMessage = "started";
@@ -285,13 +303,18 @@ public class HipChatServerExtensionTest {
 		SBuildServer server = mock(SBuildServer.class);
 		when(server.getProjectManager()).thenReturn(projectManager);
 		when(server.getRootUrl()).thenReturn(rootUrl);
-		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		String workingDir = System.getProperty("user.dir");
+	    System.out.println("Current working directory : " + workingDir);
+	    MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -320,7 +343,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testBuildStartedEventDisabled() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventDisabled() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -361,9 +384,12 @@ public class HipChatServerExtensionTest {
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		configuration.getEvents().setBuildStartedStatus(false);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -374,7 +400,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubprojectWithImplicitDefaultConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubprojectWithImplicitDefaultConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Subproject :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -421,9 +447,12 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -439,7 +468,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubprojectWithExplicitDefaultConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubprojectWithExplicitDefaultConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Subproject :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -491,9 +520,12 @@ public class HipChatServerExtensionTest {
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		HipChatProjectConfiguration projectConfiguration = new HipChatProjectConfiguration(expectedProjectId, configuredRoomId, expectedNotificationStatus);
 		configuration.setProjectConfiguration(projectConfiguration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -509,7 +541,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubprojectWithImplicitNoneConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubprojectWithImplicitNoneConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Subproject :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -555,9 +587,12 @@ public class HipChatServerExtensionTest {
 		// We don't set the configuration for the project, hence it must use the defaults
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -568,7 +603,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testBuildStartedEventForSubprojectWithExplicitNoneConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubprojectWithExplicitNoneConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Subproject :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -619,9 +654,12 @@ public class HipChatServerExtensionTest {
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		HipChatProjectConfiguration projectConfiguration = new HipChatProjectConfiguration(expectedProjectId, configuredRoomId, expectedNotificationStatus);
 		configuration.setProjectConfiguration(projectConfiguration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -632,7 +670,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testBuildStartedEventForSubprojectWithImplicitParentConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubprojectWithImplicitParentConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -684,9 +722,12 @@ public class HipChatServerExtensionTest {
 		// The parent project's configuration exists explicitly, but this project's doesn't.
 		HipChatProjectConfiguration parentProjectConfiguration = new HipChatProjectConfiguration(parentProjectId, expectedRoomId, expectedNotificationStatus);
 		configuration.setProjectConfiguration(parentProjectConfiguration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -702,7 +743,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testBuildStartedEventForSubprojectWithExplicitParentConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubprojectWithExplicitParentConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -756,9 +797,12 @@ public class HipChatServerExtensionTest {
 		configuration.setProjectConfiguration(parentProjectConfiguration);
 		HipChatProjectConfiguration projectConfiguration = new HipChatProjectConfiguration(projectId, projectRoomId, expectedNotificationStatus);
 		configuration.setProjectConfiguration(projectConfiguration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -774,7 +818,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubsubprojectWithImplicitDefaultConfiguration() throws InterruptedException, URISyntaxException {
+	public void testBuildStartedEventForSubsubprojectWithImplicitDefaultConfiguration() throws InterruptedException, URISyntaxException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Subproject :: :: Test Subsubproject Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -825,9 +869,12 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -843,7 +890,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubsubprojectWithExplicitDefaultConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubsubprojectWithExplicitDefaultConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Subproject :: :: Test Subsubproject Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -896,9 +943,12 @@ public class HipChatServerExtensionTest {
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		HipChatProjectConfiguration projectConfiguration = new HipChatProjectConfiguration(expectedProjectId, configuredRoomId, expectedNotificationStatus);
 		configuration.setProjectConfiguration(projectConfiguration);		
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -914,7 +964,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubsubprojectWithImplicitParentConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubsubprojectWithImplicitParentConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -969,9 +1019,12 @@ public class HipChatServerExtensionTest {
 		// The parent's parent project configuration exists explicitly, but neither this project nor the parent's exist.
 		HipChatProjectConfiguration parentParentProjectConfiguration = new HipChatProjectConfiguration(parentParentProjectId, expectedRoomId, expectedNotificationStatus);
 		configuration.setProjectConfiguration(parentParentProjectConfiguration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -987,7 +1040,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubsubprojectWithExplicitParentConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubsubprojectWithExplicitParentConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -1045,9 +1098,12 @@ public class HipChatServerExtensionTest {
 		configuration.setProjectConfiguration(parentParentProjectConfiguration);
 		HipChatProjectConfiguration projectConfiguration = new HipChatProjectConfiguration(projectId, projectRoomId, expectedNotificationStatus);
 		configuration.setProjectConfiguration(projectConfiguration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -1063,7 +1119,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubsubprojectWithImplicitNoneConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubsubprojectWithImplicitNoneConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Subproject :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -1113,9 +1169,12 @@ public class HipChatServerExtensionTest {
 		// We don't set the configuration for the project, hence it must use the defaults
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -1126,7 +1185,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildStartedEventForSubsubprojectWithExplicitNoneConfiguration() throws URISyntaxException, InterruptedException {
+	public void testBuildStartedEventForSubsubprojectWithExplicitNoneConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Subproject :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -1183,9 +1242,12 @@ public class HipChatServerExtensionTest {
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		HipChatProjectConfiguration projectConfiguration = new HipChatProjectConfiguration(expectedProjectId, configuredRoomId, expectedNotificationStatus);
 		configuration.setProjectConfiguration(projectConfiguration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 		
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -1196,7 +1258,7 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
-	public void testBuildSuccessfulEvent() throws URISyntaxException, InterruptedException {
+	public void testBuildSuccessfulEvent() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedSuccessMessage = "successful";
@@ -1247,9 +1309,12 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildFinished(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -1273,7 +1338,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testBuildSuccessfulEventDisabled() throws URISyntaxException, InterruptedException {
+	public void testBuildSuccessfulEventDisabled() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -1316,9 +1381,12 @@ public class HipChatServerExtensionTest {
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		configuration.getEvents().setBuildSuccessfulStatus(false);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildFinished(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -1329,7 +1397,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testBuildFailedEvent() throws URISyntaxException, InterruptedException {
+	public void testBuildFailedEvent() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedFailedMessage = "failed";
@@ -1381,9 +1449,12 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildFinished(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -1407,7 +1478,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testBuildFailedEventDisabled() throws URISyntaxException, InterruptedException {
+	public void testBuildFailedEventDisabled() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -1450,9 +1521,12 @@ public class HipChatServerExtensionTest {
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		configuration.getEvents().setBuildFailedStatus(false);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildFinished(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -1463,7 +1537,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testBuildInterruptedEvent() throws URISyntaxException, InterruptedException {
+	public void testBuildInterruptedEvent() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedInterruptedMessage = "cancelled";
@@ -1523,9 +1597,12 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildInterrupted(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);
@@ -1549,7 +1626,7 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
-	public void testServerStartupAndShutdownEvent() throws URISyntaxException, InterruptedException {
+	public void testServerStartupAndShutdownEvent() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedServerStartupMessage = "Build server started.";
 		String expectedServerShutdownMessage = "Build server shutting down.";
@@ -1568,7 +1645,10 @@ public class HipChatServerExtensionTest {
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		HipChatRoomNotification actualNotification = null;
 		String actualDefaultRoomId = null;
 		CallbackObject callbackObject = null;
@@ -1612,7 +1692,7 @@ public class HipChatServerExtensionTest {
 	
 	@Test
 	@Ignore
-	public void testActualServerStartupAndShutdownEvents() throws URISyntaxException {
+	public void testActualServerStartupAndShutdownEvents() throws URISyntaxException, IOException {
 		// Test parameters
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
@@ -1622,16 +1702,19 @@ public class HipChatServerExtensionTest {
 
 		// Mocks and other dependencies
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		extension.serverStartup();
 		extension.serverShutdown();
 	}
 	
 	@Test
 	@Ignore
-	public void testActualBuildStartedEvent() throws URISyntaxException {
+	public void testActualBuildStartedEvent() throws URISyntaxException, IOException {
 		// Test parameters
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
@@ -1672,16 +1755,19 @@ public class HipChatServerExtensionTest {
 		when(server.getProjectManager()).thenReturn(projectManager);
 		when(server.getRootUrl()).thenReturn(rootUrl);
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.register();
 		extension.changesLoaded(build);
 	}
 
 	@Test
 	@Ignore
-	public void testActualBuildSuccessfulEvent() throws URISyntaxException {
+	public void testActualBuildSuccessfulEvent() throws URISyntaxException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -1725,16 +1811,19 @@ public class HipChatServerExtensionTest {
 		when(server.getProjectManager()).thenReturn(projectManager);
 		when(server.getRootUrl()).thenReturn(rootUrl);
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.register();
 		extension.buildFinished(build);
 	}
 
 	@Test
 	@Ignore
-	public void testActualBuildFailedEvent() throws URISyntaxException {
+	public void testActualBuildFailedEvent() throws URISyntaxException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -1778,16 +1867,19 @@ public class HipChatServerExtensionTest {
 		when(server.getProjectManager()).thenReturn(projectManager);
 		when(server.getRootUrl()).thenReturn(rootUrl);
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.register();
 		extension.buildFinished(build);
 	}
 	
 	@Test
 	@Ignore
-	public void testActualBuildInterruptedEvent() throws URISyntaxException {
+	public void testActualBuildInterruptedEvent() throws URISyntaxException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -1838,9 +1930,12 @@ public class HipChatServerExtensionTest {
 		when(server.getUserModel()).thenReturn(userModel);
 		when(server.getRootUrl()).thenReturn(rootUrl);
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.register();
 		extension.buildInterrupted(build);
 	}
@@ -1884,7 +1979,7 @@ public class HipChatServerExtensionTest {
 	
 
 	@Test
-	public void testBuildInterruptedEventDisabled() throws URISyntaxException, InterruptedException {
+	public void testBuildInterruptedEventDisabled() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
@@ -1933,9 +2028,12 @@ public class HipChatServerExtensionTest {
 		configuration.setNotifyStatus(expectedNotificationStatus);
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
 		configuration.getEvents().setBuildInterruptedStatus(false);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildInterrupted(build);
 		synchronized (waitObject) {
 			waitObject.wait(1000);

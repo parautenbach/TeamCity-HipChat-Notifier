@@ -61,6 +61,7 @@ public class HipChatConfigurationController extends BaseController {
 	private static final String TEST_PARAMETER = "test";
 	private static final String PROJECT_PARAMETER = "project";
 	private static final String HIPCHAT_CONFIG_FILE = "hipchat.xml";
+	public static final String HIPCHAT_CONFIG_DIRECTORY = "hipchat";
 	private static final String SAVED_ID = "configurationSaved";
 	private static final String SAVED_MESSAGE = "Saved";
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
@@ -68,13 +69,15 @@ public class HipChatConfigurationController extends BaseController {
 
 	private HipChatConfiguration configuration;
 	private HipChatApiProcessor processor;
+	private HipChatNotificationMessageTemplates templates;
 
 	public HipChatConfigurationController(@NotNull SBuildServer server, @NotNull ServerPaths serverPaths, @NotNull WebControllerManager manager,
-			@NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor) throws IOException {
+			@NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor, @NotNull HipChatNotificationMessageTemplates templates) throws IOException {
 		manager.registerController(CONTROLLER_PATH, this);
 		this.configuration = configuration;
 		this.configFilePath = (new File(serverPaths.getConfigDir(), HIPCHAT_CONFIG_FILE)).getCanonicalPath();
 		this.processor = processor;
+		this.templates = templates;
 		logger.debug(String.format("Config file path: %s", this.configFilePath));
 		logger.info("Controller created");
 	}
@@ -96,6 +99,8 @@ public class HipChatConfigurationController extends BaseController {
 	private void handleConfigurationChange(HttpServletRequest request) throws IOException {
 		logger.debug("Changing configuration");
 		logger.debug(String.format("Query string: '%s'", request.getQueryString()));
+		
+		// Get parameters
 		String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
 		String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
 		String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
@@ -106,17 +111,34 @@ public class HipChatConfigurationController extends BaseController {
 		String buildInterrupted = request.getParameter(HipChatConfiguration.BUILD_INTERRUPTED_KEY);
 		String serverStartup = request.getParameter(HipChatConfiguration.SERVER_STARTUP_KEY);
 		String serverShutdown = request.getParameter(HipChatConfiguration.SERVER_SHUTDOWN_KEY);
+		String buildStartedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_STARTED_TEMPLATE_KEY);
+		String buildSuccessfulTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_SUCCESSFUL_TEMPLATE_KEY);
+		String buildFailedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_FAILED_TEMPLATE_KEY);
+		String buildInterruptedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_INTERRUPTED_TEMPLATE_KEY);
+		String serverStartupTemplate = request.getParameter(HipChatNotificationMessageTemplates.SERVER_STARTUP_TEMPLATE_KEY);
+		String serverShutdownTemplate = request.getParameter(HipChatNotificationMessageTemplates.SERVER_SHUTDOWN_TEMPLATE_KEY);
+		
+		// Logging
 		logger.debug(String.format("API URL: %s", apiUrl));
 		logger.debug(String.format("API token: %s", apiToken));
 		logger.debug(String.format("Default room ID: %s", defaultRoomId));
 		logger.debug(String.format("Trigger notification: %s", notify));
 		logger.debug("Events:");
-		logger.debug(String.format("\tBuild started: %s", buildStarted));
+		logger.debug(String.format("\tBuild started: %s", buildStarted));		
 		logger.debug(String.format("\tBuild successful: %s", buildSuccessful));
 		logger.debug(String.format("\tBuild failed: %s", buildFailed));
 		logger.debug(String.format("\tBuild interrupted: %s", buildInterrupted));
 		logger.debug(String.format("\tServer startup: %s", serverStartup));
 		logger.debug(String.format("\tServer shutdown: %s", serverShutdown));
+		logger.debug("Templates:");
+		logger.debug(String.format("\tBuild started: %s", buildStartedTemplate));
+		logger.debug(String.format("\tBuild successful: %s", buildSuccessfulTemplate));
+		logger.debug(String.format("\tBuild failed: %s", buildFailedTemplate));
+		logger.debug(String.format("\tBuild interrupted: %s", buildInterruptedTemplate));
+		logger.debug(String.format("\tServer startup: %s", serverStartupTemplate));
+		logger.debug(String.format("\tServer shutdown: %s", serverShutdownTemplate));
+		
+		// Save the configuration
 		this.configuration.setApiUrl(apiUrl);
 		this.configuration.setApiToken(apiToken);
 		this.configuration.setDefaultRoomId(defaultRoomId == "" ? null : defaultRoomId);
@@ -129,8 +151,18 @@ public class HipChatConfigurationController extends BaseController {
 		events.setServerStartupStatus(Boolean.parseBoolean(serverStartup));
 		events.setServerShutdownStatus(Boolean.parseBoolean(serverShutdown));
 		this.configuration.setEvents(events);
-		this.getOrCreateMessages(request).addMessage(SAVED_ID, SAVED_MESSAGE);
 		this.saveConfiguration();
+		
+		// Save the templates
+		this.templates.writeTemplate(TeamCityEvent.BUILD_STARTED, buildStartedTemplate);
+		this.templates.writeTemplate(TeamCityEvent.BUILD_SUCCESSFUL, buildSuccessfulTemplate);
+		this.templates.writeTemplate(TeamCityEvent.BUILD_FAILED, buildFailedTemplate);
+		this.templates.writeTemplate(TeamCityEvent.BUILD_INTERRUPTED, buildInterruptedTemplate);
+		this.templates.writeTemplate(TeamCityEvent.SERVER_STARTUP, serverStartupTemplate);
+		this.templates.writeTemplate(TeamCityEvent.SERVER_SHUTDOWN, serverShutdownTemplate);
+		
+		// Update the page
+		this.getOrCreateMessages(request).addMessage(SAVED_ID, SAVED_MESSAGE);
 	}
 	
 	private void handleTestConnection(HttpServletRequest request, HttpServletResponse response) {
@@ -197,25 +229,27 @@ public class HipChatConfigurationController extends BaseController {
 
 	private void upgradeConfigurationFromV0dot1ToV0dot2() throws IOException, SAXException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException {
 		File configFile = new File(this.configFilePath);
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document document = builder.parse(configFile);
-		Element rootElement = document.getDocumentElement();
-		NodeList nodes = rootElement.getChildNodes();
-		for (int i = 0; i < nodes.getLength(); i++) {
-			if (nodes.item(i).getNodeName().equals(HipChatConfiguration.DEFAULT_ROOM_ID_KEY_V0DOT1) && nodes.item(i) instanceof Element) {
-				Element roomElement = (Element)nodes.item(i);
-				document.renameNode(roomElement, roomElement.getNamespaceURI(), HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
+		if (configFile.exists()) {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(configFile);
+			Element rootElement = document.getDocumentElement();
+			NodeList nodes = rootElement.getChildNodes();
+			for (int i = 0; i < nodes.getLength(); i++) {
+				if (nodes.item(i).getNodeName().equals(HipChatConfiguration.DEFAULT_ROOM_ID_KEY_V0DOT1) && nodes.item(i) instanceof Element) {
+					Element roomElement = (Element)nodes.item(i);
+					document.renameNode(roomElement, roomElement.getNamespaceURI(), HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
+				}
 			}
+			
+			// Save
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			Result output = new StreamResult(configFile);
+			Source input = new DOMSource(document);
+			transformer.transform(input, output);
 		}
-		
-		// Save
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
-		Result output = new StreamResult(configFile);
-		Source input = new DOMSource(document);
-		transformer.transform(input, output);		
 	}
-
+	
 	public void loadConfiguration() throws IOException {
 		XStream xstream = new XStream();
 		xstream.setClassLoader(this.configuration.getClass().getClassLoader());

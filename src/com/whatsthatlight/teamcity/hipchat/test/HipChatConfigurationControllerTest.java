@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -45,6 +46,7 @@ import org.junit.Test;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController;
+import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
 
 public class HipChatConfigurationControllerTest {
@@ -77,14 +79,15 @@ public class HipChatConfigurationControllerTest {
 		configuration.setProjectConfiguration(new HipChatProjectConfiguration(expectedProjectId1, expectedRoomId1, expectedNotify1));
 		configuration.setProjectConfiguration(new HipChatProjectConfiguration(expectedProjectId2, expectedRoomId2, expectedNotify2));
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
 		controller.saveConfiguration();
 		
 		// Execute
 		configuration = new HipChatConfiguration();
 		assertNull(configuration.getProjectConfiguration(expectedProjectId1));
 		assertNull(configuration.getProjectConfiguration(expectedProjectId2));
-		controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
 		controller.loadConfiguration();
 		
 		// Test
@@ -135,7 +138,8 @@ public class HipChatConfigurationControllerTest {
 		// Execute
 		// The config file must exist on disk after initialisation
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);		
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);		
 		controller.initialise();
 		File postRegistrationConfigFile = new File(expectedFileName);
 		assertTrue(postRegistrationConfigFile.exists());
@@ -235,7 +239,8 @@ public class HipChatConfigurationControllerTest {
 		// initialisation
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
 		controller.initialise();
 		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
 		SAXBuilder builder = new SAXBuilder();
@@ -313,7 +318,8 @@ public class HipChatConfigurationControllerTest {
 		// initialisation
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
 		controller.initialise();
 		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
 		SAXBuilder builder = new SAXBuilder();
@@ -410,7 +416,8 @@ public class HipChatConfigurationControllerTest {
 		// The config file must must not have been overwritten on disk after
 		// initialisation
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
 		controller.initialise();
 		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
 		SAXBuilder builder = new SAXBuilder();
@@ -484,7 +491,8 @@ public class HipChatConfigurationControllerTest {
 		// After initialisation, the config must've been upgraded
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
 		controller.initialise();
 				
 		// Test XML was upgraded

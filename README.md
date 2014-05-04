@@ -47,10 +47,13 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 # Changelog
 
+## Version 0.6.0
+* Feature: Customisable notification messages.
+
 ## Version 0.5.0
 * Enhancement: The branch will be rendered as part of the notification for VCSs that uses branches.
 * Enhancement: The ability to reload rooms when configuring the API URL and token.
-* Enhancement: Switched from StringTemplate to Freemarker for better MVC separation.
+* Enhancement: Switched from StringTemplate to FreeMarker for better MVC separation.
 * Enhancement: Contributors will now be rendered also in the build started notification.
 
 ## Version 0.4.4

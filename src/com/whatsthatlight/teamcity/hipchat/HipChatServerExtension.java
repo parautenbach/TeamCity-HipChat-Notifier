@@ -31,8 +31,6 @@ import java.util.Random;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import freemarker.cache.StringTemplateLoader;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import jetbrains.buildServer.serverSide.Branch;
@@ -40,8 +38,11 @@ import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
+import jetbrains.buildServer.serverSide.SBuildType;
+import jetbrains.buildServer.serverSide.SFinishedBuild;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
+import jetbrains.buildServer.serverSide.dependency.Dependency;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.users.UserSet;
 import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
@@ -56,37 +57,22 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	private String messageFormat;
 	private HashMap<TeamCityEvent, HipChatMessageBundle> eventMap;
 	private HashMap<String, String> emoticonCache;
+	private HipChatNotificationMessageTemplates templates;
 
-	public HipChatServerExtension(@NotNull SBuildServer server, @NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor) {
+	public HipChatServerExtension(@NotNull SBuildServer server, @NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor, @NotNull HipChatNotificationMessageTemplates templates) {
 		this.server = server;
+		//this.configDirectory = serverPaths.getConfigDir();
 		this.configuration = configuration;
 		this.processor = processor;
+		this.templates = templates;
 		this.messageFormat = HipChatMessageFormat.HTML;
 		this.eventMap = new HashMap<TeamCityEvent, HipChatMessageBundle>();
-		this.eventMap.put(TeamCityEvent.BUILD_STARTED, 
-				new HipChatMessageBundle(HipChatNotificationMessageTemplate.BUILD_STARTED, 
-						HipChatEmoticonSet.POSITIVE, 
-						HipChatMessageColour.INFO));
-		this.eventMap.put(TeamCityEvent.BUILD_SUCCESSFUL, 
-				new HipChatMessageBundle(HipChatNotificationMessageTemplate.BUILD_SUCCESSFUL, 
-						HipChatEmoticonSet.POSITIVE, 
-						HipChatMessageColour.SUCCESS));
-		this.eventMap.put(TeamCityEvent.BUILD_FAILED, 
-				new HipChatMessageBundle(HipChatNotificationMessageTemplate.BUILD_FAILED, 
-						HipChatEmoticonSet.NEGATIVE, 
-						HipChatMessageColour.ERROR));
-		this.eventMap.put(TeamCityEvent.BUILD_INTERRUPTED, 
-				new HipChatMessageBundle(HipChatNotificationMessageTemplate.BUILD_INTERRUPTED, 
-						HipChatEmoticonSet.INDIFFERENT, 
-						HipChatMessageColour.WARNING));
-		this.eventMap.put(TeamCityEvent.SERVER_STARTUP, 
-				new HipChatMessageBundle(HipChatNotificationMessageTemplate.SERVER_STARTUP, 
-						null, 
-						HipChatMessageColour.NEUTRAL));
-		this.eventMap.put(TeamCityEvent.SERVER_SHUTDOWN, 
-				new HipChatMessageBundle(HipChatNotificationMessageTemplate.SERVER_SHUTDOWN, 
-						null, 
-						HipChatMessageColour.NEUTRAL));
+		this.eventMap.put(TeamCityEvent.BUILD_STARTED, new HipChatMessageBundle(HipChatEmoticonSet.POSITIVE, HipChatMessageColour.INFO));
+		this.eventMap.put(TeamCityEvent.BUILD_SUCCESSFUL, new HipChatMessageBundle(HipChatEmoticonSet.POSITIVE, HipChatMessageColour.SUCCESS));
+		this.eventMap.put(TeamCityEvent.BUILD_FAILED, new HipChatMessageBundle(HipChatEmoticonSet.NEGATIVE, HipChatMessageColour.ERROR));
+		this.eventMap.put(TeamCityEvent.BUILD_INTERRUPTED, new HipChatMessageBundle(HipChatEmoticonSet.INDIFFERENT, HipChatMessageColour.WARNING));
+		this.eventMap.put(TeamCityEvent.SERVER_STARTUP, new HipChatMessageBundle(null, HipChatMessageColour.NEUTRAL));
+		this.eventMap.put(TeamCityEvent.SERVER_SHUTDOWN,new HipChatMessageBundle(null, HipChatMessageColour.NEUTRAL));
 		this.emoticonCache = new HashMap<String, String>();
 		logger.debug("Server extension created");
 	}
@@ -143,22 +129,30 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	@Override
 	public void serverStartup() {
 		if (this.configuration.getEvents() != null && this.configuration.getEvents().getServerStartupStatus()) {
-			this.processServerEvent(TeamCityEvent.SERVER_STARTUP);
+			try {
+				this.processServerEvent(TeamCityEvent.SERVER_STARTUP);
+			} catch (Exception e) {
+				logger.error("Error processing server startup event", e);
+			}
 		}
 	}
 
 	@Override
 	public void serverShutdown() {
 		if (this.configuration.getEvents() != null && this.configuration.getEvents().getServerShutdownStatus()) {
-			this.processServerEvent(TeamCityEvent.SERVER_SHUTDOWN);
+			try {
+				this.processServerEvent(TeamCityEvent.SERVER_SHUTDOWN);
+			} catch (Exception e) {
+				logger.error("Error processing server shutdown event", e);
+			}
 		}
 	}
 	
-	private void processServerEvent(TeamCityEvent event) {
+	private void processServerEvent(TeamCityEvent event) throws TemplateException, IOException {
 		boolean notify = this.configuration.getDefaultNotifyStatus();
 		HipChatMessageBundle bundle = this.eventMap.get(event);
 		String colour = bundle.getColour();
-		String message = bundle.getTemplate();
+		String message = renderTemplate(this.templates.readTemplate(event), new HashMap<String, Object>());
 		HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, notify);
 		String roomId = this.configuration.getDefaultRoomId();
 		if (roomId != null) {
@@ -208,7 +202,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		
 	private String createHtmlBuildEventMessage(SRunningBuild build, TeamCityEvent buildEvent) throws TemplateException, IOException {	
 		HipChatMessageBundle bundle = this.eventMap.get(buildEvent);
-		Template template = createTemplate(bundle.getTemplate());
+		Template template = this.templates.readTemplate(buildEvent);
 		
 		// Emoticon
 		String emoticon = getRandomEmoticon(bundle.getEmoticonSet());
@@ -229,25 +223,52 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		String contributors = getContributors(build);
 		boolean hasContributors = !contributors.isEmpty();
 		logger.debug(String.format("Has contributors: %s", hasContributors));
-
+		
+		// TODO: Add artifact dependencies as a template variable
+		try {
+			SBuildType buildType = build.getBuildType();
+			Collection<SBuildType> childDependencies = buildType.getChildDependencies();
+			for (SBuildType sBuildType : childDependencies) {
+				SFinishedBuild changes = sBuildType.getLastChangesFinished();
+				changes.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
+			} 
+			logger.debug(String.format("Children: %s", childDependencies.isEmpty()));
+			List<Dependency> dependencies = buildType.getDependencies();
+			//dependencies.get(0).
+			logger.debug(String.format("Children: %s", dependencies.isEmpty()));
+			List<SBuildType> dependencyReferences = buildType.getDependencyReferences();
+			logger.debug(String.format("Children: %s", dependencyReferences.isEmpty()));
+		} catch (Exception e) {			
+		}
+				
 		// Fill the template.
 		Map<String, Object> templateMap = new HashMap<String, Object>();
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.EMOTICON_URL, emoticonUrl == null ? "" : emoticonUrl);		
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.FULL_NAME, build.getBuildType().getFullName());
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
-	    templateMap.put(HipChatNotificationMessageTemplate.Attributes.HAS_CONTRIBUTORS, hasContributors);
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.CONTRIBUTORS, contributors);
-	    templateMap.put(HipChatNotificationMessageTemplate.Attributes.HAS_BRANCH, hasBranch);
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BRANCH, branchDisplayName);
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.SERVER_URL, this.server.getRootUrl());
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.PROJECT_ID, build.getProjectExternalId());
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BUILD_ID, build.getBuildId());
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BUILD_TYPE_ID, build.getBuildTypeId());
-	    templateMap.put(HipChatNotificationMessageTemplate.Parameters.BUILD_NUMBER, build.getBuildNumber());
+		// Add all available project, build configuration, agent, server, etc. parameters to the data model
+		for (Map.Entry<String, String> entry : build.getParametersProvider().getAll().entrySet()) {
+			try {
+				logger.debug(String.format("%s: %s", entry.getKey(), entry.getValue()));
+				templateMap.put(entry.getKey(), entry.getValue());
+			} catch (Exception e) {
+				logger.error("Adding server parameter failed", e);
+			}
+		}
+		// Standard plugin parameters
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.EMOTICON_URL, emoticonUrl == null ? "" : emoticonUrl);		
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.FULL_NAME, build.getBuildType().getFullName());
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.HAS_CONTRIBUTORS, hasContributors);
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.CONTRIBUTORS, contributors);
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.HAS_BRANCH, hasBranch);
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.BRANCH, branchDisplayName);
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.SERVER_URL, this.server.getRootUrl());
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.PROJECT_ID, build.getProjectExternalId());
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.BUILD_ID, build.getBuildId());
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.BUILD_TYPE_ID, build.getBuildTypeId());
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.BUILD_NUMBER, build.getBuildNumber());
 		if (buildEvent == TeamCityEvent.BUILD_INTERRUPTED) {
 			long userId = build.getCanceledInfo().getUserId();
 			SUser user = this.server.getUserModel().findUserById(userId);
-			templateMap.put(HipChatNotificationMessageTemplate.Parameters.CANCELLED_BY, user.getDescriptiveName());
+			templateMap.put(HipChatNotificationMessageTemplates.Parameters.CANCELLED_BY, user.getDescriptiveName());
 		}
 		
 		return renderTemplate(template, templateMap);
@@ -263,15 +284,6 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		Collections.sort(userList, String.CASE_INSENSITIVE_ORDER);
 		String contributors = Utils.join(userList);
 		return contributors;
-	}
-	
-	private static Template createTemplate(String templateString) throws IOException {
-		String templateName = "template";
-		StringTemplateLoader loader = new StringTemplateLoader();
-		loader.putTemplate(templateName, templateString);
-		Configuration config = new Configuration();
-		config.setTemplateLoader(loader);
-		return config.getTemplate(templateName);
 	}
 	
 	private static String renderTemplate(Template template, Map<String, Object> templateMap) throws TemplateException, IOException {

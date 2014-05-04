@@ -8,4 +8,5 @@
   <bean id="hipChatApiProcessor" class="com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor"/>
   <bean id="hipChatServerExtension" class="com.whatsthatlight.teamcity.hipchat.HipChatServerExtension" init-method="register"/>
   <bean id="hipChatProjectTab" class="com.whatsthatlight.teamcity.hipchat.HipChatProjectTab"/>
+  <bean id="hipChatNotificationMessageTemplates" class="com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates"/>  
 </beans>

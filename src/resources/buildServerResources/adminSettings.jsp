@@ -22,10 +22,6 @@ limitations under the License.
   ${teamcityPluginResourcesPath}css/hipChatAdmin.css
 </bs:linkCSS>
 
-<bs:linkScript>
-    ${teamcityPluginResourcesPath}js/hipChatAdmin.js
-</bs:linkScript>
-
 <form action="${actionUrl}" id="hipChatForm" method="POST"
 	onsubmit="return HipChatAdmin.save()">
 	<div class="editNotificatorSettingsPage">
@@ -55,7 +51,7 @@ limitations under the License.
 					<label for="apiUrl">API URL: <l:star /></label>
 				</th>
 				<td>
-					<forms:textField name="apiUrl" value="${apiUrl}" />
+					<forms:textField name="apiUrl" value="${apiUrl}" style="width: 300px;" />
 					<span class="smallNote">This must be the base URL to the <a href="https://www.hipchat.com/docs/apiv2" target="_blank">HipChat version 2 API</a>.</span>
 				</td>
 			</tr>
@@ -64,7 +60,7 @@ limitations under the License.
 					<label for="apiToken">API token: <l:star /></label>
 				</th>
 				<td>
-					<forms:textField name="apiToken" value="${apiToken}" />
+					<forms:textField name="apiToken" value="${apiToken}" style="width: 300px;" />
 					<span class="smallNote">A user OAuth token for a dedicated build server user on HipChat.</span>
 				</td>
 			</tr>
@@ -85,7 +81,9 @@ limitations under the License.
                 </td>
 			</tr>
 			<tr>
-				<th><label for="notifyLabel">Trigger notifications: </label></th>
+				<th>
+					<label for="notifyLabel">Trigger notifications: </label>
+				</th>
 				<td>
 					<forms:checkbox name="notify" checked="${notify}" value="${notify}"/>
 					<span class="smallNote">When checked, a notification for all people in the room will be triggered, taking user preferences into account.</span>
@@ -95,9 +93,15 @@ limitations under the License.
           		<td colspan="2">Build Events Configuration</td>
         	</tr>
 			<tr>
-				<th><label for="buildStartedLabel">Build started: </label></th>
+				<th>
+					<label for="buildStartedLabel">Build started: </label>
+				</th>
 				<td>
-					<forms:checkbox name="buildStarted" checked="${buildStarted}" value="${buildStarted}"/>
+					<forms:checkbox name="buildStarted" checked="${buildStarted}" value="${buildStarted}" />
+					<forms:textField name="buildStartedTemplate" value="${buildStartedTemplate}" style="width: 85%;" />
+					<a href="${helpUrl}" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<a href="#" id="buildStartedTemplateDefaultLink">Default</a>
+					<input type="hidden" id="buildStartedTemplateDefault" value="${buildStartedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when the build starts.</span>					
 				</td>
 			</tr>
@@ -105,6 +109,10 @@ limitations under the License.
 				<th><label for="buildSuccessfulLabel">Build successful: </label></th>
 				<td>
 					<forms:checkbox name="buildSuccessful" checked="${buildSuccessful}" value="${buildSuccessful}"/>
+					<forms:textField name="buildSuccessfulTemplate" value="${buildSuccessfulTemplate}" style="width: 85%;" />
+					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<a href="#" id="buildSuccessfulTemplateDefaultLink">Default</a>
+					<input type="hidden" id="buildSuccessfulTemplateDefault" value="${buildSuccessfulTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when a finished build is successful.</span>
 				</td>
 			</tr>
@@ -112,6 +120,10 @@ limitations under the License.
 				<th><label for="buildFailedLabel">Build failed: </label></th>
 				<td>
 					<forms:checkbox name="buildFailed" checked="${buildFailed}" value="${buildFailed}"/>
+					<forms:textField name="buildFailedTemplate" value="${buildFailedTemplate}" style="width: 85%;" />
+					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<a href="#" id="buildFailedTemplateDefaultLink">Default</a>
+					<input type="hidden" id="buildFailedTemplateDefault" value="${buildFailedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when a finished build failed.</span>
 				</td>
 			</tr>
@@ -119,6 +131,10 @@ limitations under the License.
 				<th><label for="buildInterruptedLabel">Build interrupted: </label></th>
 				<td>
 					<forms:checkbox name="buildInterrupted" checked="${buildInterrupted}" value="${buildInterrupted}"/>
+					<forms:textField name="buildInterruptedTemplate" value="${buildInterruptedTemplate}" style="width: 85%;" />
+					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<a href="#" id="buildInterruptedTemplateDefaultLink">Default</a>
+					<input type="hidden" id="buildInterruptedTemplateDefault" value="${buildInterruptedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when the build gets interrupted (i.e. cancelled).</span>
 				</td>
 			</tr>
@@ -129,6 +145,10 @@ limitations under the License.
 				<th><label for="serverStartupLabel">Server startup: </label></th>
 				<td>
 					<forms:checkbox name="serverStartup" checked="${serverStartup}" value="${serverStartup}"/>
+					<forms:textField name="serverStartupTemplate" value="${serverStartupTemplate}" style="width: 85%;" />
+					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<a href="#" id="serverStartupTemplateDefaultLink">Default</a>
+					<input type="hidden" id="serverStartupTemplateDefault" value="${serverStartupTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent to the <b>default</b> room.</span>
 				</td>
 			</tr>
@@ -136,6 +156,10 @@ limitations under the License.
 				<th><label for="serverShutdownLabel">Server shutdown: </label></th>
 				<td>
 					<forms:checkbox name="serverShutdown" checked="${serverShutdown}" value="${serverShutdown}"/>
+					<forms:textField name="serverShutdownTemplate" value="${serverShutdownTemplate}" style="width: 85%;" />
+					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<a href="#" id="serverShutdownTemplateDefaultLink">Default</a>
+					<input type="hidden" id="serverShutdownTemplateDefault" value="${serverShutdownTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent to the <b>default</b> room.</span>
 				</td>
 			</tr>
@@ -147,6 +171,10 @@ limitations under the License.
 		</div>
 	</div>
 </form>
+
+<bs:linkScript>
+    ${teamcityPluginResourcesPath}js/hipChatAdmin.js
+</bs:linkScript>
 
 <script type="text/javascript">
 	(function($) {
@@ -170,5 +198,36 @@ limitations under the License.
 								return false;
 							return sendAction(false);
 						});
+		
+		$('#buildStartedTemplateDefaultLink').click(function() {
+			$("#buildStartedTemplate").val($("#buildStartedTemplateDefault").val()); 
+			return false;
+		});
+
+		$('#buildSuccessfulTemplateDefaultLink').click(function() {
+			$("#buildSuccessfulTemplate").val($("#buildSuccessfulTemplateDefault").val()); 
+			return false;
+		});
+
+		$('#buildFailedTemplateDefaultLink').click(function() {
+			$("#buildFailedTemplate").val($("#buildFailedTemplateDefault").val()); 
+			return false;
+		});
+
+		$('#buildInterruptedTemplateDefaultLink').click(function() {
+			$("#buildInterruptedTemplate").val($("#buildInterruptedTemplateDefault").val()); 
+			return false;
+		});
+
+		$('#serverStartupTemplateDefaultLink').click(function() {
+			$("#serverStartupTemplate").val($("#serverStartupTemplateDefault").val()); 
+			return false;
+		});
+
+		$('#serverShutdownTemplateDefaultLink').click(function() {
+			$("#serverShutdownTemplate").val($("#serverShutdownTemplateDefault").val()); 
+			return false;
+		});
+
 	})(jQuery);
 </script>

@@ -17,10 +17,11 @@ limitations under the License.
 var HipChatProject = {
 	save : function() {
 		BS.ajaxRequest($("hipChatProjectForm").action, {
-			parameters : "project=1" + 
-			"&roomId=" + $("roomId").value +
-			"&notify=" + $("notify").checked + 
-			"&projectId=" + $("projectId").value,
+			parameters : 
+				"project=1" + 
+				"&roomId="    + $("roomId").value +
+				"&notify="    + $("notify").checked + 
+				"&projectId=" + $("projectId").value,
 			onComplete : function(transport) {
 				if (transport.responseXML) {
 					BS.XMLResponse.processErrors(transport.responseXML, {
@@ -53,17 +54,24 @@ var HipChatAdmin = {
 		}
 		
 		BS.ajaxRequest($("hipChatForm").action, {
-			parameters : "edit=1" + 
-			"&apiUrl="           + $("apiUrl").value + 
-			"&apiToken="         + $("apiToken").value +
-			"&defaultRoomId="    + $("defaultRoomId").value +
-			"&notify="           + $("notify").checked + 
-			"&buildStarted="     + $("buildStarted").checked +
-			"&buildSuccessful="  + $("buildSuccessful").checked +
-			"&buildFailed="      + $("buildFailed").checked +
-			"&buildInterrupted=" + $("buildInterrupted").checked +
-			"&serverStartup="    + $("serverStartup").checked +
-			"&serverShutdown="   + $("serverShutdown").checked,
+			parameters : 
+				"edit=1" + 
+				"&apiUrl="                   + $("apiUrl").value + 
+				"&apiToken="                 + $("apiToken").value +
+				"&defaultRoomId="            + $("defaultRoomId").value +
+				"&notify="                   + $("notify").checked + 
+				"&buildStarted="             + $("buildStarted").checked +
+				"&buildSuccessful="          + $("buildSuccessful").checked +
+				"&buildFailed="              + $("buildFailed").checked +
+				"&buildInterrupted="         + $("buildInterrupted").checked +
+				"&serverStartup="            + $("serverStartup").checked +
+				"&serverShutdown="           + $("serverShutdown").checked + 
+				"&buildStartedTemplate="     + encodeURIComponent($("buildStartedTemplate").value) +
+				"&buildSuccessfulTemplate="  + encodeURIComponent($("buildSuccessfulTemplate").value) +
+				"&buildFailedTemplate="      + encodeURIComponent($("buildFailedTemplate").value) +
+				"&buildInterruptedTemplate=" + encodeURIComponent($("buildInterruptedTemplate").value) +
+				"&serverStartupTemplate="    + encodeURIComponent($("serverStartupTemplate").value) +
+				"&serverShutdownTemplate="   + encodeURIComponent($("serverShutdownTemplate").value),
 			onComplete : function(transport) {
 				if (transport.responseXML) {
 					BS.XMLResponse.processErrors(transport.responseXML, {
