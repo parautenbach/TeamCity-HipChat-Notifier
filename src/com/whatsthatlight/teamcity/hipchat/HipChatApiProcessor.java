@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.Charset;
 import java.util.ArrayList;
 
 import org.apache.http.HttpHeaders;
@@ -116,7 +117,7 @@ public class HipChatApiProcessor {
 			HttpPost postRequest = new HttpPost(uri.toString());
 			postRequest.addHeader(HttpHeaders.AUTHORIZATION, authorisationHeader);
 			postRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			postRequest.setEntity(new StringEntity(json));
+			postRequest.setEntity(new StringEntity(json, Charset.forName("UTF-8")));
 			HttpResponse postResponse = client.execute(postRequest);
 			StatusLine status = postResponse.getStatusLine();
 			if (status.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
