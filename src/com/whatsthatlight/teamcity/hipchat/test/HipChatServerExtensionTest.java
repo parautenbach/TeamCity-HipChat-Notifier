@@ -16,13 +16,16 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat.test;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import jetbrains.buildServer.messages.Status;
+import jetbrains.buildServer.parameters.ParametersProvider;
 import jetbrains.buildServer.serverSide.Branch;
 import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuildServer;
@@ -75,7 +78,7 @@ public class HipChatServerExtensionTest {
 		ServerPaths serverPaths = mock(ServerPaths.class);
 		when(serverPaths.getConfigDir()).thenReturn(".");			
 		HipChatConfiguration configuration = new HipChatConfiguration();
-		configuration.setApiUrl("http://example.com");
+		configuration.setApiUrl("http://example.com/");
 		configuration.setApiToken("no_such_token");
 		SBuildServer server = mock(SBuildServer.class);
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
@@ -93,10 +96,16 @@ public class HipChatServerExtensionTest {
 		String expectedMessageColour = HipChatMessageColour.NEUTRAL;
 		String expectedMessageFormat = HipChatMessageFormat.HTML;
 		
+		// Ensure we get the default template.
+		File template = new File("hipchat/serverStartupTemplate.ftl");
+		if (template.exists()) {
+			assertTrue(template.delete());
+		}
+
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);		
 		
 		// Mocks and other dependencies
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
@@ -167,6 +176,12 @@ public class HipChatServerExtensionTest {
 		String expectedMessageColour = HipChatMessageColour.NEUTRAL;
 		String expectedMessageFormat = HipChatMessageFormat.HTML;
 		
+		// Ensure we get the default template.
+		File template = new File("hipchat/serverShutdownTemplate.ftl");
+		if (template.exists()) {
+			assertTrue(template.delete());
+		}
+
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
@@ -254,7 +269,13 @@ public class HipChatServerExtensionTest {
 		String expectedContributors = String.format("%s, %s, %s", expectedUser2Name, expectedUser3Name, expectedUser1Name);
 		String expectedBranchName = "feature1";
 
-		// Callback closure
+        // Ensure we get the default template.
+        File template = new File("hipchat/buildStartedTemplate.ftl");
+        if (template.exists()) {
+            assertTrue(template.delete());
+        }
+
+        // Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
 		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
@@ -277,6 +298,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn((long)expectedBuildId);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
@@ -429,6 +453,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -500,6 +527,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn(expectedProjectId);
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -568,6 +598,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);		
@@ -634,6 +667,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		when(build.getBuildTypeId()).thenReturn("");
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>)
 		mock(UserSet.class);
@@ -700,6 +736,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
@@ -774,6 +813,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -848,6 +890,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -920,6 +965,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -994,6 +1042,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1071,6 +1122,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1147,6 +1201,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>)
 		mock(UserSet.class);
@@ -1218,6 +1275,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>)
 		mock(UserSet.class);
@@ -1272,6 +1332,12 @@ public class HipChatServerExtensionTest {
 		String expectedProjectId = "project1";
 		String expectedParentProjectId = "_Root";
 
+        // Ensure we get the default template.
+        File template = new File("hipchat/buildSuccessfulTemplate.ftl");
+        if (template.exists()) {
+            assertTrue(template.delete());
+        }
+
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
@@ -1290,6 +1356,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1412,7 +1481,13 @@ public class HipChatServerExtensionTest {
 		String expectedParentProjectId = "_Root";
 		String rootUrl = "http://example.com";
 		
-		// Callback closure
+        // Ensure we get the default template.
+        File template = new File("hipchat/buildFailedTemplate.ftl");
+        if (template.exists()) {
+            assertTrue(template.delete());
+        }
+
+        // Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
 		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
@@ -1430,6 +1505,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1553,6 +1631,12 @@ public class HipChatServerExtensionTest {
 		String expectedParentProjectId = "_Root";
 		String rootUrl = "http://example.com";
 		
+        // Ensure we get the default template.
+        File template = new File("hipchat/buildInterruptedTemplate.ftl");
+        if (template.exists()) {
+            assertTrue(template.delete());
+        }
+
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
@@ -1574,6 +1658,9 @@ public class HipChatServerExtensionTest {
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildTypeId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1635,7 +1722,17 @@ public class HipChatServerExtensionTest {
 		String expectedMessageFormat = HipChatMessageFormat.HTML;
 		String expectedDefaultRoomId = "room_id";
 
-		// Callback closure
+        // Ensure we get the default template.
+        File startuptemplate = new File("hipchat/serverStartupTemplate.ftl");
+        if (startuptemplate.exists()) {
+            assertTrue(startuptemplate.delete());
+        }
+        File shutdownTemplate = new File("hipchat/serverShutdownTemplate.ftl");
+        if (shutdownTemplate.exists()) {
+            assertTrue(shutdownTemplate.delete());
+        }
+
+        // Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
 		final Object waitObject = new Object();
 		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);

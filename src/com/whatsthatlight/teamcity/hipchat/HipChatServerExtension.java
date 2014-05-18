@@ -244,6 +244,8 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		// Fill the template.
 		Map<String, Object> templateMap = new HashMap<String, Object>();
 		// Add all available project, build configuration, agent, server, etc. parameters to the data model
+		// These are accessed as $.data_model["some.variable"]}
+		// See: http://freemarker.org/docs/ref_specvar.html
 		for (Map.Entry<String, String> entry : build.getParametersProvider().getAll().entrySet()) {
 			try {
 				logger.debug(String.format("%s: %s", entry.getKey(), entry.getValue()));

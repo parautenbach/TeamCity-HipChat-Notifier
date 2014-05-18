@@ -20,7 +20,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.Charset;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.apache.http.HttpHeaders;

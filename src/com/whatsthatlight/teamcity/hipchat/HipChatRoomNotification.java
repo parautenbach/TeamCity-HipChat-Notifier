@@ -33,10 +33,6 @@ public class HipChatRoomNotification {
 	@JsonProperty("notify")
 	public boolean notify;
 
-	public HipChatRoomNotification() {
-		// Intentionally left empty
-	}
-
 	public HipChatRoomNotification(String message, String messageFormat, String color, boolean notify) {
 		this.message = message;
 		this.messageFormat = messageFormat;
