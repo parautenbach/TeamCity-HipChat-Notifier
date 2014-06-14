@@ -35,6 +35,10 @@ public class HipChatRooms {
 	@JsonProperty("links")
 	public HipChatApiResultLinks links;
 
+	public HipChatRooms() {
+		// Intentionally left empty
+	}
+	
 	public HipChatRooms(List<HipChatRoom> items, int startIndex, int maxResults, HipChatApiResultLinks links) {
 		this.items = items;
 		this.startIndex = startIndex;
