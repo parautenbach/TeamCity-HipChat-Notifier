@@ -2037,44 +2037,6 @@ public class HipChatServerExtensionTest {
 		extension.buildInterrupted(build);
 	}
 	
-	private interface Callback {
-		
-		void invoke(HipChatRoomNotification notification, String roomId);
-
-	}
-	
-	private class CallbackObject {
-		
-		public HipChatRoomNotification notification;
-		public String roomId;
-
-		public CallbackObject(HipChatRoomNotification notification, String roomId) {
-			this.notification = notification;
-			this.roomId = roomId;
-		}
-		
-	}
-	
-	private class HipChatRoomNotificationCallback implements Callback {
-
-		// TODO: Record and test notify status
-		ArrayList<CallbackObject> callbacks;
-		Object waitObject;
-		
-		public HipChatRoomNotificationCallback(Object waitObject, ArrayList<CallbackObject> callbacks) {
-			this.waitObject = waitObject;
-			this.callbacks = callbacks;
-		}
-		
-		public void invoke(HipChatRoomNotification notification, String roomId) {
-			callbacks.add(new CallbackObject(notification, roomId));
-			synchronized (waitObject) {
-				waitObject.notify();
-			}
-		}
-	};
-	
-
 	@Test
 	public void testBuildInterruptedEventDisabled() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
@@ -2140,6 +2102,43 @@ public class HipChatServerExtensionTest {
 		assertEquals(0, callbacks.size());
 	}
 
+	private interface Callback {
+		
+		void invoke(HipChatRoomNotification notification, String roomId);
+
+	}
+	
+	private class CallbackObject {
+		
+		public HipChatRoomNotification notification;
+		public String roomId;
+
+		public CallbackObject(HipChatRoomNotification notification, String roomId) {
+			this.notification = notification;
+			this.roomId = roomId;
+		}
+		
+	}
+	
+	private class HipChatRoomNotificationCallback implements Callback {
+
+		// TODO: Record and test notify status
+		ArrayList<CallbackObject> callbacks;
+		Object waitObject;
+		
+		public HipChatRoomNotificationCallback(Object waitObject, ArrayList<CallbackObject> callbacks) {
+			this.waitObject = waitObject;
+			this.callbacks = callbacks;
+		}
+		
+		public void invoke(HipChatRoomNotification notification, String roomId) {
+			callbacks.add(new CallbackObject(notification, roomId));
+			synchronized (waitObject) {
+				waitObject.notify();
+			}
+		}
+	};
+	
 	private class MockHipChatNotificationProcessor extends HipChatApiProcessor {
 
 		private Callback callback;
