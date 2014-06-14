@@ -64,7 +64,7 @@ public class HipChatApiProcessor {
 				return null;
 			}
 			
-			Reader reader = new InputStreamReader(getResponse.getEntity().getContent());		
+			Reader reader = new InputStreamReader(getResponse.getEntity().getContent());
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.readValue(reader, HipChatEmoticons.class);
 		} catch (Exception e) {
@@ -91,7 +91,7 @@ public class HipChatApiProcessor {
 				return new HipChatRooms(new ArrayList<HipChatRoom>(), 0, 0, null);
 			}
 			
-			Reader reader = new InputStreamReader(getResponse.getEntity().getContent());		
+			Reader reader = new InputStreamReader(getResponse.getEntity().getContent());
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.readValue(reader, HipChatRooms.class);
 		} catch (Exception e) {
@@ -138,15 +138,16 @@ public class HipChatApiProcessor {
 			HttpGet getRequest = new HttpGet(uri.toString());
 			HttpResponse postResponse = client.execute(getRequest);
 			StatusLine status = postResponse.getStatusLine();
-			if (status.getStatusCode() != HttpStatus.SC_ACCEPTED) {
+			if (status.getStatusCode() == HttpStatus.SC_ACCEPTED) {
+				return true;
+			} else {
 				logger.error(String.format("Authentication failed: %s %s", status.getStatusCode(), status.getReasonPhrase()));
-				return false;
 			}
 		} catch (Exception e) {
 			logger.error("Request failed", e);
 		}
 		
-		return true;
+		return false;		
 	}
 	
 }
