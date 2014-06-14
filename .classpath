@@ -16,6 +16,11 @@
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-cache-4.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpmime-4.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/freemarker-2.3.20/freemarker.jar"/>
+        <classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-server-8.1.15.v20140411.jar"/>
+        <classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-util-8.1.15.v20140411.jar"/>
+        <classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-http-8.1.15.v20140411.jar"/>
+        <classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-io-8.1.15.v20140411.jar"/>
+        <classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-continuation-8.1.15.v20140411.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/lib/servlet-api.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/annotations.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/common-api.jar"/>
