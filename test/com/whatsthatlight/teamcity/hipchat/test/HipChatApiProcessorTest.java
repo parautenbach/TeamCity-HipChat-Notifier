@@ -31,11 +31,6 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Appender;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -43,7 +38,6 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.WriterAppender;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.Server;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -632,87 +626,5 @@ public class HipChatApiProcessorTest {
 
 		assertTrue(processor.testAuthentication());
 	}
-	
-	
-	@Test
-	public void testTestServer() throws Exception {
-		// Test parameters
-		String expectedResponse = "<h1>Hello World</h1>";
-		int expectedStatusCode = HttpServletResponse.SC_OK;
-		int port = 8080;
-		URI uri = new URI(String.format("http://localhost:%s/", port));
-
-		// Setup
-		SimpleServer server = new SimpleServer(port, new SimpleHandler(expectedResponse, expectedStatusCode));
-		server.start();
 		
-		// Make request
-		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet getRequest = new HttpGet(uri.toString());
-		HttpResponse getResponse = client.execute(getRequest);
-		int actualStatusCode = getResponse.getStatusLine().getStatusCode();
-		String actualResponse = EntityUtils.toString(getResponse.getEntity());
-
-		// Clean up
-		server.stop();
-
-		// Test
-		assertEquals(expectedStatusCode, actualStatusCode);
-		assertEquals(expectedResponse, actualResponse);
-	}
-	
-	
-	class SimpleHandler extends AbstractHandler {
-		
-		private String response;
-		private int statusCode;
-
-		public SimpleHandler(String response, int statusCode) {
-			this.response = response;
-			this.statusCode = statusCode;
-		}
-
-		@Override
-		public void handle(String target,Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-	        response.setContentType("text/html;charset=utf-8");
-	        response.setStatus(this.statusCode);
-	        baseRequest.setHandled(true);
-	        response.getWriter().write(this.response);
-		}
-		
-	}
-	
-	
-	class SimpleServer implements Runnable {
-		
-		org.eclipse.jetty.server.Server server;
-		Thread thread;
-		
-		public SimpleServer(int port, AbstractHandler handler) {
-			this.server = new Server(port);
-			this.server.setHandler(handler);
-			this.thread = new Thread(this);
-		}
-		
-		public void run() {
-			try {
-				this.server.start();
-				this.server.join();
-			} catch (Exception e) {
-				System.out.println(e);
-			}
-		}
-		
-		public void start() throws InterruptedException {
-			this.thread.start();
-			while (this.server.getState() != "STARTED") {
-			}
-		}
-		
-		public void stop() throws Exception {
-			server.stop();
-			this.thread.join();
-		}
-	}
-	
 }
