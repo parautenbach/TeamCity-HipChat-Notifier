@@ -108,8 +108,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);		
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);		
 		
 		// Mocks and other dependencies
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
@@ -123,11 +123,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		extension.serverStartup();
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -147,8 +146,8 @@ public class HipChatServerExtensionTest {
 		
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
@@ -163,11 +162,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		extension.serverStartup();
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
+		event.doWait(1000);
 		
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 	
@@ -188,8 +186,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
@@ -203,11 +201,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		extension.serverShutdown();
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
+		event.doWait(1000);
 		
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -227,8 +224,8 @@ public class HipChatServerExtensionTest {
 		
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
@@ -243,11 +240,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
 		extension.serverShutdown();
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
+		event.doWait(1000);
 		
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 	
@@ -281,8 +277,8 @@ public class HipChatServerExtensionTest {
 
         // Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		Branch branch = mock(Branch.class);
@@ -344,11 +340,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
+		event.doWait(1000);
 		
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -473,8 +468,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -509,11 +504,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 	
@@ -531,8 +525,8 @@ public class HipChatServerExtensionTest {
 		
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -575,11 +569,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -605,8 +598,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -650,12 +643,12 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		event.clear();
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -676,8 +669,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -721,11 +714,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-				
+		event.doWait(1000);
+		
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 
@@ -745,8 +737,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -791,11 +783,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 
@@ -814,8 +805,8 @@ public class HipChatServerExtensionTest {
 		
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -862,11 +853,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -891,8 +881,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -940,11 +930,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -968,8 +957,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1015,11 +1004,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -1043,8 +1031,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1092,11 +1080,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -1120,8 +1107,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1171,11 +1158,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -1200,8 +1186,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1253,11 +1239,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -1279,8 +1264,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1327,11 +1312,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-				
+		event.doWait(1000);
+	
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 	
@@ -1351,8 +1335,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1403,11 +1387,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.changesLoaded(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-				
+		event.doWait(1000);
+
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 	
@@ -1434,8 +1417,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1479,11 +1462,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildFinished(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -1513,8 +1495,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1551,11 +1533,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildFinished(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 
@@ -1583,8 +1564,8 @@ public class HipChatServerExtensionTest {
 
         // Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1628,11 +1609,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildFinished(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
-		
+		event.doWait(1000);
+
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -1662,8 +1642,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		SBuildType buildType = mock(SBuildType.class);
@@ -1700,11 +1680,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildFinished(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
+		event.doWait(1000);
 		
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 
@@ -1733,8 +1712,8 @@ public class HipChatServerExtensionTest {
 
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		CanceledInfo canceledInfo = mock(CanceledInfo.class);
@@ -1785,11 +1764,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildInterrupted(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
+		event.doWait(1000);
 		
 		// Test
+		assertTrue(event.isSet());
 		assertEquals(1, callbacks.size());
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
@@ -1828,8 +1806,8 @@ public class HipChatServerExtensionTest {
 
         // Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies, and the extension
 		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
@@ -1846,15 +1824,14 @@ public class HipChatServerExtensionTest {
 		
 		// Execute start-up
 		extension.serverStartup();
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
+		event.doWait(1000);
+		assertTrue(event.isSet());
 				
 		// Execute shutdown
+		event.clear();
 		extension.serverShutdown();
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
+		event.doWait(1000);
+		assertTrue(event.isSet());
 		
 		// Test start-up
 		assertEquals(2, callbacks.size());
@@ -2197,8 +2174,8 @@ public class HipChatServerExtensionTest {
 		
 		// Callback closure
 		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
-		final Object waitObject = new Object();
-		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(waitObject, callbacks);
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
 		
 		// Mocks and other dependencies
 		CanceledInfo canceledInfo = mock(CanceledInfo.class);
@@ -2240,11 +2217,10 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
 		extension.buildInterrupted(build);
-		synchronized (waitObject) {
-			waitObject.wait(1000);
-		}
+		event.doWait(1000);
 		
 		// Test
+		assertFalse(event.isSet());
 		assertEquals(0, callbacks.size());
 	}
 
@@ -2270,18 +2246,16 @@ public class HipChatServerExtensionTest {
 
 		// TODO: Record and test notify status
 		ArrayList<CallbackObject> callbacks;
-		Object waitObject;
+		Event event;
 		
-		public HipChatRoomNotificationCallback(Object waitObject, ArrayList<CallbackObject> callbacks) {
-			this.waitObject = waitObject;
+		public HipChatRoomNotificationCallback(Event event, ArrayList<CallbackObject> callbacks) {
+			this.event = event;
 			this.callbacks = callbacks;
 		}
 		
 		public void invoke(HipChatRoomNotification notification, String roomId) {
 			callbacks.add(new CallbackObject(notification, roomId));
-			synchronized (waitObject) {
-				waitObject.notify();
-			}
+			this.event.set();				
 		}
 	};
 	
