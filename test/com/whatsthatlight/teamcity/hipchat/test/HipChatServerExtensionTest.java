@@ -22,11 +22,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import jetbrains.buildServer.messages.Status;
 import jetbrains.buildServer.parameters.ParametersProvider;
@@ -46,18 +43,20 @@ import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
+import com.whatsthatlight.teamcity.hipchat.HipChatEmoticon;
+import com.whatsthatlight.teamcity.hipchat.HipChatEmoticons;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageColour;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageFormat;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
+import com.whatsthatlight.teamcity.hipchat.HipChatRoomLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatRoomNotification;
 import com.whatsthatlight.teamcity.hipchat.HipChatServerExtension;
 
@@ -1791,6 +1790,58 @@ public class HipChatServerExtensionTest {
 		assertEquals(expectedNotificationStatus, actualNotification.notify);
 		assertTrue(actualNotification.message.contains(expectedServerShutdownMessage));
 		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
+	}
+	
+	@Test
+	public void testRegisterMultipleEmoticonBatches() throws IOException {
+
+		// Batch size
+		int maxResults = 1;
+
+		// First batch
+		String emoticonId1 = "id1";
+		String emoticonShortcut1 = "emo1";
+		String emoticonUrl1 = "http://example.com/";
+		int startIndex1 = 0;
+		
+		// Second batch
+		String emoticonId2 = "id2";
+		String emoticonShortcut2 = "emo2";
+		String emoticonUrl2 = "http://example.com/";
+		int startIndex2 = startIndex1 + maxResults;
+
+		// First call
+		HipChatEmoticon emoticon1 = new HipChatEmoticon(emoticonId1, null, emoticonShortcut1, emoticonUrl1);
+		List<HipChatEmoticon> items1 = new ArrayList<HipChatEmoticon>();
+		items1.add(emoticon1);
+		HipChatApiResultLinks links1 = new HipChatApiResultLinks(null, null, new String());
+		HipChatEmoticons expectedEmoticons1 = new HipChatEmoticons(items1, startIndex1, maxResults, links1);		
+
+		// Second call
+		HipChatEmoticon emoticon2 = new HipChatEmoticon(emoticonId2, null, emoticonShortcut2, emoticonUrl2);
+		List<HipChatEmoticon> items2 = new ArrayList<HipChatEmoticon>();
+		items1.add(emoticon2);
+		HipChatApiResultLinks links2 = new HipChatApiResultLinks(null, null, null);
+		HipChatEmoticons expectedEmoticons2 = new HipChatEmoticons(items2, startIndex1, maxResults, links2);		
+
+		// API call mocks
+		HipChatApiProcessor processor = mock(HipChatApiProcessor.class);
+		when(processor.getEmoticons(startIndex1)).thenReturn(expectedEmoticons1);
+		when(processor.getEmoticons(startIndex2)).thenReturn(expectedEmoticons2);
+
+		// Other mocks
+		SBuildServer server = mock(SBuildServer.class);
+		HipChatConfiguration configuration = mock(HipChatConfiguration.class);
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		extension.register();
+
+		// Verifications
+		verify(processor).getEmoticons(startIndex1);
+		verify(processor).getEmoticons(startIndex2);
 	}
 	
 	@Test
