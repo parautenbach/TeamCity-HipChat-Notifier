@@ -374,6 +374,103 @@ public class HipChatServerExtensionTest {
 	}
 
 	@Test
+	public void testBuildProcessingWhenExceptionRaised() throws URISyntaxException, InterruptedException, IOException {
+		// Test parameters
+		String expectedExceptionText = "Could not process build event";
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Test User";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+		String rootUrl = "http://example.com";
+		String expectedBuildTypeId = "42";
+		long expectedBuildId = 24;
+		String expectedUser1Name = "foo";
+		String expectedBranchName = "feature1";
+
+        // Logger
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Appender appender = new WriterAppender(new PatternLayout("%m%n"), outputStream);
+        logger.addAppender(appender);
+
+        // Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
+		
+		// Mocks and other dependencies
+		Branch branch = mock(Branch.class);
+		when(branch.getDisplayName()).thenReturn(expectedBranchName);
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);	
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn(expectedBuildId);
+		when(build.getBranch()).thenReturn(branch);
+		when(build.getProjectExternalId()).thenReturn("");
+		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn((long)expectedBuildId);
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
+
+		@SuppressWarnings("unchecked")
+		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
+		Set<SUser> users = new LinkedHashSet<SUser>();
+		SUser user1 = mock(SUser.class);
+		when(user1.getDescriptiveName()).thenReturn(expectedUser1Name);
+		users.add(user1);
+		when(userSet.getUsers()).thenReturn(users);
+		when(build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD)).thenReturn(userSet);
+				
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		when(server.getRootUrl()).thenReturn(rootUrl);
+		String workingDir = System.getProperty("user.dir");
+	    System.out.println("Current working directory : " + workingDir);
+	    MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");
+        HipChatNotificationMessageTemplates templates = mock(HipChatNotificationMessageTemplates.class);
+        
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		extension.changesLoaded(build);
+		event.doWait(1000);
+        logger.removeAppender(appender);
+		
+		// Test
+		assertFalse(event.isSet());
+        boolean exceptionFound = false;
+        String logOutput = new String(outputStream.toByteArray());
+        for (String line : logOutput.split("\n")) {
+            if (line.contains(expectedExceptionText)) {
+                exceptionFound = true;
+                break;
+            }
+        }
+        assertTrue(exceptionFound);		
+	}
+	
+	@Test
 	public void testBuildStartedEventNullParentProjectConfiguration() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
 		String expectedRoomId = "parent";
