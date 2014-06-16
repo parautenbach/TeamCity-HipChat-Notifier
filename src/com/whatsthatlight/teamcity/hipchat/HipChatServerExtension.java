@@ -234,7 +234,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 			logger.debug(String.format("Children: %s", dependencies.isEmpty()));
 			List<SBuildType> dependencyReferences = buildType.getDependencyReferences();
 			logger.debug(String.format("Children: %s", dependencyReferences.isEmpty()));
-		} catch (Exception e) {			
+		} catch (Exception e) {
 		}
 				
 		// Fill the template.
