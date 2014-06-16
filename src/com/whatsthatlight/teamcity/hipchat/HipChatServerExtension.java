@@ -129,34 +129,30 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	@Override
 	public void serverStartup() {
 		if (this.configuration.getEvents() != null && this.configuration.getEvents().getServerStartupStatus()) {
-			try {
-				this.processServerEvent(TeamCityEvent.SERVER_STARTUP);
-			} catch (Exception e) {
-				logger.error("Error processing server startup event", e);
-			}
+			this.processServerEvent(TeamCityEvent.SERVER_STARTUP);
 		}
 	}
 
 	@Override
 	public void serverShutdown() {
 		if (this.configuration.getEvents() != null && this.configuration.getEvents().getServerShutdownStatus()) {
-			try {
-				this.processServerEvent(TeamCityEvent.SERVER_SHUTDOWN);
-			} catch (Exception e) {
-				logger.error("Error processing server shutdown event", e);
-			}
+			this.processServerEvent(TeamCityEvent.SERVER_SHUTDOWN);
 		}
 	}
 	
-	private void processServerEvent(TeamCityEvent event) throws TemplateException, IOException {
-		boolean notify = this.configuration.getDefaultNotifyStatus();
-		HipChatMessageBundle bundle = this.eventMap.get(event);
-		String colour = bundle.getColour();
-		String message = renderTemplate(this.templates.readTemplate(event), new HashMap<String, Object>());
-		HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, notify);
-		String roomId = this.configuration.getDefaultRoomId();
-		if (roomId != null) {
-			this.processor.sendNotification(notification, roomId);
+	private void processServerEvent(TeamCityEvent event) {
+		try {
+			boolean notify = this.configuration.getDefaultNotifyStatus();
+			HipChatMessageBundle bundle = this.eventMap.get(event);
+			String colour = bundle.getColour();
+			String message = renderTemplate(this.templates.readTemplate(event), new HashMap<String, Object>());
+			HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, notify);
+			String roomId = this.configuration.getDefaultRoomId();
+			if (roomId != null) {
+				this.processor.sendNotification(notification, roomId);
+			}
+		} catch (Exception e) {
+			logger.error(String.format("Error processing server event: %s", event), e);
 		}
 	}
 	

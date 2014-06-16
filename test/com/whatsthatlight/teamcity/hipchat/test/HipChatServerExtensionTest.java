@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -41,8 +42,11 @@ import jetbrains.buildServer.users.UserModel;
 import jetbrains.buildServer.users.UserSet;
 import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
 
+import org.apache.log4j.Appender;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.WriterAppender;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -51,6 +55,7 @@ import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticon;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticons;
+import com.whatsthatlight.teamcity.hipchat.HipChatEventConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageColour;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageFormat;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
@@ -58,6 +63,7 @@ import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatRoomNotification;
 import com.whatsthatlight.teamcity.hipchat.HipChatServerExtension;
+import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -68,6 +74,8 @@ public class HipChatServerExtensionTest {
 	private static String apiToken;
 	private static String actualRoomId;
 
+	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
+	
 	@BeforeClass
 	public static void ClassSetup() {
 		// Set up a basic logger for debugging purposes
@@ -388,7 +396,7 @@ public class HipChatServerExtensionTest {
 		extension.changesLoaded(build);
 		
 		// Verifications
-		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());;
+		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());
 	}
 	
 	@Test
@@ -1501,7 +1509,7 @@ public class HipChatServerExtensionTest {
 		extension.buildFinished(build);
 		
 		// Verifications
-		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());;
+		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());
 	}
 	
 	@Test
@@ -1676,7 +1684,7 @@ public class HipChatServerExtensionTest {
 		extension.buildFinished(build);
 		
 		// Verifications
-		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());;
+		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());
 	}
 	
 	@Test
@@ -1799,7 +1807,7 @@ public class HipChatServerExtensionTest {
 		extension.buildInterrupted(build);
 		
 		// Verifications
-		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());;
+		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());
 	}
 	
 	@Test
@@ -1892,6 +1900,66 @@ public class HipChatServerExtensionTest {
 		extension.serverStartup();
 		extension.serverShutdown();
 		
+		// Verifications
+		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());
+	}
+	
+	@Test
+	public void testServerEventException() throws URISyntaxException, InterruptedException, IOException {
+		// Test parameters
+		String expectedExceptionText = "Error processing server event: SERVER_STARTUP";
+		
+		// Logger
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		Appender appender = new WriterAppender(new PatternLayout("%m%n"), outputStream);
+		logger.addAppender(appender);
+
+		// Mocks and other dependencies, and the extension
+		HipChatApiProcessor processor = mock(HipChatApiProcessor.class);
+		HipChatEventConfiguration events = new HipChatEventConfiguration();
+		events.setServerStartupStatus(true);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(true);
+		configuration.setEvents(events);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");
+        HipChatNotificationMessageTemplates templates = mock(HipChatNotificationMessageTemplates.class);
+		when(templates.readTemplate(TeamCityEvent.SERVER_STARTUP)).thenThrow(new IOException("Test exception"));
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		
+		// Execute start-up
+		extension.serverStartup();
+		logger.removeAppender(appender);
+
+		// Verifications
+		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());
+		
+		// Test
+		boolean exceptionFound = false;
+		String logOutput = new String(outputStream.toByteArray());
+		for (String line : logOutput.split("\n")) {
+			if (line.contains(expectedExceptionText)) {
+				exceptionFound = true;
+				break;
+			}
+		}
+		assertTrue(exceptionFound);
+	}
+	
+	@Test
+	public void testServerEventNullDefaultRoomId() throws URISyntaxException, InterruptedException, IOException {
+		// Mocks and other dependencies, and the extension
+		HipChatApiProcessor processor = mock(HipChatApiProcessor.class);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setDefaultRoomId(null);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		
+		// Execute start-up
+		extension.serverStartup();
+
 		// Verifications
 		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());;
 	}
