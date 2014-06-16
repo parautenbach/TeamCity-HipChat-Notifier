@@ -38,11 +38,8 @@ import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
-import jetbrains.buildServer.serverSide.SBuildType;
-import jetbrains.buildServer.serverSide.SFinishedBuild;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
-import jetbrains.buildServer.serverSide.dependency.Dependency;
 import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.users.UserSet;
 import jetbrains.buildServer.vcs.SelectPrevBuildPolicy;
@@ -220,37 +217,35 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		boolean hasContributors = !contributors.isEmpty();
 		logger.debug(String.format("Has contributors: %s", hasContributors));
 		
-		// TODO: Add artifact dependencies as a template variable
-		try {
-			SBuildType buildType = build.getBuildType();
-			Collection<SBuildType> childDependencies = buildType.getChildDependencies();
-			for (SBuildType sBuildType : childDependencies) {
-				SFinishedBuild changes = sBuildType.getLastChangesFinished();
-				changes.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
-			} 
-			logger.debug(String.format("Children: %s", childDependencies.isEmpty()));
-			List<Dependency> dependencies = buildType.getDependencies();
-			//dependencies.get(0).
-			logger.debug(String.format("Children: %s", dependencies.isEmpty()));
-			List<SBuildType> dependencyReferences = buildType.getDependencyReferences();
-			logger.debug(String.format("Children: %s", dependencyReferences.isEmpty()));
-		} catch (Exception e) {
-		}
+//		// TODO: Add artifact dependencies as a template variable
+//		try {
+//			SBuildType buildType = build.getBuildType();
+//			Collection<SBuildType> childDependencies = buildType.getChildDependencies();
+//			for (SBuildType sBuildType : childDependencies) {
+//				SFinishedBuild changes = sBuildType.getLastChangesFinished();
+//				changes.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD);
+//			} 
+//			logger.debug(String.format("Children: %s", childDependencies.isEmpty()));
+//			List<Dependency> dependencies = buildType.getDependencies();
+//			//dependencies.get(0).
+//			logger.debug(String.format("Children: %s", dependencies.isEmpty()));
+//			List<SBuildType> dependencyReferences = buildType.getDependencyReferences();
+//			logger.debug(String.format("Children: %s", dependencyReferences.isEmpty()));
+//		} catch (Exception e) {
+//		}
 				
 		// Fill the template.
 		Map<String, Object> templateMap = new HashMap<String, Object>();
 		// Add all available project, build configuration, agent, server, etc. parameters to the data model
-		// These are accessed as $.data_model["some.variable"]}
+		// These are accessed as ${.data_model["some.variable"]}
 		// See: http://freemarker.org/docs/ref_specvar.html
+		logger.debug("Adding additional parameters");
 		for (Map.Entry<String, String> entry : build.getParametersProvider().getAll().entrySet()) {
-			try {
-				logger.debug(String.format("%s: %s", entry.getKey(), entry.getValue()));
-				templateMap.put(entry.getKey(), entry.getValue());
-			} catch (Exception e) {
-				logger.error("Adding server parameter failed", e);
-			}
+			logger.debug(String.format("%s: %s", entry.getKey(), entry.getValue()));
+			templateMap.put(entry.getKey(), entry.getValue());
 		}
 		// Standard plugin parameters
+		logger.debug("Adding standard parameters");
 	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.EMOTICON_URL, emoticonUrl == null ? "" : emoticonUrl);		
 	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.FULL_NAME, build.getBuildType().getFullName());
 	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.TRIGGERED_BY, build.getTriggeredBy().getAsString());
