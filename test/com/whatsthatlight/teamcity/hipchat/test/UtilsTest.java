@@ -172,4 +172,39 @@ public class UtilsTest {
 		assertEquals(expectedProjectId, projectConfiguration.getRoomId());
 	}
 	
+	@Test
+	public void testRootHasNoConfigurationWhenProjectInheritsFromParent() {
+		// Test parameters
+		String rootProjectId = "_Root";
+		String parentProjectId = "project2";
+		String parentRoomId = "parent";
+		boolean notifyStatus = true;
+		
+		// Top-most project is the root
+		SProject parentParentProject = mock(SProject.class);
+		when(parentParentProject.getProjectId()).thenReturn(rootProjectId);
+		
+		// In-between project
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(parentProjectId);
+		when(parentProject.getParentProject()).thenReturn(parentParentProject);
+		when(parentProject.getParentProjectId()).thenReturn(rootProjectId);
+		
+		// Child project
+		SProject project = mock(SProject.class);
+		when(project.getParentProjectId()).thenReturn(parentProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+
+		// Configuration
+		HipChatProjectConfiguration parentProjectConfiguration = new HipChatProjectConfiguration(parentProjectId, parentRoomId, notifyStatus);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setProjectConfiguration(parentProjectConfiguration);
+		
+		// Execute
+		HipChatProjectConfiguration actualEffectiveProjectConfiguration = Utils.findFirstSpecificParentConfiguration(project, configuration);
+		
+		// Test
+		assertNull(actualEffectiveProjectConfiguration);
+	}
+	
 }

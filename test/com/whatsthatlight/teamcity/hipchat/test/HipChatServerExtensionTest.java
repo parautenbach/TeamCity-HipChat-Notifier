@@ -54,6 +54,7 @@ import org.junit.Test;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticon;
+import com.whatsthatlight.teamcity.hipchat.HipChatEmoticonSet;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticons;
 import com.whatsthatlight.teamcity.hipchat.HipChatEventConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageColour;
@@ -493,6 +494,129 @@ public class HipChatServerExtensionTest {
 		assertEquals(expectedAdditionalParameterValue, actualNotification.message);
 	}
 
+	@Test
+	public void testBuildStartedEventMessageContainsEmoticon() throws URISyntaxException, InterruptedException, IOException {
+		// Test parameters
+		String expectedEmoticonUrl = "http://example.com/";
+		String templateString = String.format("<img src=\"${emoticonUrl}\">", expectedEmoticonUrl);
+		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Test User";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+		String rootUrl = "http://example.com";
+		String expectedBuildTypeId = "42";
+		long expectedBuildId = 24;
+		String expectedUser1Name = "foo";
+		String expectedUser2Name = "bar";
+		String expectedUser3Name = "baz";
+		String expectedBranchName = "feature1";
+		String emoticonUrl = "http://example.com/emoticon";
+
+        // Ensure we get the default template.
+        File templateFile = new File("hipchat/buildStartedTemplate.ftl");
+        if (templateFile.exists()) {
+            assertTrue(templateFile.delete());
+        }
+
+        // Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
+		
+		// Mocks and other dependencies
+		List<HipChatEmoticon> items = new ArrayList<HipChatEmoticon>();
+		for (String item : HipChatEmoticonSet.POSITIVE) {
+			HipChatEmoticon emoticon = new HipChatEmoticon(item, null, item, emoticonUrl);
+			items.add(emoticon);
+		}
+		
+		HipChatApiResultLinks links = new HipChatApiResultLinks(null, null, null);
+		HipChatEmoticons expectedEmoticons = new HipChatEmoticons(items, 0, items.size(), links);	
+		
+		Branch branch = mock(Branch.class);
+		when(branch.getDisplayName()).thenReturn(expectedBranchName);
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);	
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn(expectedBuildId);
+		when(build.getBranch()).thenReturn(branch);
+		when(build.getProjectExternalId()).thenReturn("");
+		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn((long)expectedBuildId);
+		HashMap<String, String> additionalParameters = new HashMap<String, String>();
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(additionalParameters);
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
+
+		@SuppressWarnings("unchecked")
+		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
+		Set<SUser> users = new LinkedHashSet<SUser>();
+		SUser user1 = mock(SUser.class);
+		when(user1.getDescriptiveName()).thenReturn(expectedUser1Name);
+		users.add(user1);
+		SUser user2 = mock(SUser.class);
+		when(user2.getDescriptiveName()).thenReturn(expectedUser2Name);
+		users.add(user2);
+		SUser user3 = mock(SUser.class);
+		when(user3.getDescriptiveName()).thenReturn(expectedUser3Name);
+		users.add(user3);
+		when(userSet.getUsers()).thenReturn(users);
+		when(build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD)).thenReturn(userSet);
+				
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		when(server.getRootUrl()).thenReturn(rootUrl);
+		String workingDir = System.getProperty("user.dir");
+	    System.out.println("Current working directory : " + workingDir);
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback, expectedEmoticons);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");
+                
+        // Set the template
+		String templateName = "template";
+		StringTemplateLoader loader = new StringTemplateLoader();
+		loader.putTemplate(templateName, templateString);
+		Configuration config = new Configuration();
+		config.setTemplateLoader(loader);
+		Template template = config.getTemplate(templateName);
+		HipChatNotificationMessageTemplates templates = mock(HipChatNotificationMessageTemplates.class);
+		when(templates.readTemplate(TeamCityEvent.BUILD_STARTED)).thenReturn(template);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		extension.register();
+		extension.changesLoaded(build);
+		event.doWait(1000);
+		
+		// Test
+		assertTrue(event.isSet());
+		assertEquals(1, callbacks.size());
+		CallbackObject callbackObject = callbacks.get(0);
+		HipChatRoomNotification actualNotification = callbackObject.notification;
+		System.out.println(actualNotification);
+		assertTrue(actualNotification.message.contains(expectedEmoticonUrl));
+	}
+	
 	@Test
 	public void testBuildProcessingWhenExceptionRaised() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
@@ -2862,6 +2986,7 @@ public class HipChatServerExtensionTest {
 	private class MockHipChatNotificationProcessor extends HipChatApiProcessor {
 
 		private Callback callback;
+		private HipChatEmoticons emoticonsResult = null;
 		private final Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 		
 		public MockHipChatNotificationProcessor(HipChatConfiguration configuration) throws URISyntaxException {
@@ -2871,6 +2996,20 @@ public class HipChatServerExtensionTest {
 		public MockHipChatNotificationProcessor(Callback callback) throws URISyntaxException {
 			this(new HipChatConfiguration());
 			this.callback = callback;
+		}
+		
+		public MockHipChatNotificationProcessor(Callback callback, HipChatEmoticons emoticonsResult) throws URISyntaxException {
+			this(callback);
+			this.emoticonsResult = emoticonsResult;
+		}
+		
+		@Override
+		public HipChatEmoticons getEmoticons(int startIndex) {
+			if (this.emoticonsResult == null) {
+				return super.getEmoticons(startIndex);
+			} else {
+				return this.emoticonsResult;
+			}
 		}
 		
 		@Override
