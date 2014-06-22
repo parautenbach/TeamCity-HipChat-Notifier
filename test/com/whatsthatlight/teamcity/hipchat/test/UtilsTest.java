@@ -25,7 +25,8 @@ import jetbrains.buildServer.serverSide.SProject;
 
 import org.apache.log4j.BasicConfigurator;
 import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.testng.annotations.Test;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;

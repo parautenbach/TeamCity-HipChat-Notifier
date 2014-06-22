@@ -28,6 +28,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -41,7 +43,10 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.testng.annotations.Test;
+
+import org.springframework.web.servlet.ModelAndView;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
@@ -507,6 +512,37 @@ public class HipChatConfigurationControllerTest {
 		// Re-read the config from disk
 		controller.initialise();
 		assertEquals(expectedDefaultRoomIdValue, configuration.getDefaultRoomId());
+	}
+	
+	@Test
+	public void test() throws URISyntaxException, IOException {
+		// Test parameters
+		String expectedConfigDir = ".";
+		
+		// Mocks
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
+		SBuildServer server = mock(SBuildServer.class);
+		WebControllerManager manager = mock(WebControllerManager.class);
+		
+		// Other dependencies
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
+		controller.initialise();
+		
+		HttpServletResponse response = null; // = mock(ServerPaths.class);
+		
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		when(request.getParameter("project")).thenReturn("1");
+		
+		
+		ModelAndView result = controller.doHandle(request, response);
+		
+		assertNull(result);
+		
 	}
 		
 }

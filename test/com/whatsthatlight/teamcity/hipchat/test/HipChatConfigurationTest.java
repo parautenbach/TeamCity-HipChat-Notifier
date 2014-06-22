@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;

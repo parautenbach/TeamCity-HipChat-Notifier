@@ -86,7 +86,7 @@ public class HipChatConfigurationController extends BaseController {
 		logger.debug("Changing project configuration");
 		String roomId = request.getParameter(HipChatConfiguration.ROOM_ID_KEY);
 		boolean notify = Boolean.parseBoolean(request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY));
-		String projectId = request.getParameter("projectId");
+		String projectId = request.getParameter(HipChatConfiguration.PROJECT_ID_KEY);
 		logger.debug(String.format("Room ID: %s", roomId));
 		logger.debug(String.format("Trigger notification: %s", notify));
 		logger.debug(String.format("Project ID: %s", projectId));

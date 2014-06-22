@@ -13,13 +13,11 @@ import java.util.Scanner;
 import jetbrains.buildServer.serverSide.ServerPaths;
 import static org.mockito.Mockito.*;
 
+import org.testng.annotations.Test;
+import org.testng.annotations.DataProvider;
+
 import org.apache.log4j.BasicConfigurator;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.theories.DataPoints;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;
@@ -29,7 +27,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-@RunWith(Theories.class)
 public class HipChatNotificationMessageTemplatesTest {
 
 	@BeforeClass
@@ -37,8 +34,9 @@ public class HipChatNotificationMessageTemplatesTest {
 		BasicConfigurator.configure();
 	}
 	
-	@DataPoints
-	public static Object[][] params = new Object[][] { 
+	@DataProvider(name = "dataProvider")
+	public Object[][] provideData() {
+		return new Object[][] {
 				{ TeamCityEvent.BUILD_STARTED, "buildStartedTemplate.ftl", "buildStarted", HipChatNotificationMessageTemplates.BUILD_STARTED_DEFAULT_TEMPLATE },
 				{ TeamCityEvent.BUILD_SUCCESSFUL, "buildSuccessfulTemplate.ftl", "buildSuccessful", HipChatNotificationMessageTemplates.BUILD_SUCCESSFUL_DEFAULT_TEMPLATE },
 				{ TeamCityEvent.BUILD_FAILED, "buildFailedTemplate.ftl", "buildFailed", HipChatNotificationMessageTemplates.BUILD_FAILED_DEFAULT_TEMPLATE },
@@ -46,6 +44,7 @@ public class HipChatNotificationMessageTemplatesTest {
 				{ TeamCityEvent.SERVER_STARTUP, "serverStartupTemplate.ftl", "serverStartup", HipChatNotificationMessageTemplates.SERVER_STARTUP_DEFAULT_TEMPLATE },
 				{ TeamCityEvent.SERVER_SHUTDOWN, "serverShutdownTemplate.ftl", "serverShutdown", HipChatNotificationMessageTemplates.SERVER_SHUTDOWN_DEFAULT_TEMPLATE }
 		};
+	}
 	
 	@Test
 	public void testOptionalContributorsExists() throws IOException, TemplateException {
@@ -122,14 +121,10 @@ public class HipChatNotificationMessageTemplatesTest {
 		assertFalse(renderedTemplate.contains(expectedContributors));
 	}
 	
-	@Test
-	@Theory
-	public void testReadAndWriteTemplate(Object[] params) throws IOException, TemplateException {
+	@Test(dataProvider = "dataProvider")
+	public void testReadAndWriteTemplate(TeamCityEvent expectedEvent, String expectedFileName, String ignored, String expectedTemplateString) throws IOException, TemplateException {
 		// Parameters
-		String expectedTemplateString = (String) params[2];
 		String expectedConfigDir = ".";
-		TeamCityEvent expectedEvent = (TeamCityEvent) params[0];
-		String expectedFileName = (String) params[1];
 		String expectedTemplateDir = "hipchat";
 		System.out.println(expectedFileName);
 		
@@ -159,14 +154,10 @@ public class HipChatNotificationMessageTemplatesTest {
 	    assertEquals(expectedTemplateString, actualTemplate.toString());
 	}
 	
-	@Test
-	@Theory
-	public void testReadDefaultTemplate(Object[] params) throws IOException, TemplateException {
+	@Test(dataProvider = "dataProvider")
+	public void testReadDefaultTemplate(TeamCityEvent expectedEvent, String expectedFileName, String ignored, String expectedTemplateString) throws IOException, TemplateException {
 		// Parameters
-		String expectedTemplateString = (String) params[3];
 		String expectedConfigDir = ".";
-		TeamCityEvent expectedEvent = (TeamCityEvent) params[0];
-		String expectedFileName = (String) params[1];
 		String expectedTemplateDir = "hipchat";
 		System.out.println(expectedFileName);
 		
@@ -187,13 +178,9 @@ public class HipChatNotificationMessageTemplatesTest {
 	    assertEquals(expectedTemplateString, actualTemplate.toString());
 	}
 	
-	@Test
-	@Theory
-	public void testOverwriteExistingTemplate(Object[] params) throws IOException {
+	@Test(dataProvider = "dataProvider")
+	public void testOverwriteExistingTemplate(TeamCityEvent expectedEvent, String expectedFileName, String expectedTemplateStringFirst, String expectedTemplateString) throws IOException {
 		// Parameters
-		TeamCityEvent expectedEvent = (TeamCityEvent) params[0];
-		String expectedFileName = (String) params[1];
-		String expectedTemplateStringFirst = (String) params[2];
 		String expectedTemplateStringSecond = "bar";
 		String expectedConfigDir = ".";
 		String expectedTemplateDir = "hipchat";

@@ -39,8 +39,8 @@ import org.apache.log4j.WriterAppender;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.eclipse.jetty.server.Request;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.testng.annotations.Test;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
@@ -66,8 +66,7 @@ public class HipChatApiProcessorTest {
 		BasicConfigurator.configure();
 	}
 	
-	@Test
-	@Ignore
+	@Test(enabled = false)
 	public void testGetEmoticons() throws URISyntaxException {
 		String apiUrl = "https://api.hipchat.com/v2/";
 		String apiToken = "token";
@@ -220,8 +219,7 @@ public class HipChatApiProcessorTest {
 		assertEquals(0, rooms.items.size());
 	}
 	
-	@Test
-	@Ignore
+	@Test(enabled = false)
 	public void testGetRooms() throws URISyntaxException {
 
 		String apiUrl = "https://api.hipchat.com/v2/";
@@ -611,8 +609,7 @@ public class HipChatApiProcessorTest {
 		assertFalse(actualAuthResult);
 	}
 	
-	@Test
-	@Ignore
+	@Test(enabled = false)
 	public void testTestAuthentication() throws URISyntaxException {
 
 		String apiUrl = "https://api.hipchat.com/v2/";
