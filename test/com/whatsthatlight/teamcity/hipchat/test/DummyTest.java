@@ -20,6 +20,7 @@ import org.testng.annotations.Test;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageColour;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageFormat;
+import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;
 
 public class DummyTest {
 
@@ -29,6 +30,10 @@ public class DummyTest {
 		// The problem is that they are effectively static classes, but there's no support for static classes in Java
 		new HipChatMessageColour();
 		new HipChatMessageFormat();
+
+		// And another stupid one: Some hidden byte code and the only way to get full coverage is to call these methods
+		TeamCityEvent.values();
+		TeamCityEvent.valueOf("BUILD_STARTED");
 	}
 
 }
