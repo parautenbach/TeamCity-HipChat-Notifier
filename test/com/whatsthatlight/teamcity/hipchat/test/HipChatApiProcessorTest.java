@@ -38,9 +38,9 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.WriterAppender;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.eclipse.jetty.server.Request;
-import org.junit.BeforeClass;
 
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;

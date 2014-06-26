@@ -24,9 +24,9 @@ import java.util.Collection;
 import jetbrains.buildServer.serverSide.SProject;
 
 import org.apache.log4j.BasicConfigurator;
-import org.junit.BeforeClass;
 
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
@@ -35,7 +35,7 @@ import com.whatsthatlight.teamcity.hipchat.Utils;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class UtilsTest {
+public class UtilsTest extends Utils {
 	
 	@BeforeClass
 	public static void ClassSetup() {

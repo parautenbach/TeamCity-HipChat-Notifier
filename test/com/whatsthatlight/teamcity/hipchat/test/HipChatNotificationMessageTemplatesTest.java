@@ -14,10 +14,10 @@ import jetbrains.buildServer.serverSide.ServerPaths;
 import static org.mockito.Mockito.*;
 
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 
 import org.apache.log4j.BasicConfigurator;
-import org.junit.BeforeClass;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;

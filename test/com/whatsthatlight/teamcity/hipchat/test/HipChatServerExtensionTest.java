@@ -47,10 +47,10 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.WriterAppender;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;

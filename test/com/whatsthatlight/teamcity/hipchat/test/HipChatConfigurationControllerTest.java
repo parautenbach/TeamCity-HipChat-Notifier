@@ -42,9 +42,10 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.junit.BeforeClass;
+
 
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
 
 import org.springframework.web.servlet.ModelAndView;
 
