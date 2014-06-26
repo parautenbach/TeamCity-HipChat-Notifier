@@ -16,21 +16,31 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat.test;
 
+import java.io.IOException;
+
+import jetbrains.buildServer.serverSide.ServerPaths;
+
 import org.testng.annotations.Test;
 
+import com.whatsthatlight.teamcity.hipchat.HipChatEmoticonSet;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageColour;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageFormat;
+import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;
 
 public class DummyTest {
 
 	@Test
-	public void forCoverageOnly() {
+	public void forCoverageOnly() throws IOException {
 		// EMMA doesn't cover these classes fully, as their constructors are never invoked
 		// The problem is that they are effectively static classes, but there's no support for static classes in Java
 		new HipChatMessageColour();
 		new HipChatMessageFormat();
-
+		new HipChatEmoticonSet();
+		ServerPaths serverPaths = org.mockito.Mockito.mock(ServerPaths.class);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		templates.new Parameters();
+		
 		// And another stupid one: Some hidden byte code and the only way to get full coverage is to call these methods
 		TeamCityEvent.values();
 		TeamCityEvent.valueOf("BUILD_STARTED");
