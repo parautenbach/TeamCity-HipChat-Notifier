@@ -42,7 +42,8 @@
 	<property name="plugin.xml" value="teamcity-plugin.xml"/>
 	<property name="plugin-bean.xml" value="build-server-plugin-hipchat-notifier.xml"/>
 	<property name="versiontag" value="&lt;version&gt;${version}&lt;/version&gt;"/>
-
+	<property name="coverage.dir" value="coverage" />
+	
 	<path id="classpath">
 		<fileset dir="${lib}">
 			<include name="**/*.jar"/>
@@ -50,21 +51,34 @@
 		<pathelement location="${classes}"/>
         <pathelement location="${teamcity.appdir}/classes"/>
 		<fileset dir="${teamcity.home}/lib" includes="*.jar"/>
+		<fileset dir="${teamcity.home}/devPackage/tests" includes="*.jar"/>
         <fileset dir="${teamcity.appdir}/lib" includes="*.jar" excludes="${main-class}*.jar"/>
 	</path>
-	
-	<manifestclasspath property="manifest.classpath" jarfile="${jar}.jar" maxParentLevels="5">
+
+	<manifestclasspath property="manifest.classpath" jarfile="${jar}.jar" maxParentLevels="7">
 		<classpath refid="classpath" />
 	</manifestclasspath>
 	
+	<path id="emma.lib">
+	    <pathelement location="${lib}/emma-2.1.5320/emma.jar" />
+	    <pathelement location="${lib}/emma-2.1.5320/emma_ant.jar" />
+	</path>
+	
+	<taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+
+	<taskdef name="testng" classname="org.testng.TestNGAntTask">
+		<classpath refid="classpath" />
+	</taskdef>
+	
 	<target name="init">
-		<echo>
+	<echo>
       Source:         ${src}
       Classes:        ${classes}
 	  Classpath:      ${manifest.classpath}
       Resources:      ${resources}
       Build:          ${build}
       Reports:        ${reports}
+	  Coverage:       ${coverage.dir}
       Main Class:     ${main-class}
       Version:        ${version}
 	  Version Tag:    ${versiontag}
@@ -97,29 +111,38 @@
 		</manifest>
 	</target>
 
-	<target name="test" depends="compile" description="Run tests">
-		<mkdir dir="${reports}"/>
-		<junit haltonerror="true" haltonfailure="true" tempdir="${reports}" failureproperty="junit.failure">
-			<classpath refid="classpath"/>
-			<formatter type="xml"/>
-			<formatter type="plain" usefile="false" />
-			<!-- Use simple or batch option -->
-			<batchtest fork="true" todir="${reports}">
-				<fileset dir="${classes}">
-					<include name="**/*Test*"/>
-					<include name="log4j.properties"/>
-					<exclude name="**/*$*.class"/>
+	<target name="emma" description="turns on EMMA's on-the-fly instrumentation mode" >
+	    <property name="emma.enabled" value="true" />
+		<property name="emma.filter" value=""/>
+    </target>
+	
+	<target name="test" depends="emma,compile" description="Run tests">
+		<mkdir dir="${coverage.dir}"/>
+		<emma enabled="${emma.enabled}" verbosity="verbose">
+			<instr instrpath="${classes}" mode="overwrite" metadatafile="${coverage.dir}/metadata.emma">
+			<filter value="${emma.filter}"/>
+			</instr>
+		</emma>
+		<testng failureProperty="tests.failed" outputdir="testng" haltonfailure="true" >
+			<classpath refid="classpath">
+			</classpath>
+			<xmlfileset dir="." includes="testng.xml"/>
+			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma"/>
+			<jvmarg value="-Demma.coverage.out.merge=false"/>
+		</testng>
+		<emma enabled="${emma.enabled}">
+			<report sourcepath="src" sort="+block,+name,+method,+class,+line" metrics="method:70,block:80,line:80,class:100,line:100">
+				<fileset dir="${coverage.dir}">
+					<include name="*.emma"/>
 				</fileset>
-			</batchtest>
-		</junit>
-		<junitreport todir="${reports}">
-			<fileset dir="${reports}">
-				<include name="TEST-*.xml"/>
-			</fileset>
-		</junitreport>
+				<txt outfile="${coverage.dir}/coverage.txt" depth="package" columns="class,method,block,line,name"/>
+				<xml outfile="${coverage.dir}/coverage.xml" depth="package"/>
+				<html outfile="${coverage.dir}/coverage.html" depth="method" columns="name,class,method,block,line"/>
+				</report>
+		</emma>		
 	</target>
 
-	<target name="release" depends="test" description="Generate the distribution" >
+	<target name="release" depends="compile" description="Generate the distribution" >
 		<replaceregexp file="teamcity-plugin.xml" match="&lt;version&gt;.*?&lt;/version&gt;" replace="${versiontag}" />
 		<mkdir dir="${build}"/>
 		<copy file="${plugin.xml}" todir="${build}"/>
@@ -147,6 +170,8 @@
 		<delete dir="${classes}"/>
 		<delete dir="${build}"/>
 		<delete dir="${reports}"/>
+		<delete dir="${coverage.dir}"/>
+		<delete dir="testng"/>
 		<delete file="${manifest}"/>
 	</target>
 
