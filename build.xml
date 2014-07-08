@@ -124,7 +124,7 @@
 				<filter value="${emma.filter}"/>
 			</instr>
 		</emma>
-		<testng failureProperty="tests.failed" outputdir="testng" haltonfailure="true" >
+		<testng failureProperty="tests.failed" outputdir="testng" haltonfailure="false" >
 			<classpath refid="classpath">
 			</classpath>
 			<xmlfileset dir="." includes="testng.xml"/>

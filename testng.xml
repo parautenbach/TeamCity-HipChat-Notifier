@@ -12,6 +12,7 @@
       <class name="com.whatsthatlight.teamcity.hipchat.test.HipChatServerExtensionTest"/>
       <class name="com.whatsthatlight.teamcity.hipchat.test.SimpleServerTest"/>
       <class name="com.whatsthatlight.teamcity.hipchat.test.UtilsTest"/>
+      <class name="com.whatsthatlight.teamcity.hipchat.test.HipChatProjectTabTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->
