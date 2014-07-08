@@ -43,6 +43,7 @@
 	<property name="plugin-bean.xml" value="build-server-plugin-hipchat-notifier.xml"/>
 	<property name="versiontag" value="&lt;version&gt;${version}&lt;/version&gt;"/>
 	<property name="coverage.dir" value="coverage" />
+	<property name="testng.dir" value="testng" />
 	
 	<path id="classpath">
 		<fileset dir="${lib}">
@@ -124,7 +125,7 @@
 				<filter value="${emma.filter}"/>
 			</instr>
 		</emma>
-		<testng failureProperty="tests.failed" outputdir="testng" haltonfailure="false" >
+		<testng failureProperty="tests.failed" outputdir="${testng.dir}" haltonfailure="false" >
 			<classpath refid="classpath">
 			</classpath>
 			<xmlfileset dir="." includes="testng.xml"/>
@@ -172,7 +173,7 @@
 		<delete dir="${build}"/>
 		<delete dir="${reports}"/>
 		<delete dir="${coverage.dir}"/>
-		<delete dir="testng"/>
+		<delete dir="${testng.dir}"/>
 		<delete file="${manifest}"/>
 	</target>
 
