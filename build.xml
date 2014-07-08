@@ -71,25 +71,25 @@
 	</taskdef>
 	
 	<target name="init">
-	<echo>
-      Source:         ${src}
-      Classes:        ${classes}
-	  Classpath:      ${manifest.classpath}
-      Resources:      ${resources}
-      Build:          ${build}
-      Reports:        ${reports}
-	  Coverage:       ${coverage.dir}
-      Main Class:     ${main-class}
-      Version:        ${version}
-	  Version Tag:    ${versiontag}
-      Vendor:         ${vendor}
-      Tag Type:       ${tag-type}
-      Jar Name        ${jar}
-      Library path:   ${lib}
-      JUnit Home:     ${junit.home}
-	  TeamCity Home:  ${teamcity.home}
-	  TeamCity App:   ${teamcity.appdir}
-    </echo>
+		<echo>
+	      Source:         ${src}
+	      Classes:        ${classes}
+		  Classpath:      ${manifest.classpath}
+	      Resources:      ${resources}
+	      Build:          ${build}
+	      Reports:        ${reports}
+		  Coverage:       ${coverage.dir}
+	      Main Class:     ${main-class}
+	      Version:        ${version}
+		  Version Tag:    ${versiontag}
+	      Vendor:         ${vendor}
+	      Tag Type:       ${tag-type}
+	      Jar Name        ${jar}
+	      Library path:   ${lib}
+	      JUnit Home:     ${junit.home}
+		  TeamCity Home:  ${teamcity.home}
+		  TeamCity App:   ${teamcity.appdir}
+	    </echo>
 	</target>
 
 	<target name="compile" depends="init" description="Compile the source code" >
@@ -111,16 +111,17 @@
 		</manifest>
 	</target>
 
+	<!-- http://stackoverflow.com/questions/52984/how-do-i-generate-emma-code-coverage-reports-using-ant -->
 	<target name="emma" description="turns on EMMA's on-the-fly instrumentation mode" >
 	    <property name="emma.enabled" value="true" />
-		<property name="emma.filter" value=""/>
+		<property name="emma.filter" value="-com.whatsthatlight.teamcity.hipchat.test.*"/>
     </target>
 	
 	<target name="test" depends="emma,compile" description="Run tests">
 		<mkdir dir="${coverage.dir}"/>
 		<emma enabled="${emma.enabled}" verbosity="verbose">
 			<instr instrpath="${classes}" mode="overwrite" metadatafile="${coverage.dir}/metadata.emma">
-			<filter value="${emma.filter}"/>
+				<filter value="${emma.filter}"/>
 			</instr>
 		</emma>
 		<testng failureProperty="tests.failed" outputdir="testng" haltonfailure="true" >

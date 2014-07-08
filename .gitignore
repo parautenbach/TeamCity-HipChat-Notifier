@@ -8,3 +8,5 @@ hipchat.xml
 /hipchat
 /hipchat.bak
 /test-output
+/testng
+/coverage
