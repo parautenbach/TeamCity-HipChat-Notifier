@@ -141,7 +141,7 @@ public class HipChatConfigurationController extends BaseController {
 		// Save the configuration
 		this.configuration.setApiUrl(apiUrl);
 		this.configuration.setApiToken(apiToken);
-		this.configuration.setDefaultRoomId(defaultRoomId == "" ? null : defaultRoomId);
+		this.configuration.setDefaultRoomId(defaultRoomId.equals("") ? null : defaultRoomId);
 		this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
 		HipChatEventConfiguration events = new HipChatEventConfiguration();
 		events.setBuildStartedStatus(Boolean.parseBoolean(buildStarted));

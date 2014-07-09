@@ -10,12 +10,10 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.AssertJUnit;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.Matchers.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,11 +31,9 @@ import com.whatsthatlight.teamcity.hipchat.HipChatRoom;
 import com.whatsthatlight.teamcity.hipchat.HipChatRooms;
 import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;
 
-import freemarker.template.Template;
 import jetbrains.buildServer.controllers.WebFixture;
 import jetbrains.buildServer.serverSide.ServerPaths;
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase;
-import jetbrains.buildServer.serverSide.impl.auth.LoginConfigurationImpl;
 import jetbrains.buildServer.web.openapi.PagePlaces;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 
@@ -245,6 +241,6 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 				break;
 			}
 		}
-		assertTrue(exceptionFound);
+		AssertJUnit.assertTrue(exceptionFound);
 	}
 }

@@ -41,8 +41,7 @@ public class SimpleServer implements Runnable {
 	
 	public void start() throws InterruptedException {
 		this.thread.start();
-		while (this.server.getState() != "STARTED") {
-		}
+		while (!this.server.getState().equals("STARTED"));
 	}
 	
 	public void stop() throws Exception {
