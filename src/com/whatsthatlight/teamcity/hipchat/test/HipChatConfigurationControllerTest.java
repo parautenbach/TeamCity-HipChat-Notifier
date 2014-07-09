@@ -549,6 +549,44 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
         AssertJUnit.assertEquals(expectedNotifyStatus, actualProjectConfiguration.getNotifyStatus());
 	}
 
+	@Test
+	public void testEnablePlugin() throws Exception {
+        // Test parameters
+        boolean expectedPluginDisabledStatus = false;
+
+		// Mocks
+		MockRequest request = new MockRequest();
+		request.addParameters("action", "enable");
+		this.myRequest = request;
+		
+		// Execute
+		this.configuration.setDisabledStatus(!expectedPluginDisabledStatus);
+		ModelAndView result = processRequest();
+		
+        // Test
+        AssertJUnit.assertNull(result);
+        AssertJUnit.assertEquals(expectedPluginDisabledStatus, this.configuration.getDisabledStatus());
+	}
+	
+	@Test
+	public void testDisablePlugin() throws Exception {
+        // Test parameters
+        boolean expectedPluginDisabledStatus = true;
+
+		// Mocks
+		MockRequest request = new MockRequest();
+		request.addParameters("action", "disable");
+		this.myRequest = request;
+		
+		// Execute
+		this.configuration.setDisabledStatus(!expectedPluginDisabledStatus);
+		ModelAndView result = processRequest();
+		
+        // Test
+        AssertJUnit.assertNull(result);
+        AssertJUnit.assertEquals(expectedPluginDisabledStatus, this.configuration.getDisabledStatus());
+	}
+	
 	@Override
 	protected HipChatConfigurationController createController() throws IOException {
 		try {
