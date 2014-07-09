@@ -21,7 +21,11 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -46,13 +50,19 @@ import org.springframework.web.servlet.ModelAndView;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController;
+import com.whatsthatlight.teamcity.hipchat.HipChatEventConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
+import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;
+
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 public class HipChatConfigurationControllerTest extends BaseControllerTestCase<HipChatConfigurationController> {
 
 	private HipChatConfiguration configuration;
 	private HipChatApiProcessor processor;
+	private HipChatNotificationMessageTemplates templates;
 
 	@BeforeClass
 	public static void ClassSetup() {
@@ -625,6 +635,89 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
         AssertJUnit.assertEquals(HttpStatus.SC_BAD_REQUEST, this.myResponse.getStatus());
 	}
 	
+	@Test
+	public void testConfigurationChange() throws Exception {
+		// Test parameters
+		String expectedApiUrl = "http://example.com/";
+		String expectedApiToken = "1234567890";
+		String expectedDefaultRoomId = "room1";
+		boolean expectedNotifyStatus = false;
+		boolean expectedEventStatus = true;
+		String expectedTemplate = "template";
+		
+		// Prepare
+		HipChatEventConfiguration events = new HipChatEventConfiguration();
+		events.setBuildStartedStatus(!expectedEventStatus);
+		events.setBuildSuccessfulStatus(!expectedEventStatus);
+		events.setBuildInterruptedStatus(!expectedEventStatus);
+		events.setBuildFailedStatus(!expectedEventStatus);
+		events.setServerStartupStatus(!expectedEventStatus);
+		events.setServerShutdownStatus(!expectedEventStatus);
+		// Global
+		this.configuration.setEvents(events);
+		this.configuration.setApiUrl("test");
+		this.configuration.setApiToken("test");
+		this.configuration.setDefaultRoomId("test");
+		this.configuration.setNotifyStatus(!expectedNotifyStatus);
+		// Templates
+		this.templates.writeTemplate(TeamCityEvent.BUILD_STARTED, "test");
+		this.templates.writeTemplate(TeamCityEvent.BUILD_SUCCESSFUL, "test");
+		this.templates.writeTemplate(TeamCityEvent.BUILD_INTERRUPTED, "test");
+		this.templates.writeTemplate(TeamCityEvent.BUILD_FAILED, "test");
+		this.templates.writeTemplate(TeamCityEvent.SERVER_STARTUP, "test");
+		this.templates.writeTemplate(TeamCityEvent.SERVER_SHUTDOWN, "test");
+		
+		// Mocks
+		MockRequest request = new MockRequest();
+		request.addParameters("edit", "1");
+		request.addParameters("apiUrl", expectedApiUrl);
+		request.addParameters("apiToken", expectedApiToken);
+		request.addParameters("defaultRoomId", expectedDefaultRoomId);
+		request.addParameters("notify", Boolean.valueOf(expectedNotifyStatus));
+		// Events
+		request.addParameters("buildStarted", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("buildSuccessful", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("buildFailed", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("buildInterrupted", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("serverStartup", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("serverShutdown", Boolean.valueOf(expectedEventStatus));
+		// Templates
+		request.addParameters("buildStartedTemplate", expectedTemplate);
+		request.addParameters("buildSuccessfulTemplate", expectedTemplate);
+		request.addParameters("buildFailedTemplate", expectedTemplate);
+		request.addParameters("buildInterruptedTemplate", expectedTemplate);
+		request.addParameters("serverStartupTemplate", expectedTemplate);
+		request.addParameters("serverShutdownTemplate", expectedTemplate);
+		this.myRequest = request;
+		
+		// Execute
+		ModelAndView result = processRequest();
+		
+        // Test
+        AssertJUnit.assertNull(result);
+        AssertJUnit.assertEquals(expectedApiUrl, this.configuration.getApiUrl());
+        AssertJUnit.assertEquals(expectedApiToken, this.configuration.getApiToken());
+        AssertJUnit.assertEquals(expectedDefaultRoomId, this.configuration.getDefaultRoomId());
+        AssertJUnit.assertEquals(expectedNotifyStatus, this.configuration.getDefaultNotifyStatus());
+        // Events
+        HipChatEventConfiguration actualEvents = this.configuration.getEvents();
+        AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getBuildStartedStatus());
+        AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getBuildSuccessfulStatus());
+        AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getBuildInterruptedStatus());
+        AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getBuildFailedStatus());
+        AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getServerStartupStatus());
+        AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getServerShutdownStatus());
+        // Templates
+        System.out.println(expectedTemplate);
+        System.out.println(this.templates.readTemplate(TeamCityEvent.BUILD_STARTED));
+        AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.BUILD_STARTED))));
+        AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.BUILD_SUCCESSFUL))));
+        AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.BUILD_INTERRUPTED))));
+        AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.BUILD_FAILED))));
+        AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.SERVER_STARTUP))));
+        AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.SERVER_SHUTDOWN))));
+	}
+	
 	@Override
 	protected HipChatConfigurationController createController() throws IOException {
 		try {
@@ -632,7 +725,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 			when(serverPaths.getConfigDir()).thenReturn(".");
 			this.configuration = new HipChatConfiguration();
 			this.processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
-			HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+			this.templates = new HipChatNotificationMessageTemplates(serverPaths);
 			return new HipChatConfigurationController(this.myServer, serverPaths, this.myWebManager, configuration, processor, templates);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -640,4 +733,13 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		}
 	}
 		
+	private static String renderTemplate(Template template) throws TemplateException, IOException {
+		HashMap<String, Object> templateMap = new HashMap<String, Object>();
+		Writer writer = new StringWriter();
+	    template.process(templateMap, writer);
+	    writer.flush();
+	    String renderedTemplate = writer.toString();
+	    writer.close();
+	    return renderedTemplate;		
+	}
 }
