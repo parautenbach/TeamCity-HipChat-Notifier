@@ -133,7 +133,7 @@
 			<jvmarg value="-Demma.coverage.out.merge=false"/>
 		</testng>
 		<emma enabled="${emma.enabled}">
-			<report sourcepath="src" sort="+block,+name,+method,+class,+line" metrics="method:70,block:80,line:80,class:100,line:100">
+			<report sourcepath="src" sort="+block,+name,+method,+class,+line" metrics="method:100,block:100,line:100,class:100,line:100">
 				<fileset dir="${coverage.dir}">
 					<include name="*.emma"/>
 				</fileset>
