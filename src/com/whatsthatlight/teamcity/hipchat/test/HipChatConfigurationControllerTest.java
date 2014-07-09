@@ -32,6 +32,7 @@ import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.ServerPaths;
 import jetbrains.buildServer.web.openapi.WebControllerManager;
 
+import org.apache.http.HttpStatus;
 import org.apache.log4j.BasicConfigurator;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -50,13 +51,14 @@ import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
 
 public class HipChatConfigurationControllerTest extends BaseControllerTestCase<HipChatConfigurationController> {
 
+	private HipChatConfiguration configuration;
+	private HipChatApiProcessor processor;
+
 	@BeforeClass
 	public static void ClassSetup() {
 		// Set up a basic logger for debugging purposes
 		BasicConfigurator.configure();
 	}
-
-	private HipChatConfiguration configuration;
 
 	@Test
 	public void testProjectConfiguration() throws URISyntaxException, IOException {
@@ -586,6 +588,42 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
         AssertJUnit.assertNull(result);
         AssertJUnit.assertEquals(expectedPluginDisabledStatus, this.configuration.getDisabledStatus());
 	}
+
+	@Test
+	public void testTestConnectionSuccessful() throws Exception {
+		// Mocks
+		MockRequest request = new MockRequest();
+		request.addParameters("test", "1");
+		request.addParameters("apiUrl", "http://example.com/");
+		request.addParameters("apiToken", "1234567890");
+		this.myRequest = request;
+		
+		// Execute
+		when(this.processor.testAuthentication()).thenReturn(true);
+		ModelAndView result = processRequest();
+		
+        // Test
+        AssertJUnit.assertNull(result);
+        AssertJUnit.assertEquals(HttpStatus.SC_OK, this.myResponse.getStatus());
+	}
+	
+	@Test
+	public void testTestConnectionFailure() throws Exception {
+		// Mocks
+		MockRequest request = new MockRequest();
+		request.addParameters("test", "1");
+		request.addParameters("apiUrl", "http://example.com/");
+		request.addParameters("apiToken", "1234567890");
+		this.myRequest = request;
+		
+		// Execute
+		when(this.processor.testAuthentication()).thenReturn(false);
+		ModelAndView result = processRequest();
+		
+        // Test
+        AssertJUnit.assertNull(result);
+        AssertJUnit.assertEquals(HttpStatus.SC_BAD_REQUEST, this.myResponse.getStatus());
+	}
 	
 	@Override
 	protected HipChatConfigurationController createController() throws IOException {
@@ -593,8 +631,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 			ServerPaths serverPaths = org.mockito.Mockito.mock(ServerPaths.class);
 			when(serverPaths.getConfigDir()).thenReturn(".");
 			this.configuration = new HipChatConfiguration();
-			HipChatApiProcessor processor;
-			processor = new HipChatApiProcessor(configuration);
+			this.processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
 			HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
 			return new HipChatConfigurationController(this.myServer, serverPaths, this.myWebManager, configuration, processor, templates);
 		} catch (Exception e) {
