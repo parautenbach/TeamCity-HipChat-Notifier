@@ -46,12 +46,14 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 	private HipChatConfiguration configuration;
 	private HipChatApiProcessor processor;
 	private HipChatNotificationMessageTemplates templates;
+	private HipChatServerExtension serverExtension;
 
 	public HipChatConfigurationPageExtension(@NotNull PagePlaces pagePlaces, 
 			@NotNull PluginDescriptor descriptor, 
 			@NotNull HipChatConfiguration configuration, 
 			@NotNull HipChatApiProcessor processor,
-			@NotNull HipChatNotificationMessageTemplates templates) {
+			@NotNull HipChatNotificationMessageTemplates templates,
+			@NotNull HipChatServerExtension serverExtension) {
 		super(pagePlaces);
 		setPluginName(PLUGIN_NAME);
 		setIncludeUrl(descriptor.getPluginResourcesPath(PAGE));
@@ -64,6 +66,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		this.configuration = configuration;
 		this.processor = processor;
 		this.templates = templates;
+		this.serverExtension = serverExtension;
 		register();
 		logger.info("Global configuration page registered");
 	}
@@ -77,6 +80,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		model.put(ROOM_ID_LIST, Utils.getRooms(this.processor));
 		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, this.configuration.getDefaultNotifyStatus());
 		model.put(HipChatConfiguration.DISABLED_STATUS_KEY, this.configuration.getDisabledStatus());
+		model.put(HipChatConfiguration.EMOTICON_CACHE_SIZE_KEY, this.serverExtension.getEmoticonCacheSize());
 		
 		if (this.configuration.getEvents() != null) {
 			model.put(HipChatConfiguration.BUILD_STARTED_KEY, this.configuration.getEvents().getBuildStartedStatus());			

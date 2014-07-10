@@ -52,6 +52,7 @@ import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController;
 import com.whatsthatlight.teamcity.hipchat.HipChatEventConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
+import com.whatsthatlight.teamcity.hipchat.HipChatServerExtension;
 import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;
 
 import freemarker.template.Template;
@@ -85,6 +86,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
 		SBuildServer server = org.mockito.Mockito.mock(SBuildServer.class);
 		WebControllerManager manager = org.mockito.Mockito.mock(WebControllerManager.class);
+		HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
 		
 		// Prepare
 		HipChatConfiguration configuration = new HipChatConfiguration();
@@ -92,14 +94,14 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		configuration.setProjectConfiguration(new HipChatProjectConfiguration(expectedProjectId2, expectedRoomId2, expectedNotify2));
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates, serverExtension);
 		controller.saveConfiguration();
 		
 		// Execute
 		configuration = new HipChatConfiguration();
 		AssertJUnit.assertNull(configuration.getProjectConfiguration(expectedProjectId1));
 		AssertJUnit.assertNull(configuration.getProjectConfiguration(expectedProjectId2));
-		controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
+		controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates, serverExtension);
 		controller.loadConfiguration();
 		
 		// Test
@@ -134,6 +136,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
 		SBuildServer server = org.mockito.Mockito.mock(SBuildServer.class);
 		WebControllerManager manager = org.mockito.Mockito.mock(WebControllerManager.class);
+		HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
 
 		// Pre-conditions
 		File initialConfigFile = new File(expectedConfigDir, expectedFileName);
@@ -151,7 +154,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		// The config file must exist on disk after initialisation
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);		
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates, serverExtension);		
 		controller.initialise();
 		File postRegistrationConfigFile = new File(expectedFileName);
 		AssertJUnit.assertTrue(postRegistrationConfigFile.exists());
@@ -225,6 +228,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
 		SBuildServer server = org.mockito.Mockito.mock(SBuildServer.class);
 		WebControllerManager manager = org.mockito.Mockito.mock(WebControllerManager.class);
+		HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
 
 		// Pre-conditions
 		// @formatter:off
@@ -252,7 +256,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates, serverExtension);
 		controller.initialise();
 		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
 		SAXBuilder builder = new SAXBuilder();
@@ -299,6 +303,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
 		SBuildServer server = org.mockito.Mockito.mock(SBuildServer.class);
 		WebControllerManager manager = org.mockito.Mockito.mock(WebControllerManager.class);
+		HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
 
 		// Pre-conditions
 		// @formatter:off
@@ -331,7 +336,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates, serverExtension);
 		controller.initialise();
 		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
 		SAXBuilder builder = new SAXBuilder();
@@ -395,6 +400,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
 		SBuildServer server = org.mockito.Mockito.mock(SBuildServer.class);
 		WebControllerManager manager = org.mockito.Mockito.mock(WebControllerManager.class);
+		HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
 
 		// Pre-conditions
 		// @formatter:off
@@ -429,7 +435,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		// initialisation
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates, serverExtension);
 		controller.initialise();
 		File postInitConfigFile = new File(expectedConfigDir, expectedFileName);
 		SAXBuilder builder = new SAXBuilder();
@@ -499,12 +505,13 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDir);
 		SBuildServer server = org.mockito.Mockito.mock(SBuildServer.class);
 		WebControllerManager manager = org.mockito.Mockito.mock(WebControllerManager.class);
+		HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
 		
 		// After initialisation, the config must've been upgraded
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates);
+		HipChatConfigurationController controller = new HipChatConfigurationController(server, serverPaths, manager, configuration, processor, templates, serverExtension);
 		controller.initialise();
 				
 		// Test XML was upgraded
@@ -805,10 +812,11 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		try {
 			ServerPaths serverPaths = org.mockito.Mockito.mock(ServerPaths.class);
 			when(serverPaths.getConfigDir()).thenReturn(".");
+			HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
 			this.configuration = new HipChatConfiguration();
 			this.processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
 			this.templates = new HipChatNotificationMessageTemplates(serverPaths);
-			return new HipChatConfigurationController(this.myServer, serverPaths, this.myWebManager, configuration, processor, templates);
+			return new HipChatConfigurationController(this.myServer, serverPaths, this.myWebManager, configuration, processor, templates, serverExtension);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

@@ -75,8 +75,14 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	}
 
 	public void register() {
+		this.reloadEmoticons();
+		this.server.addListener(this);
+		logger.debug("Server extension registered");
+	}
+	
+	public int reloadEmoticons() {
 		logger.debug("Caching all available emoticons");
-
+		this.emoticonCache = new HashMap<String, String>();
 		int startIndex = 0;
 		HipChatEmoticons emoticons = null;
 		do {
@@ -90,10 +96,12 @@ public class HipChatServerExtension extends BuildServerAdapter {
 				this.emoticonCache.put(emoticon.shortcut, emoticon.url);
 			}
 			startIndex = startIndex + emoticons.maxResults;
-		} while (emoticons.links.next != null);
-		
-		this.server.addListener(this);
-		logger.debug("Server extension registered");
+		} while (emoticons.links.next != null);		
+		return this.emoticonCache.size();
+	}
+	
+	public int getEmoticonCacheSize() {
+		return this.emoticonCache.size();
 	}
 
 	@Override

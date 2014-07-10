@@ -59,6 +59,7 @@ public class HipChatConfigurationController extends BaseController {
 	private static final String CONTROLLER_PATH = "/configureHipChat.html";
 	public static final String EDIT_PARAMETER = "edit";
 	private static final String TEST_PARAMETER = "test";
+	private static final String RELOAD_EMOTICONS_PARAMTER = "reloadEmoticons";
 	private static final String PROJECT_PARAMETER = "project";
 	private static final String HIPCHAT_CONFIG_FILE = "hipchat.xml";
 	public static final String HIPCHAT_CONFIG_DIRECTORY = "hipchat";
@@ -70,14 +71,17 @@ public class HipChatConfigurationController extends BaseController {
 	private HipChatConfiguration configuration;
 	private HipChatApiProcessor processor;
 	private HipChatNotificationMessageTemplates templates;
+	private HipChatServerExtension serverExtension;
 
 	public HipChatConfigurationController(@NotNull SBuildServer server, @NotNull ServerPaths serverPaths, @NotNull WebControllerManager manager,
-			@NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor, @NotNull HipChatNotificationMessageTemplates templates) throws IOException {
+			@NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor, @NotNull HipChatNotificationMessageTemplates templates,
+			@NotNull HipChatServerExtension serverExtension) throws IOException {
 		manager.registerController(CONTROLLER_PATH, this);
 		this.configuration = configuration;
 		this.configFilePath = (new File(serverPaths.getConfigDir(), HIPCHAT_CONFIG_FILE)).getCanonicalPath();
 		this.processor = processor;
 		this.templates = templates;
+		this.serverExtension = serverExtension;
 		logger.debug(String.format("Config file path: %s", this.configFilePath));
 		logger.info("Controller created");
 	}
@@ -190,6 +194,10 @@ public class HipChatConfigurationController extends BaseController {
 		this.saveConfiguration();
 	}
 	
+	private void handleReloadEmoticons(HttpServletRequest request) {
+		this.serverExtension.reloadEmoticons();
+	}
+	
 	@Override
 	public ModelAndView doHandle(HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -202,6 +210,8 @@ public class HipChatConfigurationController extends BaseController {
 				this.handleTestConnection(request, response);
 			} else if (request.getParameter(ACTION_PARAMETER) != null) {
 				this.handlePluginStatusChange(request);
+			} else if (request.getParameter(RELOAD_EMOTICONS_PARAMTER) != null) {
+				this.handleReloadEmoticons(request);
 			}
 		} catch (Exception e) {
 			logger.error("Could not handle request", e);

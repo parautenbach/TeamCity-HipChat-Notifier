@@ -89,6 +89,14 @@ limitations under the License.
 					<span class="smallNote">When checked, a notification for all people in the room will be triggered, taking user preferences into account.</span>
 				</td>
 			</tr>
+			<tr>
+				<th>
+					<label for="emoticonCache">Emoticon cache: </label>
+				</th>
+				<td>
+					${emoticonCacheSize} items&nbsp;&mdash;&nbsp;<a href="#" onclick="return HipChatAdmin.reloadEmoticons()">Reload</a>
+				</td>
+			</tr>
 			<tr class="groupingTitle">
           		<td colspan="2">Build Events Configuration</td>
         	</tr>

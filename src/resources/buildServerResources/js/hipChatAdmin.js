@@ -106,5 +106,26 @@ var HipChatAdmin = {
 					alert("Connection failed!")
 				});
 		return false;
+	},
+	
+	reloadEmoticons : function() {
+		if (!HipChatAdmin.validate()) {
+			return false;
+		}
+		
+		jQuery.ajax(
+				{
+					url: $("hipChatForm").action, 
+					data: {
+							reloadEmoticons: 1
+						  },
+					type: "GET"
+				}).done(function() {
+					alert("Reload successful!");
+					BS.reload(true);
+				}).fail(function() {
+					alert("Reload failed!")
+				});
+		return false;
 	}
 };

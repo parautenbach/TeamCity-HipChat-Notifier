@@ -29,6 +29,7 @@ import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension;
 import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.HipChatRoom;
 import com.whatsthatlight.teamcity.hipchat.HipChatRooms;
+import com.whatsthatlight.teamcity.hipchat.HipChatServerExtension;
 import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;
 
 import jetbrains.buildServer.controllers.WebFixture;
@@ -69,9 +70,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
-
+        HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+        
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
 		
         // Execute
 		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
@@ -94,9 +96,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
+        HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
 
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
 
         // Execute
 		String actualGroup = myPage.getGroup();
@@ -108,7 +111,7 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 	@Test
 	public void testFillModel() throws Exception {
 		// Test parameters
-		int expectedModelSize = 24;
+		int expectedModelSize = 25;
 		String expectedRoomId = "room1";
 		String expectedRoomName = "test room";
 		
@@ -132,9 +135,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
-		
+        HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
 
         // Execute
 		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
@@ -150,7 +154,7 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 	@Test
 	public void testFillModelNoEventsConfiguration() throws Exception {
 		// Test parameters
-		int expectedModelSize = 18;
+		int expectedModelSize = 19;
 		String expectedRoomId = "room1";
 		String expectedRoomName = "test room";
 		
@@ -175,9 +179,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
-		
+        HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
 
         // Execute
 		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
@@ -193,7 +198,7 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 	@Test
 	public void testFillModelGetTemplateRaisesException() throws IOException {
 		// Test parameters
-		int expectedModelSize = 12;
+		int expectedModelSize = 13;
 		String expectedRoomId = "room1";
 		String expectedRoomName = "test room";
 		String expectedExceptionText = "This is a test!";
@@ -222,9 +227,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
-		
+        HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
 
         // Execute
 		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
