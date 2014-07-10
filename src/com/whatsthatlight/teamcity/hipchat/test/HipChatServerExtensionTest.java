@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jetbrains.buildServer.messages.Status;
@@ -47,8 +48,6 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.WriterAppender;
-import org.junit.Ignore;
-
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
@@ -86,8 +85,8 @@ public class HipChatServerExtensionTest {
 		// Set up a basic logger for debugging purposes
 		BasicConfigurator.configure();
 		apiUrl = "https://api.hipchat.com/v2/";
-		apiToken = "notatoken";
-		actualRoomId = "000000";
+		apiToken = "notoken";
+		actualRoomId = "00000";
 	}
 
 	@Test
@@ -263,10 +262,10 @@ public class HipChatServerExtensionTest {
 	@Test
 	public void testBuildStartedEventAndMessageDetails() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
-		String expectedBuildName = "Test Project :: Test Build Configuration";
+		String expectedBuildName = "Test Project :: Test Build Configuration (fŏŏbārbaß)";
 		String expectedStartMessage = "started";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.INFO;
 		String expectedMessageFormat = HipChatMessageFormat.HTML;
@@ -2635,8 +2634,7 @@ public class HipChatServerExtensionTest {
 		verify(processor).getEmoticons(startIndex2);
 	}
 	
-	@Test
-	@Ignore
+	@Test(enabled = false)
 	public void testActualServerStartupAndShutdownEvents() throws URISyntaxException, IOException {
 		// Test parameters
 		HipChatConfiguration configuration = new HipChatConfiguration();
@@ -2657,8 +2655,7 @@ public class HipChatServerExtensionTest {
 		extension.serverShutdown();
 	}
 	
-	@Test
-	@Ignore
+	@Test(enabled = false)
 	public void testActualBuildStartedEvent() throws URISyntaxException, IOException {
 		// Test parameters
 		HipChatConfiguration configuration = new HipChatConfiguration();
@@ -2666,7 +2663,7 @@ public class HipChatServerExtensionTest {
 		configuration.setApiToken(apiToken);
 		configuration.setDefaultRoomId(actualRoomId);
 		configuration.setNotifyStatus(true);
-		String expectedTriggerBy = "A Test User";
+		String expectedTriggerBy = "A Test User (fŏŏbārbaß)";
 		String expectedProjectId = "project1";
 		String expectedParentProjectId = "_Root";
 		String expectedBuildNumber = "0.0.0.0";
@@ -2675,6 +2672,9 @@ public class HipChatServerExtensionTest {
 		long expectedBuildId = 24;
 		
 		// Mocks and other dependencies
+		Map<String, String> parametersMap = new HashMap<String, String>();
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);		
+		when(parametersProvider.getAll()).thenReturn(parametersMap);
 		TriggeredBy triggeredBy = mock(TriggeredBy.class);
 		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
 		SBuildType buildType = mock(SBuildType.class);
@@ -2686,6 +2686,8 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		when(build.getProjectExternalId()).thenReturn("bt0000");
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -2710,13 +2712,12 @@ public class HipChatServerExtensionTest {
 		extension.changesLoaded(build);
 	}
 
-	@Test
-	@Ignore
+	@Test(enabled = false)
 	public void testActualBuildSuccessfulEvent() throws URISyntaxException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
@@ -2729,6 +2730,9 @@ public class HipChatServerExtensionTest {
 		long expectedBuildId = 24;
 		
 		// Mocks and other dependencies
+		Map<String, String> parametersMap = new HashMap<String, String>();
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);		
+		when(parametersProvider.getAll()).thenReturn(parametersMap);
 		TriggeredBy triggeredBy = mock(TriggeredBy.class);
 		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
 		SBuildType buildType = mock(SBuildType.class);
@@ -2742,6 +2746,8 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildStatus()).thenReturn(status);
 		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
+        when(build.getParametersProvider()).thenReturn(parametersProvider);
+		when(build.getProjectExternalId()).thenReturn("bt0000");
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -2766,13 +2772,12 @@ public class HipChatServerExtensionTest {
 		extension.buildFinished(build);
 	}
 
-	@Test
-	@Ignore
+	@Test(enabled = false)
 	public void testActualBuildFailedEvent() throws URISyntaxException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
@@ -2785,6 +2790,9 @@ public class HipChatServerExtensionTest {
 		long expectedBuildId = 24;
 		
 		// Mocks and other dependencies
+        Map<String, String> parametersMap = new HashMap<String, String>();
+        ParametersProvider parametersProvider = mock(ParametersProvider.class);     
+        when(parametersProvider.getAll()).thenReturn(parametersMap);
 		TriggeredBy triggeredBy = mock(TriggeredBy.class);
 		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
 		SBuildType buildType = mock(SBuildType.class);
@@ -2794,6 +2802,8 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+        when(build.getParametersProvider()).thenReturn(parametersProvider);
+		when(build.getProjectExternalId()).thenReturn("bt0000");
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -2822,13 +2832,12 @@ public class HipChatServerExtensionTest {
 		extension.buildFinished(build);
 	}
 	
-	@Test
-	@Ignore
+	@Test(enabled = false)
 	public void testActualBuildInterruptedEvent() throws URISyntaxException, IOException {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
 		String expectedCanceledBy = "Cancel User";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
@@ -2842,6 +2851,9 @@ public class HipChatServerExtensionTest {
 		long expectedBuildId = 24;
 		
 		// Mocks and other dependencies
+        Map<String, String> parametersMap = new HashMap<String, String>();
+        ParametersProvider parametersProvider = mock(ParametersProvider.class);     
+        when(parametersProvider.getAll()).thenReturn(parametersMap);
 		CanceledInfo canceledInfo = mock(CanceledInfo.class);
 		when(canceledInfo.getUserId()).thenReturn((long) 0);
 		TriggeredBy triggeredBy = mock(TriggeredBy.class);
@@ -2856,6 +2868,8 @@ public class HipChatServerExtensionTest {
 		when(build.getCanceledInfo()).thenReturn(canceledInfo);
 		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
+        when(build.getParametersProvider()).thenReturn(parametersProvider);
+        when(build.getProjectExternalId()).thenReturn("bt0000");
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
