@@ -98,7 +98,7 @@ limitations under the License.
 				</td>
 			</tr>
 			<tr class="groupingTitle">
-          		<td colspan="2">Build Events Configuration&nbsp;<a href="${helpUrl}" class="helpIcon" style="vertical-align: middle;" target="_blank"><bs:helpIcon/></a></td>
+          		<td colspan="2">Build Events Configuration&nbsp;<a href="http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/" class="helpIcon" style="vertical-align: middle;" target="_blank"><bs:helpIcon/></a></td>
         	</tr>
 			<tr>
 				<th>
@@ -143,7 +143,7 @@ limitations under the License.
 				</td>
 			</tr>
 			<tr class="groupingTitle">
-          		<td colspan="2">Server Events Configuration&nbsp;<a href="${helpUrl}" class="helpIcon" target="_blank"><bs:helpIcon/></a></td>
+          		<td colspan="2">Server Events Configuration&nbsp;<a href="http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/" class="helpIcon" target="_blank"><bs:helpIcon/></a></td>
         	</tr>
 			<tr>
 				<th><label for="serverStartupLabel">Server startup: </label></th>
