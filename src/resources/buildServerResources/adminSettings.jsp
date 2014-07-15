@@ -98,7 +98,7 @@ limitations under the License.
 				</td>
 			</tr>
 			<tr class="groupingTitle">
-          		<td colspan="2">Build Events Configuration</td>
+          		<td colspan="2">Build Events Configuration&nbsp;<a href="${helpUrl}" class="helpIcon" style="vertical-align: middle;" target="_blank"><bs:helpIcon/></a></td>
         	</tr>
 			<tr>
 				<th>
@@ -106,8 +106,7 @@ limitations under the License.
 				</th>
 				<td>
 					<forms:checkbox name="buildStarted" checked="${buildStarted}" value="${buildStarted}" style="vertical-align: top;"/>
-					<textarea id="buildStartedTemplate" name="buildStartedTemplate" style="width: 85%;">${buildStartedTemplate}</textarea>
-					<a href="${helpUrl}" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<textarea id="buildStartedTemplate" name="buildStartedTemplate" style="width: 88%;">${buildStartedTemplate}</textarea>
 					<a style="vertical-align: top;" href="#" id="buildStartedTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildStartedTemplateDefault" value="${buildStartedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when the build starts.</span>					
@@ -117,8 +116,7 @@ limitations under the License.
 				<th><label for="buildSuccessfulLabel">Build successful: </label></th>
 				<td>
 					<forms:checkbox name="buildSuccessful" checked="${buildSuccessful}" value="${buildSuccessful}" style="vertical-align: top;"/>
-					<textarea id="buildSuccessfulTemplate" name="buildSuccessfulTemplate" style="width: 85%;">${buildSuccessfulTemplate}</textarea>	
-					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<textarea id="buildSuccessfulTemplate" name="buildSuccessfulTemplate" style="width: 88%;">${buildSuccessfulTemplate}</textarea>	
 					<a style="vertical-align: top;" href="#" id="buildSuccessfulTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildSuccessfulTemplateDefault" value="${buildSuccessfulTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when a finished build is successful.</span>
@@ -128,8 +126,7 @@ limitations under the License.
 				<th><label for="buildFailedLabel">Build failed: </label></th>
 				<td>
 					<forms:checkbox name="buildFailed" checked="${buildFailed}" value="${buildFailed}" style="vertical-align: top;"/>
-					<textarea id="buildFailedTemplate" name="buildFailedTemplate" style="width: 85%;">${buildFailedTemplate}</textarea>
-					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<textarea id="buildFailedTemplate" name="buildFailedTemplate" style="width: 88%;">${buildFailedTemplate}</textarea>
 					<a style="vertical-align: top;" href="#" id="buildFailedTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildFailedTemplateDefault" value="${buildFailedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when a finished build failed.</span>
@@ -139,22 +136,20 @@ limitations under the License.
 				<th><label for="buildInterruptedLabel">Build interrupted: </label></th>
 				<td>
 					<forms:checkbox name="buildInterrupted" checked="${buildInterrupted}" value="${buildInterrupted}" style="vertical-align: top;"/>
-					<textarea id="buildInterruptedTemplate" name="buildInterruptedTemplate" style="width: 85%;">${buildInterruptedTemplate}</textarea>
-					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<textarea id="buildInterruptedTemplate" name="buildInterruptedTemplate" style="width: 88%;">${buildInterruptedTemplate}</textarea>
 					<a style="vertical-align: top;" href="#" id="buildInterruptedTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildInterruptedTemplateDefault" value="${buildInterruptedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when the build gets interrupted (i.e. cancelled).</span>
 				</td>
 			</tr>
 			<tr class="groupingTitle">
-          		<td colspan="2">Server Events Configuration</td>
+          		<td colspan="2">Server Events Configuration<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a></td>
         	</tr>
 			<tr>
 				<th><label for="serverStartupLabel">Server startup: </label></th>
 				<td>
 					<forms:checkbox name="serverStartup" checked="${serverStartup}" value="${serverStartup}" style="vertical-align: top;"/>
-					<textarea id="serverStartupTemplate" name="serverStartupTemplate" style="width: 85%;">${serverStartupTemplate}</textarea>
-					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<textarea id="serverStartupTemplate" name="serverStartupTemplate" style="width: 88%;">${serverStartupTemplate}</textarea>
 					<a style="vertical-align: top;" href="#" id="serverStartupTemplateDefaultLink">Default</a>
 					<input type="hidden" id="serverStartupTemplateDefault" value="${serverStartupTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent to the <b>default</b> room.</span>
@@ -164,8 +159,7 @@ limitations under the License.
 				<th><label for="serverShutdownLabel">Server shutdown: </label></th>
 				<td>
 					<forms:checkbox name="serverShutdown" checked="${serverShutdown}" value="${serverShutdown}" style="vertical-align: top;"/>
-					<textarea id="serverShutdownTemplate" name="serverShutdownTemplate" style="width: 85%;">${serverShutdownTemplate}</textarea>
-					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
+					<textarea id="serverShutdownTemplate" name="serverShutdownTemplate" style="width: 88%;">${serverShutdownTemplate}</textarea>
 					<a style="vertical-align: top;" href="#" id="serverShutdownTemplateDefaultLink">Default</a>
 					<input type="hidden" id="serverShutdownTemplateDefault" value="${serverShutdownTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent to the <b>default</b> room.</span>
