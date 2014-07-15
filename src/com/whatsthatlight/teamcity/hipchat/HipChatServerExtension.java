@@ -53,10 +53,14 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	private static Random rng = new Random();
 	private String messageFormat;
 	private HashMap<TeamCityEvent, HipChatMessageBundle> eventMap;
-	private HashMap<String, String> emoticonCache;
 	private HipChatNotificationMessageTemplates templates;
+	private HipChatEmoticonCache emoticonCache;
 
-	public HipChatServerExtension(@NotNull SBuildServer server, @NotNull HipChatConfiguration configuration, @NotNull HipChatApiProcessor processor, @NotNull HipChatNotificationMessageTemplates templates) {
+	public HipChatServerExtension(@NotNull SBuildServer server, 
+			@NotNull HipChatConfiguration configuration, 
+			@NotNull HipChatApiProcessor processor, 
+			@NotNull HipChatNotificationMessageTemplates templates, 
+			@NotNull HipChatEmoticonCache emoticonCache) {
 		this.server = server;
 		//this.configDirectory = serverPaths.getConfigDir();
 		this.configuration = configuration;
@@ -70,40 +74,16 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		this.eventMap.put(TeamCityEvent.BUILD_INTERRUPTED, new HipChatMessageBundle(HipChatEmoticonSet.INDIFFERENT, HipChatMessageColour.WARNING));
 		this.eventMap.put(TeamCityEvent.SERVER_STARTUP, new HipChatMessageBundle(null, HipChatMessageColour.NEUTRAL));
 		this.eventMap.put(TeamCityEvent.SERVER_SHUTDOWN,new HipChatMessageBundle(null, HipChatMessageColour.NEUTRAL));
-		this.emoticonCache = new HashMap<String, String>();
+		this.emoticonCache = emoticonCache;
 		logger.debug("Server extension created");
 	}
 
 	public void register() {
-		this.reloadEmoticons();
 		this.server.addListener(this);
 		logger.debug("Server extension registered");
+		//this.controller.IsInitialised();
 	}
 	
-	public int reloadEmoticons() {
-		logger.debug("Caching all available emoticons");
-		this.emoticonCache = new HashMap<String, String>();
-		int startIndex = 0;
-		HipChatEmoticons emoticons = null;
-		do {
-			logger.debug(String.format("Start index: %s", startIndex));
-			emoticons = this.processor.getEmoticons(startIndex);
-			if (emoticons == null) {
-				break;
-			}
-			for (HipChatEmoticon emoticon : emoticons.items) {
-				logger.debug(String.format("Adding emoticon: %s - %s", emoticon.shortcut, emoticon.url));
-				this.emoticonCache.put(emoticon.shortcut, emoticon.url);
-			}
-			startIndex = startIndex + emoticons.maxResults;
-		} while (emoticons.links.next != null);		
-		return this.emoticonCache.size();
-	}
-	
-	public int getEmoticonCacheSize() {
-		return this.emoticonCache.size();
-	}
-
 	@Override
 	public void changesLoaded(SRunningBuild build) {
 		logger.debug(String.format("Build started: %s", build.getBuildType().getName()));

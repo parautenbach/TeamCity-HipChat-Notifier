@@ -66,12 +66,12 @@ var HipChatAdmin = {
 				"&buildInterrupted="         + $("buildInterrupted").checked +
 				"&serverStartup="            + $("serverStartup").checked +
 				"&serverShutdown="           + $("serverShutdown").checked + 
-				"&buildStartedTemplate="     + encodeURIComponent($("buildStartedTemplate").value) +
-				"&buildSuccessfulTemplate="  + encodeURIComponent($("buildSuccessfulTemplate").value) +
-				"&buildFailedTemplate="      + encodeURIComponent($("buildFailedTemplate").value) +
-				"&buildInterruptedTemplate=" + encodeURIComponent($("buildInterruptedTemplate").value) +
-				"&serverStartupTemplate="    + encodeURIComponent($("serverStartupTemplate").value) +
-				"&serverShutdownTemplate="   + encodeURIComponent($("serverShutdownTemplate").value),
+				"&buildStartedTemplate="     + encodeURIComponent(document.getElementById('buildStartedTemplate').value) +
+				"&buildSuccessfulTemplate="  + encodeURIComponent(document.getElementById('buildSuccessfulTemplate').value) +
+				"&buildFailedTemplate="      + encodeURIComponent(document.getElementById('buildFailedTemplate').value) +
+				"&buildInterruptedTemplate=" + encodeURIComponent(document.getElementById('buildInterruptedTemplate').value) +
+				"&serverStartupTemplate="    + encodeURIComponent(document.getElementById('serverStartupTemplate').value) +
+				"&serverShutdownTemplate="   + encodeURIComponent(document.getElementById('serverShutdownTemplate').value),
 			onComplete : function(transport) {
 				if (transport.responseXML) {
 					BS.XMLResponse.processErrors(transport.responseXML, {

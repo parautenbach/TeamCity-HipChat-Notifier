@@ -3,10 +3,11 @@
 
 <beans default-autowire="constructor">
   <bean id="hipChatConfiguration" class="com.whatsthatlight.teamcity.hipchat.HipChatConfiguration"/>
-  <bean id="hipChatConfigurationController" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController" init-method="initialise"/>
-  <bean id="hipChatAdminPage" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension"/>
-  <bean id="hipChatApiProcessor" class="com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor"/>
-  <bean id="hipChatServerExtension" class="com.whatsthatlight.teamcity.hipchat.HipChatServerExtension" init-method="register"/>
-  <bean id="hipChatProjectTab" class="com.whatsthatlight.teamcity.hipchat.HipChatProjectTab"/>
   <bean id="hipChatNotificationMessageTemplates" class="com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates"/>  
+  <bean id="hipChatApiProcessor" class="com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor"/>
+  <bean id="hipChatProjectTab" class="com.whatsthatlight.teamcity.hipchat.HipChatProjectTab"/>
+  <bean id="hipChatServerExtension" class="com.whatsthatlight.teamcity.hipchat.HipChatServerExtension" init-method="register"/>
+  <bean id="hipChatAdminPage" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension"/>
+  <bean id="hipChatEmoticonCache" class="com.whatsthatlight.teamcity.hipchat.HipChatEmoticonCache"/>
+  <bean id="hipChatConfigurationController" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationController" init-method="initialise"/>
 </beans>

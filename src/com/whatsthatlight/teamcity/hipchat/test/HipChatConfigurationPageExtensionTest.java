@@ -26,6 +26,7 @@ import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension;
+import com.whatsthatlight.teamcity.hipchat.HipChatEmoticonCache;
 import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.HipChatRoom;
 import com.whatsthatlight.teamcity.hipchat.HipChatRooms;
@@ -71,9 +72,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
         HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
         
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension, emoticonCache);
 		
         // Execute
 		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
@@ -97,9 +99,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
         HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension, emoticonCache);
 
         // Execute
 		String actualGroup = myPage.getGroup();
@@ -136,9 +139,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
         HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension, emoticonCache);
 
         // Execute
 		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
@@ -180,9 +184,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
         HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension, emoticonCache);
 
         // Execute
 		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
@@ -228,9 +233,10 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
         HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
         // The test page
-        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension);
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension, emoticonCache);
 
         // Execute
 		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);

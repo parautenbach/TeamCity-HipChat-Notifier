@@ -54,6 +54,7 @@ import org.testng.annotations.BeforeClass;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticon;
+import com.whatsthatlight.teamcity.hipchat.HipChatEmoticonCache;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticonSet;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticons;
 import com.whatsthatlight.teamcity.hipchat.HipChatEventConfiguration;
@@ -93,13 +94,14 @@ public class HipChatServerExtensionTest {
 	public void testRegisterDoesNotRaiseExceptionWhenEmoticonRetrievalFails() throws URISyntaxException, IOException {
 		ServerPaths serverPaths = mock(ServerPaths.class);
 		when(serverPaths.getConfigDir()).thenReturn(".");			
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl("http://example.com/");
 		configuration.setApiToken("no_such_token");
 		SBuildServer server = mock(SBuildServer.class);
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.register();
 	}
 	
@@ -131,9 +133,10 @@ public class HipChatServerExtensionTest {
 		ServerPaths serverPaths = mock(ServerPaths.class);
 		when(serverPaths.getConfigDir()).thenReturn(".");			
 		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		extension.serverStartup();
 		event.doWait(1000);
 
@@ -170,9 +173,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		extension.serverStartup();
 		event.doWait(1000);
 		
@@ -209,9 +213,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		extension.serverShutdown();
 		event.doWait(1000);
 		
@@ -248,9 +253,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		extension.serverShutdown();
 		event.doWait(1000);
 		
@@ -349,9 +355,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 		
@@ -479,9 +486,10 @@ public class HipChatServerExtensionTest {
 		Template template = config.getTemplate(templateName);
 		HipChatNotificationMessageTemplates templates = mock(HipChatNotificationMessageTemplates.class);
 		when(templates.readTemplate(TeamCityEvent.BUILD_STARTED)).thenReturn(template);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 		
@@ -591,7 +599,8 @@ public class HipChatServerExtensionTest {
 		configuration.setDefaultRoomId(expectedDefaultRoomId);
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");
-                
+		HipChatEmoticonCache emoticonCache = new HipChatEmoticonCache(processor);
+
         // Set the template
 		String templateName = "template";
 		StringTemplateLoader loader = new StringTemplateLoader();
@@ -603,7 +612,8 @@ public class HipChatServerExtensionTest {
 		when(templates.readTemplate(TeamCityEvent.BUILD_STARTED)).thenReturn(template);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		emoticonCache.reload();
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.register();
 		extension.changesLoaded(build);
 		event.doWait(1000);
@@ -694,9 +704,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");
         HipChatNotificationMessageTemplates templates = mock(HipChatNotificationMessageTemplates.class);
-        
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
         logger.removeAppender(appender);
@@ -794,9 +805,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 		
@@ -888,9 +900,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 		
@@ -915,9 +928,10 @@ public class HipChatServerExtensionTest {
 		ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		
 		// Verifications
@@ -962,9 +976,10 @@ public class HipChatServerExtensionTest {
 		users.add(user1);
 		when(userSet.getUsers()).thenReturn(users);
 		when(build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD)).thenReturn(userSet);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		
 		// Verifications
@@ -1008,9 +1023,10 @@ public class HipChatServerExtensionTest {
 		users.add(user1);
 		when(userSet.getUsers()).thenReturn(users);
 		when(build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD)).thenReturn(userSet);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		
 		// Verifications
@@ -1062,9 +1078,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -1127,9 +1144,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -1202,9 +1220,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		event.clear();
 		extension.changesLoaded(build);
 		event.doWait(1000);
@@ -1272,9 +1291,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 		
@@ -1341,9 +1361,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -1411,9 +1432,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -1488,9 +1510,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -1562,9 +1585,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -1638,9 +1662,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -1716,9 +1741,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -1797,9 +1823,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -1870,9 +1897,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 	
@@ -1945,9 +1973,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
 		event.doWait(1000);
 
@@ -2020,9 +2049,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
 		event.doWait(1000);
 
@@ -2091,9 +2121,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
 		event.doWait(1000);
 
@@ -2121,9 +2152,10 @@ public class HipChatServerExtensionTest {
 		ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
 		
 		// Verifications
@@ -2195,9 +2227,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
 		event.doWait(1000);
 
@@ -2266,9 +2299,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
 		event.doWait(1000);
 		
@@ -2296,9 +2330,10 @@ public class HipChatServerExtensionTest {
 		ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
 		
 		// Verifications
@@ -2378,9 +2413,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildInterrupted(build);
 		event.doWait(1000);
 		
@@ -2419,9 +2455,10 @@ public class HipChatServerExtensionTest {
 		ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildInterrupted(build);
 		
 		// Verifications
@@ -2461,7 +2498,8 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		HipChatRoomNotification actualNotification = null;
 		String actualDefaultRoomId = null;
 		CallbackObject callbackObject = null;
@@ -2512,9 +2550,10 @@ public class HipChatServerExtensionTest {
 		ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.serverStartup();
 		extension.serverShutdown();
 		
@@ -2543,7 +2582,8 @@ public class HipChatServerExtensionTest {
         when(serverPaths.getConfigDir()).thenReturn(".");
         HipChatNotificationMessageTemplates templates = mock(HipChatNotificationMessageTemplates.class);
 		when(templates.readTemplate(TeamCityEvent.SERVER_STARTUP)).thenThrow(new IOException("Test exception"));
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		
 		// Execute start-up
 		extension.serverStartup();
@@ -2573,7 +2613,8 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		
 		// Execute start-up
 		extension.serverStartup();
@@ -2582,57 +2623,6 @@ public class HipChatServerExtensionTest {
 		verify(processor, times(0)).sendNotification(any(HipChatRoomNotification.class), anyString());;
 	}
 	
-	@Test
-	public void testRegisterMultipleEmoticonBatches() throws IOException {
-
-		// Batch size
-		int maxResults = 1;
-
-		// First batch
-		String emoticonId1 = "id1";
-		String emoticonShortcut1 = "emo1";
-		String emoticonUrl1 = "http://example.com/";
-		int startIndex1 = 0;
-		
-		// Second batch
-		String emoticonId2 = "id2";
-		String emoticonShortcut2 = "emo2";
-		String emoticonUrl2 = "http://example.com/";
-		int startIndex2 = startIndex1 + maxResults;
-
-		// First call
-		HipChatEmoticon emoticon1 = new HipChatEmoticon(emoticonId1, null, emoticonShortcut1, emoticonUrl1);
-		List<HipChatEmoticon> items1 = new ArrayList<HipChatEmoticon>();
-		items1.add(emoticon1);
-		HipChatApiResultLinks links1 = new HipChatApiResultLinks(null, null, new String());
-		HipChatEmoticons expectedEmoticons1 = new HipChatEmoticons(items1, startIndex1, maxResults, links1);		
-
-		// Second call
-		HipChatEmoticon emoticon2 = new HipChatEmoticon(emoticonId2, null, emoticonShortcut2, emoticonUrl2);
-		List<HipChatEmoticon> items2 = new ArrayList<HipChatEmoticon>();
-		items1.add(emoticon2);
-		HipChatApiResultLinks links2 = new HipChatApiResultLinks(null, null, null);
-		HipChatEmoticons expectedEmoticons2 = new HipChatEmoticons(items2, startIndex1, maxResults, links2);		
-
-		// API call mocks
-		HipChatApiProcessor processor = mock(HipChatApiProcessor.class);
-		when(processor.getEmoticons(startIndex1)).thenReturn(expectedEmoticons1);
-		when(processor.getEmoticons(startIndex2)).thenReturn(expectedEmoticons2);
-
-		// Other mocks
-		SBuildServer server = mock(SBuildServer.class);
-		HipChatConfiguration configuration = mock(HipChatConfiguration.class);
-		ServerPaths serverPaths = mock(ServerPaths.class);
-		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
-		
-		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
-		extension.register();
-
-		// Verifications
-		verify(processor).getEmoticons(startIndex1);
-		verify(processor).getEmoticons(startIndex2);
-	}
 	
 	@Test(enabled = false)
 	public void testActualServerStartupAndShutdownEvents() throws URISyntaxException, IOException {
@@ -2648,9 +2638,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		extension.serverStartup();
 		extension.serverShutdown();
 	}
@@ -2705,9 +2696,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.register();
 		extension.changesLoaded(build);
 	}
@@ -2765,9 +2757,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.register();
 		extension.buildFinished(build);
 	}
@@ -2825,9 +2818,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.register();
 		extension.buildFinished(build);
 	}
@@ -2892,9 +2886,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.register();
 		extension.buildInterrupted(build);
 	}
@@ -2952,9 +2947,10 @@ public class HipChatServerExtensionTest {
         ServerPaths serverPaths = mock(ServerPaths.class);
         when(serverPaths.getConfigDir()).thenReturn(".");           
         HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 
 		// Execute
-		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates);
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildInterrupted(build);
 		event.doWait(1000);
 		

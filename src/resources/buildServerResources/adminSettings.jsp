@@ -105,10 +105,10 @@ limitations under the License.
 					<label for="buildStartedLabel">Build started: </label>
 				</th>
 				<td>
-					<forms:checkbox name="buildStarted" checked="${buildStarted}" value="${buildStarted}" />
-					<forms:textField name="buildStartedTemplate" value="${buildStartedTemplate}" style="width: 85%;" />
+					<forms:checkbox name="buildStarted" checked="${buildStarted}" value="${buildStarted}" style="vertical-align: top;"/>
+					<textarea id="buildStartedTemplate" name="buildStartedTemplate" style="width: 85%;">${buildStartedTemplate}</textarea>
 					<a href="${helpUrl}" class="helpIcon" target="_blank"><bs:helpIcon/></a>
-					<a href="#" id="buildStartedTemplateDefaultLink">Default</a>
+					<a style="vertical-align: top;" href="#" id="buildStartedTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildStartedTemplateDefault" value="${buildStartedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when the build starts.</span>					
 				</td>
@@ -116,10 +116,10 @@ limitations under the License.
 			<tr>
 				<th><label for="buildSuccessfulLabel">Build successful: </label></th>
 				<td>
-					<forms:checkbox name="buildSuccessful" checked="${buildSuccessful}" value="${buildSuccessful}"/>
-					<forms:textField name="buildSuccessfulTemplate" value="${buildSuccessfulTemplate}" style="width: 85%;" />
+					<forms:checkbox name="buildSuccessful" checked="${buildSuccessful}" value="${buildSuccessful}" style="vertical-align: top;"/>
+					<textarea id="buildSuccessfulTemplate" name="buildSuccessfulTemplate" style="width: 85%;">${buildSuccessfulTemplate}</textarea>	
 					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
-					<a href="#" id="buildSuccessfulTemplateDefaultLink">Default</a>
+					<a style="vertical-align: top;" href="#" id="buildSuccessfulTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildSuccessfulTemplateDefault" value="${buildSuccessfulTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when a finished build is successful.</span>
 				</td>
@@ -127,10 +127,10 @@ limitations under the License.
 			<tr>
 				<th><label for="buildFailedLabel">Build failed: </label></th>
 				<td>
-					<forms:checkbox name="buildFailed" checked="${buildFailed}" value="${buildFailed}"/>
-					<forms:textField name="buildFailedTemplate" value="${buildFailedTemplate}" style="width: 85%;" />
+					<forms:checkbox name="buildFailed" checked="${buildFailed}" value="${buildFailed}" style="vertical-align: top;"/>
+					<textarea id="buildFailedTemplate" name="buildFailedTemplate" style="width: 85%;">${buildFailedTemplate}</textarea>
 					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
-					<a href="#" id="buildFailedTemplateDefaultLink">Default</a>
+					<a style="vertical-align: top;" href="#" id="buildFailedTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildFailedTemplateDefault" value="${buildFailedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when a finished build failed.</span>
 				</td>
@@ -138,10 +138,10 @@ limitations under the License.
 			<tr>
 				<th><label for="buildInterruptedLabel">Build interrupted: </label></th>
 				<td>
-					<forms:checkbox name="buildInterrupted" checked="${buildInterrupted}" value="${buildInterrupted}"/>
-					<forms:textField name="buildInterruptedTemplate" value="${buildInterruptedTemplate}" style="width: 85%;" />
+					<forms:checkbox name="buildInterrupted" checked="${buildInterrupted}" value="${buildInterrupted}" style="vertical-align: top;"/>
+					<textarea id="buildInterruptedTemplate" name="buildInterruptedTemplate" style="width: 85%;">${buildInterruptedTemplate}</textarea>
 					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
-					<a href="#" id="buildInterruptedTemplateDefaultLink">Default</a>
+					<a style="vertical-align: top;" href="#" id="buildInterruptedTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildInterruptedTemplateDefault" value="${buildInterruptedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when the build gets interrupted (i.e. cancelled).</span>
 				</td>
@@ -152,10 +152,10 @@ limitations under the License.
 			<tr>
 				<th><label for="serverStartupLabel">Server startup: </label></th>
 				<td>
-					<forms:checkbox name="serverStartup" checked="${serverStartup}" value="${serverStartup}"/>
-					<forms:textField name="serverStartupTemplate" value="${serverStartupTemplate}" style="width: 85%;" />
+					<forms:checkbox name="serverStartup" checked="${serverStartup}" value="${serverStartup}" style="vertical-align: top;"/>
+					<textarea id="serverStartupTemplate" name="serverStartupTemplate" style="width: 85%;">${serverStartupTemplate}</textarea>
 					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
-					<a href="#" id="serverStartupTemplateDefaultLink">Default</a>
+					<a style="vertical-align: top;" href="#" id="serverStartupTemplateDefaultLink">Default</a>
 					<input type="hidden" id="serverStartupTemplateDefault" value="${serverStartupTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent to the <b>default</b> room.</span>
 				</td>
@@ -163,10 +163,10 @@ limitations under the License.
 			<tr>
 				<th><label for="serverShutdownLabel">Server shutdown: </label></th>
 				<td>
-					<forms:checkbox name="serverShutdown" checked="${serverShutdown}" value="${serverShutdown}"/>
-					<forms:textField name="serverShutdownTemplate" value="${serverShutdownTemplate}" style="width: 85%;" />
+					<forms:checkbox name="serverShutdown" checked="${serverShutdown}" value="${serverShutdown}" style="vertical-align: top;"/>
+					<textarea id="serverShutdownTemplate" name="serverShutdownTemplate" style="width: 85%;">${serverShutdownTemplate}</textarea>
 					<a href="${helpUrl} }" class="helpIcon" target="_blank"><bs:helpIcon/></a>
-					<a href="#" id="serverShutdownTemplateDefaultLink">Default</a>
+					<a style="vertical-align: top;" href="#" id="serverShutdownTemplateDefaultLink">Default</a>
 					<input type="hidden" id="serverShutdownTemplateDefault" value="${serverShutdownTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent to the <b>default</b> room.</span>
 				</td>
