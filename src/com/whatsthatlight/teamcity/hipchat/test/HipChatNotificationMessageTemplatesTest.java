@@ -47,6 +47,27 @@ public class HipChatNotificationMessageTemplatesTest {
 	}
 	
 	@Test
+	public void testTemplateDirectoryGetsCreated() throws IOException {
+		String expectedConfigDirectory = ".";
+		String expectedTemplateDirectory = "hipchat";
+		
+		File templateDirectory = new File(expectedTemplateDirectory);
+		if (templateDirectory.exists()) {
+			templateDirectory.delete();
+		}
+		
+		assertFalse(templateDirectory.exists());
+		
+		ServerPaths serverPaths = mock(ServerPaths.class);
+		when(serverPaths.getConfigDir()).thenReturn(expectedConfigDirectory);
+		
+		new HipChatNotificationMessageTemplates(serverPaths);
+		
+		templateDirectory = new File(expectedTemplateDirectory);
+		assertTrue(templateDirectory.exists());
+	}
+	
+	@Test
 	public void testOptionalContributorsExists() throws IOException, TemplateException {
 		// Test parameters
 		String expectedContributors = "foo, bar, baz";

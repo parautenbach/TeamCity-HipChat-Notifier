@@ -16,10 +16,7 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat.test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -57,7 +54,6 @@ import com.whatsthatlight.teamcity.hipchat.HipChatEmoticonCache;
 import com.whatsthatlight.teamcity.hipchat.HipChatEventConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
-import com.whatsthatlight.teamcity.hipchat.HipChatRoomNotification;
 import com.whatsthatlight.teamcity.hipchat.TeamCityEvent;
 
 import freemarker.template.Template;

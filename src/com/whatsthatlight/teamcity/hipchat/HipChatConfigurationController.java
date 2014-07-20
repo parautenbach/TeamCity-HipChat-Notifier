@@ -106,76 +106,72 @@ public class HipChatConfigurationController extends BaseController {
 	}
 	
 	private void handleConfigurationChange(HttpServletRequest request) throws IOException {
-		try {
-			logger.debug("Changing configuration");
-			logger.debug(String.format("Query string: '%s'", request.getQueryString()));
-			
-			// Get parameters
-			String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
-			String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
-			String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
-			String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
-			String buildStarted = request.getParameter(HipChatConfiguration.BUILD_STARTED_KEY);
-			String buildSuccessful = request.getParameter(HipChatConfiguration.BUILD_SUCCESSFUL_KEY);
-			String buildFailed = request.getParameter(HipChatConfiguration.BUILD_FAILED_KEY);
-			String buildInterrupted = request.getParameter(HipChatConfiguration.BUILD_INTERRUPTED_KEY);
-			String serverStartup = request.getParameter(HipChatConfiguration.SERVER_STARTUP_KEY);
-			String serverShutdown = request.getParameter(HipChatConfiguration.SERVER_SHUTDOWN_KEY);
-			String buildStartedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_STARTED_TEMPLATE_KEY);
-			String buildSuccessfulTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_SUCCESSFUL_TEMPLATE_KEY);
-			String buildFailedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_FAILED_TEMPLATE_KEY);
-			String buildInterruptedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_INTERRUPTED_TEMPLATE_KEY);
-			String serverStartupTemplate = request.getParameter(HipChatNotificationMessageTemplates.SERVER_STARTUP_TEMPLATE_KEY);
-			String serverShutdownTemplate = request.getParameter(HipChatNotificationMessageTemplates.SERVER_SHUTDOWN_TEMPLATE_KEY);
-			
-			// Logging
-			logger.debug(String.format("API URL: %s", apiUrl));
-			logger.debug(String.format("API token: %s", apiToken));
-			logger.debug(String.format("Default room ID: %s", defaultRoomId));
-			logger.debug(String.format("Trigger notification: %s", notify));
-			logger.debug("Events:");
-			logger.debug(String.format("\tBuild started: %s", buildStarted));		
-			logger.debug(String.format("\tBuild successful: %s", buildSuccessful));
-			logger.debug(String.format("\tBuild failed: %s", buildFailed));
-			logger.debug(String.format("\tBuild interrupted: %s", buildInterrupted));
-			logger.debug(String.format("\tServer startup: %s", serverStartup));
-			logger.debug(String.format("\tServer shutdown: %s", serverShutdown));
-			logger.debug("Templates:");
-			logger.debug(String.format("\tBuild started: %s", buildStartedTemplate));
-			logger.debug(String.format("\tBuild successful: %s", buildSuccessfulTemplate));
-			logger.debug(String.format("\tBuild failed: %s", buildFailedTemplate));
-			logger.debug(String.format("\tBuild interrupted: %s", buildInterruptedTemplate));
-			logger.debug(String.format("\tServer startup: %s", serverStartupTemplate));
-			logger.debug(String.format("\tServer shutdown: %s", serverShutdownTemplate));
-			
-			// Save the configuration
-			this.configuration.setApiUrl(apiUrl);
-			this.configuration.setApiToken(apiToken);
-			this.configuration.setDefaultRoomId(defaultRoomId.equals("") ? null : defaultRoomId);
-			this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
-			HipChatEventConfiguration events = new HipChatEventConfiguration();
-			events.setBuildStartedStatus(Boolean.parseBoolean(buildStarted));
-			events.setBuildSuccessfulStatus(Boolean.parseBoolean(buildSuccessful));
-			events.setBuildFailedStatus(Boolean.parseBoolean(buildFailed));
-			events.setBuildInterruptedStatus(Boolean.parseBoolean(buildInterrupted));
-			events.setServerStartupStatus(Boolean.parseBoolean(serverStartup));
-			events.setServerShutdownStatus(Boolean.parseBoolean(serverShutdown));
-			this.configuration.setEvents(events);
-			this.saveConfiguration();
-			
-			// Save the templates
-			this.templates.writeTemplate(TeamCityEvent.BUILD_STARTED, buildStartedTemplate);
-			this.templates.writeTemplate(TeamCityEvent.BUILD_SUCCESSFUL, buildSuccessfulTemplate);
-			this.templates.writeTemplate(TeamCityEvent.BUILD_FAILED, buildFailedTemplate);
-			this.templates.writeTemplate(TeamCityEvent.BUILD_INTERRUPTED, buildInterruptedTemplate);
-			this.templates.writeTemplate(TeamCityEvent.SERVER_STARTUP, serverStartupTemplate);
-			this.templates.writeTemplate(TeamCityEvent.SERVER_SHUTDOWN, serverShutdownTemplate);
-			
-			// Update the page
-			this.getOrCreateMessages(request).addMessage(SAVED_ID, SAVED_MESSAGE);
-		} catch (Exception e) {
-			logger.error(e);
-		}
+		logger.debug("Changing configuration");
+		logger.debug(String.format("Query string: '%s'", request.getQueryString()));
+		
+		// Get parameters
+		String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
+		String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
+		String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
+		String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
+		String buildStarted = request.getParameter(HipChatConfiguration.BUILD_STARTED_KEY);
+		String buildSuccessful = request.getParameter(HipChatConfiguration.BUILD_SUCCESSFUL_KEY);
+		String buildFailed = request.getParameter(HipChatConfiguration.BUILD_FAILED_KEY);
+		String buildInterrupted = request.getParameter(HipChatConfiguration.BUILD_INTERRUPTED_KEY);
+		String serverStartup = request.getParameter(HipChatConfiguration.SERVER_STARTUP_KEY);
+		String serverShutdown = request.getParameter(HipChatConfiguration.SERVER_SHUTDOWN_KEY);
+		String buildStartedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_STARTED_TEMPLATE_KEY);
+		String buildSuccessfulTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_SUCCESSFUL_TEMPLATE_KEY);
+		String buildFailedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_FAILED_TEMPLATE_KEY);
+		String buildInterruptedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_INTERRUPTED_TEMPLATE_KEY);
+		String serverStartupTemplate = request.getParameter(HipChatNotificationMessageTemplates.SERVER_STARTUP_TEMPLATE_KEY);
+		String serverShutdownTemplate = request.getParameter(HipChatNotificationMessageTemplates.SERVER_SHUTDOWN_TEMPLATE_KEY);
+		
+		// Logging
+		logger.debug(String.format("API URL: %s", apiUrl));
+		logger.debug(String.format("API token: %s", apiToken));
+		logger.debug(String.format("Default room ID: %s", defaultRoomId));
+		logger.debug(String.format("Trigger notification: %s", notify));
+		logger.debug("Events:");
+		logger.debug(String.format("\tBuild started: %s", buildStarted));		
+		logger.debug(String.format("\tBuild successful: %s", buildSuccessful));
+		logger.debug(String.format("\tBuild failed: %s", buildFailed));
+		logger.debug(String.format("\tBuild interrupted: %s", buildInterrupted));
+		logger.debug(String.format("\tServer startup: %s", serverStartup));
+		logger.debug(String.format("\tServer shutdown: %s", serverShutdown));
+		logger.debug("Templates:");
+		logger.debug(String.format("\tBuild started: %s", buildStartedTemplate));
+		logger.debug(String.format("\tBuild successful: %s", buildSuccessfulTemplate));
+		logger.debug(String.format("\tBuild failed: %s", buildFailedTemplate));
+		logger.debug(String.format("\tBuild interrupted: %s", buildInterruptedTemplate));
+		logger.debug(String.format("\tServer startup: %s", serverStartupTemplate));
+		logger.debug(String.format("\tServer shutdown: %s", serverShutdownTemplate));
+		
+		// Save the configuration
+		this.configuration.setApiUrl(apiUrl);
+		this.configuration.setApiToken(apiToken);
+		this.configuration.setDefaultRoomId(defaultRoomId.equals("") ? null : defaultRoomId);
+		this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
+		HipChatEventConfiguration events = new HipChatEventConfiguration();
+		events.setBuildStartedStatus(Boolean.parseBoolean(buildStarted));
+		events.setBuildSuccessfulStatus(Boolean.parseBoolean(buildSuccessful));
+		events.setBuildFailedStatus(Boolean.parseBoolean(buildFailed));
+		events.setBuildInterruptedStatus(Boolean.parseBoolean(buildInterrupted));
+		events.setServerStartupStatus(Boolean.parseBoolean(serverStartup));
+		events.setServerShutdownStatus(Boolean.parseBoolean(serverShutdown));
+		this.configuration.setEvents(events);
+		this.saveConfiguration();
+		
+		// Save the templates
+		this.templates.writeTemplate(TeamCityEvent.BUILD_STARTED, buildStartedTemplate);
+		this.templates.writeTemplate(TeamCityEvent.BUILD_SUCCESSFUL, buildSuccessfulTemplate);
+		this.templates.writeTemplate(TeamCityEvent.BUILD_FAILED, buildFailedTemplate);
+		this.templates.writeTemplate(TeamCityEvent.BUILD_INTERRUPTED, buildInterruptedTemplate);
+		this.templates.writeTemplate(TeamCityEvent.SERVER_STARTUP, serverStartupTemplate);
+		this.templates.writeTemplate(TeamCityEvent.SERVER_SHUTDOWN, serverShutdownTemplate);
+		
+		// Update the page
+		this.getOrCreateMessages(request).addMessage(SAVED_ID, SAVED_MESSAGE);
 	}
 	
 	private void handleTestConnection(HttpServletRequest request, HttpServletResponse response) {
