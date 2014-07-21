@@ -37,6 +37,7 @@ import jetbrains.buildServer.serverSide.Branch;
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuild;
+import jetbrains.buildServer.serverSide.SBuildAgent;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
@@ -227,9 +228,14 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		// Add all available project, build configuration, agent, server, etc. parameters to the data model
 		// These are accessed as ${.data_model["some.variable"]}
 		// See: http://freemarker.org/docs/ref_specvar.html
-		logger.debug("Adding additional parameters");
+		logger.debug("Adding build parameters");
 		for (Map.Entry<String, String> entry : build.getParametersProvider().getAll().entrySet()) {
-			logger.debug(String.format("%s: %s", entry.getKey(), entry.getValue()));
+			logger.debug(String.format("\t%s: %s", entry.getKey(), entry.getValue()));
+			templateMap.put(entry.getKey(), entry.getValue());
+		}
+		logger.debug("Adding agent parameters");
+		for (Map.Entry<String, String> entry : build.getAgent().getAvailableParameters().entrySet()) {
+			logger.debug(String.format("\t%s: %s", entry.getKey(), entry.getValue()));
 			templateMap.put(entry.getKey(), entry.getValue());
 		}
 		// Standard plugin parameters

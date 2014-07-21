@@ -13,8 +13,8 @@ directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins
 [Visit](http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/) my website for more detailled instructions and information.
 
 Compatibility:
+* Release v0.4.4 to v0.6.0 was tested against TeamCity 8.1.1.
 * Releases v0.1.0 to v0.4.3 was tested against TeamCity 8.0.5.
-* Release v0.4.4 to v0.5.0 was tested against TeamCity 8.1.1.
 * Support for older TeamCity versions is uncertain.
 
 Note: I would gladly provide information and experiences by others here. 
@@ -35,17 +35,24 @@ On TeamCity, as an administrator, configure the generated token and other settin
 * Check that Eclipse knows where to find a JDK (under Installed JREs in the Java section of Eclipse preferences). 
 * On Windows make sure that you have `JAVA_HOME` variable set to where your JDK is installed, e.g. `C:\Program Files\Java\jdk1.7.0_51`.
 * To release the project as a TeamCity plugin right click on `build.xml` and select _Run As -> 2 Ant Build_. Check the release target and run. The plugin package will be created under a `build` folder.
+* Tests are built on [TestNG](http://testng.org/), coverage determined by [EMMA](http://emma.sourceforge.net/) and static analysis performed using [lint4j](http://www.jutils.com/).
 
 For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.com/parautenbach/TeamCity-HipChat-Notifier/blob/master/teamcity-server-log4j.xml) in this project's root to `conf/teamcity-server-log4j.xml` and then monitor `logs/hipchat-notifier.log `.
 
 # Future Improvements
 
-* Configurable notification message templates, with their colours and emoticon sets: It could be nice for users to customise these, or translate them into the language of their choice. 
-* Implement more events: Right now the supported events seem sufficient. 
-* Use @ mentions to send guaranteed messages to persons that have contributed to a failed build: This could add a lot of clutter. 
+* Configurable notification colours and emoticon sets.
+* Implement more events: Right now the supported events seem sufficient, but notifying on first failure or success would be nice. 
 * Add more build statistics, such as the number of tests passed and failed.
 
-# Changelog
+# Change log
+
+## Version 0.6.0
+* Bug: Unicode notification message payloads wasn't sent as UTF-8 (#20).
+* Bug: Race condition during plugin initialisation (during server startup) that sometimes prevented emoticons from being cached (#25).
+* Enhancement: Configurable notification message templates, using [FreeMarker](http://freemarker.org/).
+* Enhancement: In addition to configurable templates, any build or agent parameter can now be referenced too (#16).
+* Enhancement: Switched from JUnit to TestNG, added EMMA for code coverage analysis and lint4j for static analysis, with the result that 722 out of 727 lines (99%) are now tested. 
 
 ## Version 0.5.0
 * Enhancement: The branch will be rendered as part of the notification for VCSs that uses branches.

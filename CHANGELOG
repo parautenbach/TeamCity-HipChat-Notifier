@@ -1,3 +1,10 @@
+Version 0.6.0
+* Bug: Unicode notification message payloads wasn't sent as UTF-8 (#20).
+* Bug: Race condition during plugin initialisation (during server startup) that sometimes prevented emoticons from being cached (#25).
+* Enhancement: Configurable notification message templates.
+* Enhancement: In addition to configurable templates, any build or agent parameter can now be referenced too (#16).
+* Enhancement: Switched from JUnit to TestNG, added EMMA for code coverage analysis and lint4j for static analysis, with the result that 722 out of 727 lines (99%) are now tested. 
+
 Version 0.5.0
 * Enhancement: The branch will be rendered as part of the notification for VCSs that uses branches.
 * Enhancement: The ability to reload rooms when configuring the API URL and token.
