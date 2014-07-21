@@ -48,7 +48,7 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 # Change log
 
 ## Version 0.6.0
-* Bug: Unicode notification message payloads wasn't sent as UTF-8 (#20).
+* Bug: Unicode notification message payloads weren't sent as UTF-8 (#20).
 * Bug: Race condition during plugin initialisation (during server startup) that sometimes prevented emoticons from being cached (#25).
 * Enhancement: Configurable notification message templates, using [FreeMarker](http://freemarker.org/).
 * Enhancement: In addition to configurable templates, any build or agent parameter can now be referenced too (#16).
