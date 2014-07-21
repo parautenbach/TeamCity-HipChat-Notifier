@@ -1,7 +1,7 @@
 TeamCity-HipChat-Notifier
 =========================
 
-A fun TeamCity HipChat Notifier for sending build server notifications to a HipChat room, using colours and emoticons.
+A fun TeamCity HipChat Notifier for sending build server notifications to a HipChat room, using colours and emoticons and customisable notification messages.
 
 ![Screen shot of app](images/screen_shot.png "Screen shot of app")
 
