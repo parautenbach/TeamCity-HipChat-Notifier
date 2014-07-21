@@ -31,6 +31,7 @@ import jetbrains.buildServer.messages.Status;
 import jetbrains.buildServer.parameters.ParametersProvider;
 import jetbrains.buildServer.serverSide.Branch;
 import jetbrains.buildServer.serverSide.ProjectManager;
+import jetbrains.buildServer.serverSide.SBuildAgent;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SBuildType;
 import jetbrains.buildServer.serverSide.SProject;
@@ -320,6 +321,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(additionalParameters);
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
@@ -390,7 +394,10 @@ public class HipChatServerExtensionTest {
 		// Test parameters
 		String additionalParameterKey = "some.variable";
 		String expectedAdditionalParameterValue = "additionalParameter";
-        String templateString = String.format("${.data_model[\"%s\"]}", additionalParameterKey);
+		String additionalAgentParameterKey = "agent.variable";
+		String expectedAdditionalAgentParameterValue = "additionalAgentParameter";
+		String expectedMessage = String.format("%s %s", expectedAdditionalParameterValue, expectedAdditionalAgentParameterValue);
+        String templateString = String.format("${.data_model[\"%s\"]} ${.data_model[\"%s\"]}", additionalParameterKey, additionalAgentParameterKey);
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
 		String expectedTriggerBy = "Test User";
@@ -442,6 +449,11 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(additionalParameters);
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		HashMap<String, String> additionalAgentParameters = new HashMap<String, String>();
+		additionalAgentParameters.put(additionalAgentParameterKey, expectedAdditionalAgentParameterValue);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(additionalAgentParameters);
+		when(build.getAgent()).thenReturn(agent );
 
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
@@ -499,7 +511,7 @@ public class HipChatServerExtensionTest {
 		CallbackObject callbackObject = callbacks.get(0);
 		HipChatRoomNotification actualNotification = callbackObject.notification;
 		System.out.println(actualNotification);
-		assertEquals(expectedAdditionalParameterValue, actualNotification.message);
+		assertEquals(expectedMessage, actualNotification.message);
 	}
 
 	@Test
@@ -565,6 +577,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(additionalParameters);
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
@@ -769,6 +784,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
@@ -1123,6 +1141,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1197,6 +1218,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1407,6 +1431,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
@@ -1484,6 +1511,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1561,6 +1591,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1636,6 +1669,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1713,6 +1749,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -1793,6 +1832,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -2027,6 +2069,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -2204,7 +2249,10 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
-		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		when(build.getParametersProvider()).thenReturn(parametersProvider);		
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );		
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
@@ -2387,6 +2435,9 @@ public class HipChatServerExtensionTest {
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
 		@SuppressWarnings("unchecked")
 		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);

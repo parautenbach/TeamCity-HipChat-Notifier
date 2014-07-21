@@ -52,7 +52,7 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 * Bug: Race condition during plugin initialisation (during server startup) that sometimes prevented emoticons from being cached (#25).
 * Enhancement: Configurable notification message templates, using [FreeMarker](http://freemarker.org/).
 * Enhancement: In addition to configurable templates, any build or agent parameter can now be referenced too (#16).
-* Enhancement: Switched from JUnit to TestNG, added EMMA for code coverage analysis and lint4j for static analysis, with the result that 722 out of 727 lines (99%) are now tested. 
+* Enhancement: Switched from JUnit to TestNG, added EMMA for code coverage analysis and lint4j for static analysis. 
 
 ## Version 0.5.0
 * Enhancement: The branch will be rendered as part of the notification for VCSs that uses branches.
