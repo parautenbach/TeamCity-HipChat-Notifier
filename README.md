@@ -39,6 +39,11 @@ On TeamCity, as an administrator, configure the generated token and other settin
 
 For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.com/parautenbach/TeamCity-HipChat-Notifier/blob/master/teamcity-server-log4j.xml) in this project's root to `conf/teamcity-server-log4j.xml` and then monitor `logs/hipchat-notifier.log `.
 
+# Troubleshooting
+
+* Enable logging, as explained directly above, and look for any errors and warnings.
+* If you run TeamCity (Tomcat) behind a proxy, e.g. Nginx, you may need to increase your [buffer sizes](http://nginx.org/en/docs/http/ngx_http_proxy_module.html) from the defaults, because of the increased POST payload to save notification templates.
+
 # Future Improvements
 
 * Configurable notification colours and emoticon sets.
