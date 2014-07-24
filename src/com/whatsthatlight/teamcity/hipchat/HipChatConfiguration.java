@@ -46,6 +46,8 @@ public class HipChatConfiguration {
 	public static final String SERVER_STARTUP_KEY = "serverStartup";
 	public static final String SERVER_SHUTDOWN_KEY = "serverShutdown";
 	public static final String EMOTICON_CACHE_SIZE_KEY = "emoticonCacheSize";
+	public static final String ONLY_AFTER_FIRST_BUILD_SUCCESSFUL_KEY = "onlyAfterFirstBuildSuccessful";
+	public static final String ONLY_AFTER_FIRST_BUILD_FAILED_KEY = "onlyAfterFirstBuildFailed";
 
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;

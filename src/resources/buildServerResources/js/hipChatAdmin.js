@@ -56,22 +56,24 @@ var HipChatAdmin = {
 		BS.ajaxRequest($("hipChatForm").action, {
 			parameters : 
 				"edit=1" + 
-				"&apiUrl="                   + $("apiUrl").value + 
-				"&apiToken="                 + $("apiToken").value +
-				"&defaultRoomId="            + $("defaultRoomId").value +
-				"&notify="                   + $("notify").checked + 
-				"&buildStarted="             + $("buildStarted").checked +
-				"&buildSuccessful="          + $("buildSuccessful").checked +
-				"&buildFailed="              + $("buildFailed").checked +
-				"&buildInterrupted="         + $("buildInterrupted").checked +
-				"&serverStartup="            + $("serverStartup").checked +
-				"&serverShutdown="           + $("serverShutdown").checked + 
-				"&buildStartedTemplate="     + encodeURIComponent(document.getElementById('buildStartedTemplate').value) +
-				"&buildSuccessfulTemplate="  + encodeURIComponent(document.getElementById('buildSuccessfulTemplate').value) +
-				"&buildFailedTemplate="      + encodeURIComponent(document.getElementById('buildFailedTemplate').value) +
-				"&buildInterruptedTemplate=" + encodeURIComponent(document.getElementById('buildInterruptedTemplate').value) +
-				"&serverStartupTemplate="    + encodeURIComponent(document.getElementById('serverStartupTemplate').value) +
-				"&serverShutdownTemplate="   + encodeURIComponent(document.getElementById('serverShutdownTemplate').value),
+				"&apiUrl="                        + $("apiUrl").value + 
+				"&apiToken="                      + $("apiToken").value +
+				"&defaultRoomId="                 + $("defaultRoomId").value +
+				"&notify="                        + $("notify").checked + 
+				"&buildStarted="                  + $("buildStarted").checked +
+				"&buildSuccessful="               + $("buildSuccessful").checked +
+				"&buildFailed="                   + $("buildFailed").checked +
+				"&buildInterrupted="              + $("buildInterrupted").checked +
+				"&serverStartup="                 + $("serverStartup").checked +
+				"&serverShutdown="                + $("serverShutdown").checked + 
+				"&onlyAfterFirstBuildSuccessful=" + $("onlyAfterFirstBuildSuccessful").checked +
+				"&onlyAfterFirstBuildFailed="     + $("onlyAfterFirstBuildFailed").checked + 				
+				"&buildStartedTemplate="          + encodeURIComponent(document.getElementById('buildStartedTemplate').value) +
+				"&buildSuccessfulTemplate="       + encodeURIComponent(document.getElementById('buildSuccessfulTemplate').value) +
+				"&buildFailedTemplate="           + encodeURIComponent(document.getElementById('buildFailedTemplate').value) +
+				"&buildInterruptedTemplate="      + encodeURIComponent(document.getElementById('buildInterruptedTemplate').value) +
+				"&serverStartupTemplate="         + encodeURIComponent(document.getElementById('serverStartupTemplate').value) +
+				"&serverShutdownTemplate="        + encodeURIComponent(document.getElementById('serverShutdownTemplate').value),
 			onComplete : function(transport) {
 				if (transport.responseXML) {
 					BS.XMLResponse.processErrors(transport.responseXML, {

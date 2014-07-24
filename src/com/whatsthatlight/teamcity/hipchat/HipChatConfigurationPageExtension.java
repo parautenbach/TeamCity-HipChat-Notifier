@@ -84,9 +84,11 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		model.put(HipChatConfiguration.EMOTICON_CACHE_SIZE_KEY, this.emoticonCache.getSize());
 		
 		if (this.configuration.getEvents() != null) {
-			model.put(HipChatConfiguration.BUILD_STARTED_KEY, this.configuration.getEvents().getBuildStartedStatus());			
+			model.put(HipChatConfiguration.BUILD_STARTED_KEY, this.configuration.getEvents().getBuildStartedStatus());
 			model.put(HipChatConfiguration.BUILD_SUCCESSFUL_KEY, this.configuration.getEvents().getBuildSuccessfulStatus());
+			model.put(HipChatConfiguration.ONLY_AFTER_FIRST_BUILD_SUCCESSFUL_KEY, this.configuration.getEvents().getOnlyAfterFirstBuildSuccessfulStatus());
 			model.put(HipChatConfiguration.BUILD_FAILED_KEY, this.configuration.getEvents().getBuildFailedStatus());
+			model.put(HipChatConfiguration.ONLY_AFTER_FIRST_BUILD_FAILED_KEY, this.configuration.getEvents().getOnlyAfterFirstBuildFailedStatus());
 			model.put(HipChatConfiguration.BUILD_INTERRUPTED_KEY, this.configuration.getEvents().getBuildInterruptedStatus());
 			model.put(HipChatConfiguration.SERVER_STARTUP_KEY, this.configuration.getEvents().getServerStartupStatus());
 			model.put(HipChatConfiguration.SERVER_SHUTDOWN_KEY, this.configuration.getEvents().getServerShutdownStatus());

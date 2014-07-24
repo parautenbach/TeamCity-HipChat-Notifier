@@ -38,6 +38,7 @@ import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
+import jetbrains.buildServer.serverSide.SFinishedBuild;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.users.SUser;
@@ -96,10 +97,21 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	@Override
 	public void buildFinished(SRunningBuild build) {
 		super.buildFinished(build);
+		List<SFinishedBuild> buildHistory = build.getBuildType().getHistory();
+		SFinishedBuild previousBuild = null;
+		if (buildHistory.size() > 1) {
+			previousBuild = buildHistory.get(1);
+		}
 		if (build.getBuildStatus().isSuccessful() && this.configuration.getEvents() != null && this.configuration.getEvents().getBuildSuccessfulStatus()) {
-			this.processBuildEvent(build, TeamCityEvent.BUILD_SUCCESSFUL);
+			if (!this.configuration.getEvents().getOnlyAfterFirstBuildSuccessfulStatus() || 
+					(this.configuration.getEvents().getOnlyAfterFirstBuildSuccessfulStatus() && previousBuild != null && previousBuild.getBuildStatus().isFailed())) {
+				this.processBuildEvent(build, TeamCityEvent.BUILD_SUCCESSFUL);
+			}
 		} else if (build.getBuildStatus().isFailed() && this.configuration.getEvents() != null && this.configuration.getEvents().getBuildFailedStatus()) {
-			this.processBuildEvent(build, TeamCityEvent.BUILD_FAILED);
+			if (!this.configuration.getEvents().getOnlyAfterFirstBuildFailedStatus() || 
+					(this.configuration.getEvents().getOnlyAfterFirstBuildFailedStatus() && previousBuild != null && previousBuild.getBuildStatus().isSuccessful())) {
+				this.processBuildEvent(build, TeamCityEvent.BUILD_FAILED);
+			}
 		}
 	}
 	

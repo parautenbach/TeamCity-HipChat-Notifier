@@ -120,6 +120,8 @@ public class HipChatConfigurationController extends BaseController {
 		String buildInterrupted = request.getParameter(HipChatConfiguration.BUILD_INTERRUPTED_KEY);
 		String serverStartup = request.getParameter(HipChatConfiguration.SERVER_STARTUP_KEY);
 		String serverShutdown = request.getParameter(HipChatConfiguration.SERVER_SHUTDOWN_KEY);
+		String onlyAfterFirstBuildSuccessful = request.getParameter(HipChatConfiguration.ONLY_AFTER_FIRST_BUILD_SUCCESSFUL_KEY);
+		String onlyAfterFirstBuildFailed = request.getParameter(HipChatConfiguration.ONLY_AFTER_FIRST_BUILD_FAILED_KEY);
 		String buildStartedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_STARTED_TEMPLATE_KEY);
 		String buildSuccessfulTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_SUCCESSFUL_TEMPLATE_KEY);
 		String buildFailedTemplate = request.getParameter(HipChatNotificationMessageTemplates.BUILD_FAILED_TEMPLATE_KEY);
@@ -134,8 +136,10 @@ public class HipChatConfigurationController extends BaseController {
 		logger.debug(String.format("Trigger notification: %s", notify));
 		logger.debug("Events:");
 		logger.debug(String.format("\tBuild started: %s", buildStarted));		
-		logger.debug(String.format("\tBuild successful: %s", buildSuccessful));
+		logger.debug(String.format("\tBuild successful: %s", onlyAfterFirstBuildSuccessful));
+		logger.debug(String.format("\t\tOnly after first: %s", buildSuccessful));
 		logger.debug(String.format("\tBuild failed: %s", buildFailed));
+		logger.debug(String.format("\t\tOnly after first: %s", onlyAfterFirstBuildFailed));
 		logger.debug(String.format("\tBuild interrupted: %s", buildInterrupted));
 		logger.debug(String.format("\tServer startup: %s", serverStartup));
 		logger.debug(String.format("\tServer shutdown: %s", serverShutdown));
@@ -155,7 +159,9 @@ public class HipChatConfigurationController extends BaseController {
 		HipChatEventConfiguration events = new HipChatEventConfiguration();
 		events.setBuildStartedStatus(Boolean.parseBoolean(buildStarted));
 		events.setBuildSuccessfulStatus(Boolean.parseBoolean(buildSuccessful));
+		events.setOnlyAfterFirstBuildSuccessfulStatus(Boolean.parseBoolean(onlyAfterFirstBuildSuccessful));
 		events.setBuildFailedStatus(Boolean.parseBoolean(buildFailed));
+		events.setOnlyAfterFirstBuildFailedStatus(Boolean.parseBoolean(onlyAfterFirstBuildFailed));
 		events.setBuildInterruptedStatus(Boolean.parseBoolean(buildInterrupted));
 		events.setServerStartupStatus(Boolean.parseBoolean(serverStartup));
 		events.setServerShutdownStatus(Boolean.parseBoolean(serverShutdown));

@@ -109,7 +109,7 @@ limitations under the License.
 					<textarea id="buildStartedTemplate" name="buildStartedTemplate" style="width: 88%;">${buildStartedTemplate}</textarea>
 					<a style="vertical-align: top;" href="#" id="buildStartedTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildStartedTemplateDefault" value="${buildStartedTemplateDefault}" />
-					<span class="smallNote">When checked, a message will be sent when the build starts.</span>					
+					<span class="smallNote">When checked, a message will be sent when the build starts.</span>			
 				</td>
 			</tr>
 			<tr>
@@ -120,6 +120,8 @@ limitations under the License.
 					<a style="vertical-align: top;" href="#" id="buildSuccessfulTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildSuccessfulTemplateDefault" value="${buildSuccessfulTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when a finished build is successful.</span>
+					<forms:checkbox name="onlyAfterFirstBuildSuccessful" checked="${onlyAfterFirstBuildSuccessful}" value="${onlyAfterFirstBuildSuccessful}" style="vertical-align: top;"/>
+					<span class="smallNote">When checked, a message will be sent only when a the first build after a failed build is successful.</span>
 				</td>
 			</tr>
 			<tr>
@@ -130,6 +132,8 @@ limitations under the License.
 					<a style="vertical-align: top;" href="#" id="buildFailedTemplateDefaultLink">Default</a>
 					<input type="hidden" id="buildFailedTemplateDefault" value="${buildFailedTemplateDefault}" />
 					<span class="smallNote">When checked, a message will be sent when a finished build failed.</span>
+					<forms:checkbox name="onlyAfterFirstBuildFailed" checked="${onlyAfterFirstBuildFailed}" value="${onlyAfterFirstBuildFailed}" style="vertical-align: top;"/>
+					<span class="smallNote">When checked, a message will be sent only when a the first build after a successful build has failed.</span>
 				</td>
 			</tr>
 			<tr>

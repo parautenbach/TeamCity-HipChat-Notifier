@@ -38,6 +38,12 @@ public class HipChatEventConfiguration {
 	@XStreamAlias(HipChatConfiguration.SERVER_SHUTDOWN_KEY)
 	private boolean serverShutdown = true;
 
+	@XStreamAlias(HipChatConfiguration.ONLY_AFTER_FIRST_BUILD_SUCCESSFUL_KEY)
+	private boolean onlyAfterFirstBuildSuccessful = false;
+
+	@XStreamAlias(HipChatConfiguration.ONLY_AFTER_FIRST_BUILD_FAILED_KEY)
+	private boolean onlyAfterFirstBuildFailed = false;
+
 	
 	public HipChatEventConfiguration() {
 	}
@@ -89,5 +95,21 @@ public class HipChatEventConfiguration {
 	public void setServerShutdownStatus(boolean status) {
 		this.serverShutdown = status;
 	}
-	
+
+	public boolean getOnlyAfterFirstBuildSuccessfulStatus() {
+		return this.onlyAfterFirstBuildSuccessful;
+	}
+
+	public void setOnlyAfterFirstBuildSuccessfulStatus(boolean status) {
+		this.onlyAfterFirstBuildSuccessful = status;
+	}
+
+	public boolean getOnlyAfterFirstBuildFailedStatus() {
+		return this.onlyAfterFirstBuildFailed;
+	}
+
+	public void setOnlyAfterFirstBuildFailedStatus(boolean status) {
+		this.onlyAfterFirstBuildFailed = status;
+	}
+
 }
