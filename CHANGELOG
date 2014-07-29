@@ -1,3 +1,7 @@
+Version 0.6.1
+* Bug: Large GET request when submitting plugin configuration (due to the templates) can cause a 404 on some setups because of request limits (#26, #27).
+* Enhancement: Global setting to only notify on first successful build after a failure, or first failed build after a successful build (#21). 
+
 Version 0.6.0
 * Bug: Unicode notification message payloads weren't sent as UTF-8 (#20).
 * Bug: Race condition during plugin initialisation (during server startup) that sometimes prevented emoticons from being cached (#25).

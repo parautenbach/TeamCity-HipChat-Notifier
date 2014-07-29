@@ -54,6 +54,7 @@ var HipChatAdmin = {
 		}
 		
 		BS.ajaxRequest($("hipChatForm").action, {
+			method : "POST",
 			parameters : 
 				"edit=1" + 
 				"&apiUrl="                        + $("apiUrl").value + 

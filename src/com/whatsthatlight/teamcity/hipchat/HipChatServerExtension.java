@@ -103,13 +103,11 @@ public class HipChatServerExtension extends BuildServerAdapter {
 			previousBuild = buildHistory.get(1);
 		}
 		if (build.getBuildStatus().isSuccessful() && this.configuration.getEvents() != null && this.configuration.getEvents().getBuildSuccessfulStatus()) {
-			if (!this.configuration.getEvents().getOnlyAfterFirstBuildSuccessfulStatus() || 
-					(this.configuration.getEvents().getOnlyAfterFirstBuildSuccessfulStatus() && previousBuild != null && previousBuild.getBuildStatus().isFailed())) {
+			if (!this.configuration.getEvents().getOnlyAfterFirstBuildSuccessfulStatus() || previousBuild == null || previousBuild.getBuildStatus().isFailed()) {
 				this.processBuildEvent(build, TeamCityEvent.BUILD_SUCCESSFUL);
 			}
 		} else if (build.getBuildStatus().isFailed() && this.configuration.getEvents() != null && this.configuration.getEvents().getBuildFailedStatus()) {
-			if (!this.configuration.getEvents().getOnlyAfterFirstBuildFailedStatus() || 
-					(this.configuration.getEvents().getOnlyAfterFirstBuildFailedStatus() && previousBuild != null && previousBuild.getBuildStatus().isSuccessful())) {
+			if (!this.configuration.getEvents().getOnlyAfterFirstBuildFailedStatus() || previousBuild == null || previousBuild.getBuildStatus().isSuccessful()) {
 				this.processBuildEvent(build, TeamCityEvent.BUILD_FAILED);
 			}
 		}

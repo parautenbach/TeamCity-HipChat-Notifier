@@ -5,7 +5,7 @@
     <name>HipChat Notifier</name>
     <display-name>HipChat Notifier</display-name>
     <!-- <description>Some description goes here</description> -->
-    <version>0.6.0</version>
+    <version>0.6.1</version>
     <vendor>
       <name>What's That Light?</name>
       <url>http://www.whatsthatlight.com/</url>

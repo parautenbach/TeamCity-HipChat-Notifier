@@ -13,7 +13,7 @@ directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins
 [Visit](http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/) my website for more detailled instructions and information.
 
 Compatibility:
-* Releases v0.4.4 to v0.6.0 was tested against TeamCity 8.1.1.
+* Releases v0.4.4 to v0.6.1 was tested against TeamCity 8.1.1.
 * Releases v0.1.0 to v0.4.3 was tested against TeamCity 8.0.5.
 * Support for older TeamCity versions is uncertain.
 
@@ -51,6 +51,10 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 * Add more build statistics, such as the number of tests passed and failed.
 
 # Change log
+
+## Version 0.6.1
+* Bug: Large GET request when submitting plugin configuration (due to the templates) can cause a 404 on some setups because of request limits (#26, #27).
+* Enhancement: Global setting to only notify on first successful build after a failure, or first failed build after a successful build (#21). 
 
 ## Version 0.6.0
 * Bug: Unicode notification message payloads weren't sent as UTF-8 (#20).
