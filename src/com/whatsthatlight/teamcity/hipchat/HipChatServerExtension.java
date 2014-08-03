@@ -259,7 +259,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.SERVER_URL, this.server.getRootUrl());
 	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.PROJECT_ID, build.getProjectExternalId());
 	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.BUILD_ID, new Long(build.getBuildId()).toString());
-	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.BUILD_TYPE_ID, build.getBuildTypeId());
+	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.BUILD_TYPE_ID, build.getBuildTypeExternalId());
 	    templateMap.put(HipChatNotificationMessageTemplates.Parameters.BUILD_NUMBER, build.getBuildNumber());
 		if (buildEvent == TeamCityEvent.BUILD_INTERRUPTED) {
 			long userId = build.getCanceledInfo().getUserId();

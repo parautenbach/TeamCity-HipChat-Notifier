@@ -312,11 +312,11 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		when(build.getBranch()).thenReturn(branch);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn((long)expectedBuildId);
 		HashMap<String, String> additionalParameters = new HashMap<String, String>();
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
@@ -437,11 +437,11 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		when(build.getBranch()).thenReturn(branch);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn((long)expectedBuildId);
 		
 		// Set additional parameters
@@ -568,11 +568,11 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		when(build.getBranch()).thenReturn(branch);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn((long)expectedBuildId);
 		HashMap<String, String> additionalParameters = new HashMap<String, String>();
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
@@ -682,11 +682,11 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		when(build.getBranch()).thenReturn(branch);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn((long)expectedBuildId);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -776,11 +776,11 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		when(build.getBranch()).thenReturn(branch);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn((long)expectedBuildId);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -872,11 +872,11 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		when(build.getBranch()).thenReturn(branch);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn((long)expectedBuildId);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1078,7 +1078,7 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
@@ -1137,7 +1137,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1214,7 +1214,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn(expectedProjectId);
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1289,7 +1289,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1359,7 +1359,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
@@ -1427,7 +1427,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1507,7 +1507,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1587,7 +1587,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1665,7 +1665,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1745,7 +1745,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1828,7 +1828,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1910,7 +1910,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -1984,7 +1984,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -2065,7 +2065,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -2154,7 +2154,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -2243,7 +2243,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -2342,7 +2342,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -2445,7 +2445,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -2544,7 +2544,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -2616,7 +2616,7 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
@@ -2716,7 +2716,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -2814,7 +2814,7 @@ public class HipChatServerExtensionTest {
         when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
         when(build.getTriggeredBy()).thenReturn(triggeredBy);
         when(build.getProjectExternalId()).thenReturn("");
-        when(build.getBuildTypeId()).thenReturn("");
+        when(build.getBuildTypeExternalId()).thenReturn("");
         when(build.getBuildId()).thenReturn((long)0);
         ParametersProvider parametersProvider = mock(ParametersProvider.class);
         when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -2913,7 +2913,7 @@ public class HipChatServerExtensionTest {
         when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
         when(build.getTriggeredBy()).thenReturn(triggeredBy);
         when(build.getProjectExternalId()).thenReturn("");
-        when(build.getBuildTypeId()).thenReturn("");
+        when(build.getBuildTypeExternalId()).thenReturn("");
         when(build.getBuildId()).thenReturn((long)0);
         ParametersProvider parametersProvider = mock(ParametersProvider.class);
         when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -3016,7 +3016,7 @@ public class HipChatServerExtensionTest {
         when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
         when(build.getTriggeredBy()).thenReturn(triggeredBy);
         when(build.getProjectExternalId()).thenReturn("");
-        when(build.getBuildTypeId()).thenReturn("");
+        when(build.getBuildTypeExternalId()).thenReturn("");
         when(build.getBuildId()).thenReturn((long)0);
         ParametersProvider parametersProvider = mock(ParametersProvider.class);
         when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -3115,7 +3115,7 @@ public class HipChatServerExtensionTest {
         when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
         when(build.getTriggeredBy()).thenReturn(triggeredBy);
         when(build.getProjectExternalId()).thenReturn("");
-        when(build.getBuildTypeId()).thenReturn("");
+        when(build.getBuildTypeExternalId()).thenReturn("");
         when(build.getBuildId()).thenReturn((long)0);
         ParametersProvider parametersProvider = mock(ParametersProvider.class);
         when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -3187,7 +3187,7 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
@@ -3291,7 +3291,7 @@ public class HipChatServerExtensionTest {
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getCanceledInfo()).thenReturn(canceledInfo);
 		when(build.getProjectExternalId()).thenReturn("");
-		when(build.getBuildTypeId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn("");
 		when(build.getBuildId()).thenReturn((long)0);
 		ParametersProvider parametersProvider = mock(ParametersProvider.class);
 		when(parametersProvider.getAll()).thenReturn(new HashMap<String, String>());
@@ -3586,7 +3586,7 @@ public class HipChatServerExtensionTest {
 		when(build.isPersonal()).thenReturn(false);
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		when(build.getParametersProvider()).thenReturn(parametersProvider);
 		when(build.getProjectExternalId()).thenReturn("bt0000");
@@ -3647,7 +3647,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getBuildStatus()).thenReturn(status);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
         when(build.getParametersProvider()).thenReturn(parametersProvider);
 		when(build.getProjectExternalId()).thenReturn("bt0000");
@@ -3713,7 +3713,7 @@ public class HipChatServerExtensionTest {
 		when(build.getCommitters(any(SelectPrevBuildPolicy.class))).thenReturn(userSet);
 		Status status = Status.FAILURE;
 		when(build.getBuildStatus()).thenReturn(status);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
 		SProject parentProject = mock(SProject.class);
 		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
@@ -3771,7 +3771,7 @@ public class HipChatServerExtensionTest {
 		when(build.getTriggeredBy()).thenReturn(triggeredBy);
 		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
 		when(build.getCanceledInfo()).thenReturn(canceledInfo);
-		when(build.getBuildTypeId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
 		when(build.getBuildId()).thenReturn(expectedBuildId);
         when(build.getParametersProvider()).thenReturn(parametersProvider);
         when(build.getProjectExternalId()).thenReturn("bt0000");
