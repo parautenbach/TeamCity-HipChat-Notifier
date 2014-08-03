@@ -13,11 +13,11 @@ directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins
 [Visit](http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/) my website for more detailled instructions and information.
 
 Compatibility:
-* Releases v0.4.4 to v0.6.1 was tested against TeamCity 8.1.1.
+* Releases v0.4.4 and above was tested against TeamCity 8.1.1.
 * Releases v0.1.0 to v0.4.3 was tested against TeamCity 8.0.5.
 * Support for older TeamCity versions is uncertain.
 
-Note: I would gladly provide information and experiences by others here. 
+I will gladly provide information and experiences by others here. 
 
 # Configuration
 
@@ -47,7 +47,7 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 # Future Improvements
 
 * Configurable notification colours and emoticon sets.
-* Implement more events: Right now the supported events seem sufficient, but notifying on first failure or success would be nice. 
+* Implement more events: Right now the supported events seem sufficient. 
 * Add more build statistics, such as the number of tests passed and failed.
 
 # Change log
