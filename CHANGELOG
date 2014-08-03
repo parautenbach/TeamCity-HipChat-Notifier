@@ -1,3 +1,8 @@
+Version 0.6.2
+* Bug: Point the link in the message (default template) to the build configuration rather than the project (#28).
+* Bug: Build ID wasn't corrected formatted as a string (#29).
+* Bug: Links to a build ID don't require the build type ID anymore, since TeamCity 8 (#30, #31).
+
 Version 0.6.1
 * Bug: Large GET request when submitting plugin configuration (due to the templates) can cause a 404 on some setups because of request limits (#26, #27).
 * Enhancement: Global setting to only notify on first successful build after a failure, or first failed build after a successful build (#21). 
