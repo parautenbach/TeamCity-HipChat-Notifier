@@ -20,20 +20,24 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.TreeMap;
 
 import jetbrains.buildServer.serverSide.SProject;
 
 import org.apache.log4j.BasicConfigurator;
-
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
+import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
+import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
+import com.whatsthatlight.teamcity.hipchat.HipChatRoom;
+import com.whatsthatlight.teamcity.hipchat.HipChatRooms;
 import com.whatsthatlight.teamcity.hipchat.Utils;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class UtilsTest extends Utils {
 	
@@ -206,6 +210,37 @@ public class UtilsTest extends Utils {
 		
 		// Test
 		assertNull(actualEffectiveProjectConfiguration);
+	}
+	
+	@Test
+	public void testGetRooms() {
+		// Test parameters
+		String expectedFirstRoomId = "0";
+		String expectedFirstRoomName = "roomOne";
+		String expectedSecondRoomId = "1";
+		String expectedSecondRoomName = "roomTwo";
+		int expectedNumberOfRooms = 2;
+		
+		// Construct the room sets
+		List<HipChatRoom> firstSetItems = new ArrayList<HipChatRoom>();
+		firstSetItems.add(new HipChatRoom(expectedFirstRoomId, null, expectedFirstRoomName));
+		List<HipChatRoom> secondSetItems = new ArrayList<HipChatRoom>();
+		secondSetItems.add(new HipChatRoom(expectedSecondRoomId, null, expectedSecondRoomName));
+		HipChatApiResultLinks firstSetlinks = new HipChatApiResultLinks(null, null, "hasNext");
+		HipChatApiResultLinks secondSetlinks = new HipChatApiResultLinks(null, null, null);
+		HipChatRooms firstSet = new HipChatRooms(firstSetItems, 0, 1, firstSetlinks);
+		HipChatRooms secondSet = new HipChatRooms(secondSetItems, 1, 1, secondSetlinks);
+		
+		// Mocks
+		HipChatApiProcessor processor = mock(HipChatApiProcessor.class);
+		when(processor.getRooms(0)).thenReturn(firstSet);
+		when(processor.getRooms(1)).thenReturn(secondSet);
+		
+		// Execute
+		TreeMap<String, String> actualRooms = Utils.getRooms(processor);
+		
+		// Test
+		assertEquals(expectedNumberOfRooms, actualRooms.size());
 	}
 	
 }
