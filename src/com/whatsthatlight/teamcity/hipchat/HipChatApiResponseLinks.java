@@ -18,7 +18,7 @@ package com.whatsthatlight.teamcity.hipchat;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class HipChatRoomLinks {
+public class HipChatApiResponseLinks {
 
 	@JsonProperty("self")
 	public String self;
@@ -29,11 +29,11 @@ public class HipChatRoomLinks {
 	@JsonProperty("members")
 	public String members;
 	
-	public HipChatRoomLinks() {
+	public HipChatApiResponseLinks() {
 		// Intentionally left empty
 	}
 	
-	public HipChatRoomLinks(String self, String webhooks, String members) {
+	public HipChatApiResponseLinks(String self, String webhooks, String members) {
 		this.self = self;
 		this.webhooks = webhooks;
 		this.members = members;

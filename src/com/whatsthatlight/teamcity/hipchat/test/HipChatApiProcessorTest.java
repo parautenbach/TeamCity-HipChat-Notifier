@@ -50,7 +50,7 @@ import com.whatsthatlight.teamcity.hipchat.HipChatEmoticons;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageColour;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageFormat;
 import com.whatsthatlight.teamcity.hipchat.HipChatRoom;
-import com.whatsthatlight.teamcity.hipchat.HipChatRoomLinks;
+import com.whatsthatlight.teamcity.hipchat.HipChatApiResponseLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatRoomNotification;
 import com.whatsthatlight.teamcity.hipchat.HipChatRooms;
 
@@ -96,7 +96,7 @@ public class HipChatApiProcessorTest {
 		String token = "token";
 
 		// JSON
-		HipChatRoomLinks emoticonLinks = new HipChatRoomLinks("self", "webhooks", "members");
+		HipChatApiResponseLinks emoticonLinks = new HipChatApiResponseLinks("self", "webhooks", "members");
 		HipChatEmoticon emoticon = new HipChatEmoticon(expectedEmoticonId, emoticonLinks, expectedEmoticonShortcut, expectedEmoticonUrl);
 		HipChatApiResultLinks resultLinks = new HipChatApiResultLinks("self", "prev", "next");
 		List<HipChatEmoticon> emoticonsList = new ArrayList<HipChatEmoticon>();
@@ -213,7 +213,7 @@ public class HipChatApiProcessorTest {
 		
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		
-		HipChatRooms rooms = processor.getRooms();
+		HipChatRooms rooms = processor.getRooms(0);
 		assertNotNull(rooms);
 		assertNotNull(rooms.items);
 		assertEquals(0, rooms.items.size());
@@ -231,7 +231,7 @@ public class HipChatApiProcessorTest {
 
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 
-		HipChatRooms rooms = processor.getRooms();
+		HipChatRooms rooms = processor.getRooms(0);
 		for (HipChatRoom room : rooms.items) {
 			System.out.println(String.format("%s - %s", room.id, room.name));
 		}
@@ -249,7 +249,7 @@ public class HipChatApiProcessorTest {
 		String token = "token";
 
 		// JSON
-		HipChatRoomLinks roomLinks = new HipChatRoomLinks("self", "webhooks", "members");
+		HipChatApiResponseLinks roomLinks = new HipChatApiResponseLinks("self", "webhooks", "members");
 		HipChatRoom room = new HipChatRoom(expectedRoomId, roomLinks, expectedRoomName);
 		HipChatApiResultLinks resultLinks = new HipChatApiResultLinks("self", "prev", "next");
 		List<HipChatRoom> roomsList = new ArrayList<HipChatRoom>();
@@ -291,7 +291,7 @@ public class HipChatApiProcessorTest {
 		
 		// Execute
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
-		HipChatRooms actualRooms = processor.getRooms();
+		HipChatRooms actualRooms = processor.getRooms(0);
 		
 		// Clean up
 		server.stop();
@@ -323,7 +323,7 @@ public class HipChatApiProcessorTest {
 		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
 		
 		// Execute
-		HipChatRooms actualRooms = processor.getRooms();
+		HipChatRooms actualRooms = processor.getRooms(0);
 		logger.removeAppender(appender);
 		
 		// Test

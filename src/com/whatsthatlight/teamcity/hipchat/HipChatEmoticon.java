@@ -24,7 +24,7 @@ public class HipChatEmoticon {
 	public String id;
 
 	@JsonProperty("links")
-	public HipChatRoomLinks links;
+	public HipChatApiResponseLinks links;
 	
 	@JsonProperty("shortcut")
 	public String shortcut;
@@ -36,7 +36,7 @@ public class HipChatEmoticon {
 		// Intentionally left empty
 	}
 	
-	public HipChatEmoticon(String id, HipChatRoomLinks links, String shortcut, String url) {
+	public HipChatEmoticon(String id, HipChatApiResponseLinks links, String shortcut, String url) {
 		this.id = id;
 		this.links = links;
 		this.shortcut = shortcut;

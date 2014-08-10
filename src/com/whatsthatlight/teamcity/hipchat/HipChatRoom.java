@@ -24,7 +24,7 @@ public class HipChatRoom {
 	public String id;
 
 	@JsonProperty("links")
-	public HipChatRoomLinks links;
+	public HipChatApiResponseLinks links;
 	
 	@JsonProperty("name")
 	public String name;
@@ -33,7 +33,7 @@ public class HipChatRoom {
 		// Intentionally left empty
 	}
 	
-	public HipChatRoom(String id, HipChatRoomLinks links, String name) {
+	public HipChatRoom(String id, HipChatApiResponseLinks links, String name) {
 		this.id = id;
 		this.links = links;
 		this.name = name;

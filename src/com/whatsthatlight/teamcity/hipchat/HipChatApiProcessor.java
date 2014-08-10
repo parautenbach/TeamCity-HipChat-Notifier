@@ -74,9 +74,9 @@ public class HipChatApiProcessor {
 		return null;
 	}
 	
-	public HipChatRooms getRooms() {
+	public HipChatRooms getRooms(int startIndex) {
 		try {
-			URI uri = new URI(String.format("%s%s", this.configuration.getApiUrl(), "room"));
+			URI uri = new URI(String.format("%s%s?start-index=%s", this.configuration.getApiUrl(), "room", startIndex));
 			String authorisationHeader = String.format("Bearer %s", this.configuration.getApiToken());
 
 			// Make request

@@ -72,7 +72,7 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		int maxResults = 1;
 		List<HipChatRoom> roomItems = new ArrayList<HipChatRoom>();
 		roomItems.add(new HipChatRoom(expectedRoomId, null, expectedRoomName));
-		HipChatApiResultLinks roomLinks = null;
+		HipChatApiResultLinks roomLinks = new HipChatApiResultLinks();
 		HipChatRooms rooms = new HipChatRooms(roomItems, startIndex, maxResults, roomLinks);
 
 		// Project mocks
@@ -84,7 +84,7 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		
 		// Processor mock
 		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
-		when(processor.getRooms()).thenReturn(rooms);
+		when(processor.getRooms(0)).thenReturn(rooms);
 
 		// Other page dependencies
 		SUser user = org.mockito.Mockito.mock(SUser.class);
@@ -134,7 +134,7 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		int maxResults = 1;
 		List<HipChatRoom> roomItems = new ArrayList<HipChatRoom>();
 		roomItems.add(new HipChatRoom(availableRoomId, null, expectedRoomName));
-		HipChatApiResultLinks roomLinks = null;
+		HipChatApiResultLinks roomLinks = new HipChatApiResultLinks();
 		HipChatRooms rooms = new HipChatRooms(roomItems, startIndex, maxResults, roomLinks);
 
 		// Project mocks
@@ -146,7 +146,7 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		
 		// Processor mock
 		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
-		when(processor.getRooms()).thenReturn(rooms);
+		when(processor.getRooms(0)).thenReturn(rooms);
 
 		// Other page dependencies
 		SUser user = org.mockito.Mockito.mock(SUser.class);
@@ -196,7 +196,7 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		int maxResults = 1;
 		List<HipChatRoom> roomItems = new ArrayList<HipChatRoom>();
 		roomItems.add(new HipChatRoom(availableRoomId, null, expectedRoomName));
-		HipChatApiResultLinks roomLinks = null;
+		HipChatApiResultLinks roomLinks = new HipChatApiResultLinks();
 		HipChatRooms rooms = new HipChatRooms(roomItems, startIndex, maxResults, roomLinks);
 
 		// Project mocks
@@ -208,7 +208,7 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		
 		// Processor mock
 		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
-		when(processor.getRooms()).thenReturn(rooms);
+		when(processor.getRooms(0)).thenReturn(rooms);
 
 		// Other page dependencies
 		SUser user = org.mockito.Mockito.mock(SUser.class);

@@ -127,12 +127,12 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		int maxResults = 1;
 		List<HipChatRoom> roomItems = new ArrayList<HipChatRoom>();
 		roomItems.add(new HipChatRoom(expectedRoomId, null, expectedRoomName));
-		HipChatApiResultLinks roomLinks = null;
+		HipChatApiResultLinks roomLinks = new HipChatApiResultLinks();
 		HipChatRooms rooms = new HipChatRooms(roomItems, startIndex, maxResults, roomLinks);
 
 		// Processor mock
 		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
-		when(processor.getRooms()).thenReturn(rooms);
+		when(processor.getRooms(0)).thenReturn(rooms);
 
 		// Other page dependencies
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
@@ -172,12 +172,12 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		int maxResults = 1;
 		List<HipChatRoom> roomItems = new ArrayList<HipChatRoom>();
 		roomItems.add(new HipChatRoom(expectedRoomId, null, expectedRoomName));
-		HipChatApiResultLinks roomLinks = null;
+		HipChatApiResultLinks roomLinks = new HipChatApiResultLinks();
 		HipChatRooms rooms = new HipChatRooms(roomItems, startIndex, maxResults, roomLinks);
 
 		// Processor mock
 		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
-		when(processor.getRooms()).thenReturn(rooms);
+		when(processor.getRooms(0)).thenReturn(rooms);
 
 		// Other page dependencies
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
@@ -218,12 +218,12 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 		int maxResults = 1;
 		List<HipChatRoom> roomItems = new ArrayList<HipChatRoom>();
 		roomItems.add(new HipChatRoom(expectedRoomId, null, expectedRoomName));
-		HipChatApiResultLinks roomLinks = null;
+		HipChatApiResultLinks roomLinks = new HipChatApiResultLinks();
 		HipChatRooms rooms = new HipChatRooms(roomItems, startIndex, maxResults, roomLinks);
 
 		// Processor mock
 		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
-		when(processor.getRooms()).thenReturn(rooms);
+		when(processor.getRooms(0)).thenReturn(rooms);
 
 		// Other page dependencies
 		HipChatConfiguration configuration = new HipChatConfiguration();	

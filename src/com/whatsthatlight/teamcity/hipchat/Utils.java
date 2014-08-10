@@ -44,9 +44,15 @@ public class Utils {
 	
 	public static TreeMap<String, String> getRooms(HipChatApiProcessor processor) {
 		TreeMap<String, String> map = new TreeMap<String, String>();
-		for (HipChatRoom room : processor.getRooms().items) {
-			map.put(room.name, room.id);
-		}
+		int startIndex = 0;
+		HipChatRooms rooms = null;
+		do {
+			rooms = processor.getRooms(startIndex);
+			for (HipChatRoom room : rooms.items) {
+				map.put(room.name, room.id);
+			}
+			startIndex = startIndex + rooms.maxResults;
+		} while (rooms.links.next != null);
 		return map;
 	}
 	
