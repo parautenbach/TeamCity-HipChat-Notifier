@@ -52,6 +52,9 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 # Change log
 
+## Version 0.6.3
+* Bug: For large setups, only a 100 rooms were returned to select from (#32).
+
 ## Version 0.6.2
 * Bug: Point the link in the message (default template) to the build configuration rather than the project (#28).
 * Bug: Build ID wasn't corrected formatted as a string (#29).
