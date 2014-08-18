@@ -113,6 +113,7 @@ public class HipChatConfigurationController extends BaseController {
 		String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
 		String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
 		String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
+		String serverEventRoomId = request.getParameter(HipChatConfiguration.SERVER_EVENT_ROOM_ID_KEY);
 		String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
 		String buildStarted = request.getParameter(HipChatConfiguration.BUILD_STARTED_KEY);
 		String buildSuccessful = request.getParameter(HipChatConfiguration.BUILD_SUCCESSFUL_KEY);
@@ -132,15 +133,16 @@ public class HipChatConfigurationController extends BaseController {
 		// Logging
 		logger.debug(String.format("API URL: %s", apiUrl));
 		logger.debug(String.format("API token: %s", apiToken));
-		logger.debug(String.format("Default room ID: %s", defaultRoomId));
 		logger.debug(String.format("Trigger notification: %s", notify));
 		logger.debug("Events:");
+		logger.debug(String.format("\tDefault room ID: %s", defaultRoomId));
 		logger.debug(String.format("\tBuild started: %s", buildStarted));		
 		logger.debug(String.format("\tBuild successful: %s", onlyAfterFirstBuildSuccessful));
 		logger.debug(String.format("\t\tOnly after first: %s", buildSuccessful));
 		logger.debug(String.format("\tBuild failed: %s", buildFailed));
 		logger.debug(String.format("\t\tOnly after first: %s", onlyAfterFirstBuildFailed));
 		logger.debug(String.format("\tBuild interrupted: %s", buildInterrupted));
+		logger.debug(String.format("\tServer event room ID: %s", serverEventRoomId));
 		logger.debug(String.format("\tServer startup: %s", serverStartup));
 		logger.debug(String.format("\tServer shutdown: %s", serverShutdown));
 		logger.debug("Templates:");
@@ -154,8 +156,9 @@ public class HipChatConfigurationController extends BaseController {
 		// Save the configuration
 		this.configuration.setApiUrl(apiUrl);
 		this.configuration.setApiToken(apiToken);
-		this.configuration.setDefaultRoomId(defaultRoomId.equals("") ? null : defaultRoomId);
 		this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
+		this.configuration.setDefaultRoomId(defaultRoomId.equals("") ? null : defaultRoomId);
+		this.configuration.setServerEventRoomId(serverEventRoomId.equals("") ? null : serverEventRoomId);
 		HipChatEventConfiguration events = new HipChatEventConfiguration();
 		events.setBuildStartedStatus(Boolean.parseBoolean(buildStarted));
 		events.setBuildSuccessfulStatus(Boolean.parseBoolean(buildSuccessful));

@@ -143,6 +143,9 @@ public class HipChatServerExtension extends BuildServerAdapter {
 			String message = renderTemplate(this.templates.readTemplate(event), new HashMap<String, Object>());
 			HipChatRoomNotification notification = new HipChatRoomNotification(message, this.messageFormat, colour, notify);
 			String roomId = this.configuration.getDefaultRoomId();
+			if (event == TeamCityEvent.SERVER_STARTUP || event == TeamCityEvent.SERVER_SHUTDOWN) {
+				roomId = this.configuration.getServerEventRoomId();
+			}
 			if (roomId != null) {
 				this.processor.sendNotification(notification, roomId);
 			}

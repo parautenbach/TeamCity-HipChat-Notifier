@@ -12,7 +12,7 @@
 	<property name="reports" location="reports"/>
 	<property name="main-class" value="HipChatNotifier"/>
 	<!-- Default to 0.0.0.0 if no version specified -->
-	<condition property="version" value="${env.BUILD_NUMBER}" else="0.6.3">
+	<condition property="version" value="${env.BUILD_NUMBER}" else="0.6.4">
 		<and>
 			<isset property="env.BUILD_NUMBER"/>
 			<not>

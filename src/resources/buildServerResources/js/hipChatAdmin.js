@@ -60,6 +60,7 @@ var HipChatAdmin = {
 				"&apiUrl="                        + $("apiUrl").value + 
 				"&apiToken="                      + $("apiToken").value +
 				"&defaultRoomId="                 + $("defaultRoomId").value +
+				"&serverEventRoomId="             + $("serverEventRoomId").value +
 				"&notify="                        + $("notify").checked + 
 				"&buildStarted="                  + $("buildStarted").checked +
 				"&buildSuccessful="               + $("buildSuccessful").checked +

@@ -30,6 +30,7 @@ public class HipChatConfiguration {
 	public static final String NOTIFY_STATUS_KEY = "notify";
 	public static final String DEFAULT_ROOM_ID_KEY = "defaultRoomId";
 	public static final String DEFAULT_ROOM_ID_KEY_V0DOT1 = "roomId";
+	public static final String SERVER_EVENT_ROOM_ID_KEY = "serverEventRoomId";
 	public static final String ROOM_ID_KEY = "roomId";
 	public static final String PROJECT_ID_KEY = "projectId";
 	public static final String PROJECT_ROOM_KEY = "projectRoom";
@@ -63,6 +64,9 @@ public class HipChatConfiguration {
 
 	@XStreamAlias(DEFAULT_ROOM_ID_KEY)
 	private String defaultRoomId;
+	
+	@XStreamAlias(SERVER_EVENT_ROOM_ID_KEY)
+	private String serverEventRoomId;
 	
 	// We use a list for correct serialization. It causes us to perform a linear search when getting or setting, but that's ok. 
 	@XStreamImplicit
@@ -130,6 +134,10 @@ public class HipChatConfiguration {
 		return this.defaultRoomId;
 	}
 
+	public String getServerEventRoomId() {
+		return this.serverEventRoomId;
+	}
+	
 	public void setApiToken(String token) {
 		this.apiToken = token;
 	}
@@ -149,6 +157,10 @@ public class HipChatConfiguration {
 
 	public void setDefaultRoomId(String roomId) {
 		this.defaultRoomId = roomId;
+	}
+	
+	public void setServerEventRoomId(String roomId) {
+		this.serverEventRoomId = roomId;
 	}
 	
 }

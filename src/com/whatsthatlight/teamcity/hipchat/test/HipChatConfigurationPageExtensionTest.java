@@ -114,7 +114,7 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 	@Test
 	public void testFillModel() throws Exception {
 		// Test parameters
-		int expectedModelSize = 27;
+		int expectedModelSize = 28;
 		String expectedRoomId = "room1";
 		String expectedRoomName = "test room";
 		
@@ -158,7 +158,7 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 	@Test
 	public void testFillModelNoEventsConfiguration() throws Exception {
 		// Test parameters
-		int expectedModelSize = 19;
+		int expectedModelSize = 20;
 		String expectedRoomId = "room1";
 		String expectedRoomName = "test room";
 		
@@ -203,7 +203,7 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 	@Test
 	public void testFillModelGetTemplateRaisesException() throws IOException {
 		// Test parameters
-		int expectedModelSize = 15;
+		int expectedModelSize = 16;
 		String expectedRoomId = "room1";
 		String expectedRoomName = "test room";
 		String expectedExceptionText = "This is a test!";

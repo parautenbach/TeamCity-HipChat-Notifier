@@ -65,22 +65,6 @@ limitations under the License.
 				</td>
 			</tr>
 			<tr>
-				<!-- TODO: Automatically refresh this on URL or token change. -->
-				<th><label for="defaultRoomId">Default room: </label></th>
-				<td>
-				  <forms:select name="defaultRoomId">
-				  	<forms:option value="">(None)</forms:option>
-                    <c:forEach var="roomIdEntry" items="${roomIdList}">
-                      <forms:option value="${roomIdEntry.value}" selected="${roomIdEntry.value == defaultRoomId}">
-                        <c:out value="${roomIdEntry.key}"/>
-                      </forms:option>
-                    </c:forEach>
-                  </forms:select>
-                  &nbsp;
-                  <a href="#" onclick="return HipChatAdmin.save()">Save to reload</a>
-                </td>
-			</tr>
-			<tr>
 				<th>
 					<label for="notifyLabel">Trigger notifications: </label>
 				</th>
@@ -100,6 +84,22 @@ limitations under the License.
 			<tr class="groupingTitle">
           		<td colspan="2">Build Events Configuration&nbsp;<a href="http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/" class="helpIcon" style="vertical-align: middle;" target="_blank"><bs:helpIcon/></a></td>
         	</tr>
+			<tr>
+				<!-- TODO: Automatically refresh this on URL or token change. -->
+				<th><label for="defaultRoomId">Default room: </label></th>
+				<td>
+				  <forms:select name="defaultRoomId">
+				  	<forms:option value="">(None)</forms:option>
+                    <c:forEach var="roomIdEntry" items="${roomIdList}">
+                      <forms:option value="${roomIdEntry.value}" selected="${roomIdEntry.value == defaultRoomId}">
+                        <c:out value="${roomIdEntry.key}"/>
+                      </forms:option>
+                    </c:forEach>
+                  </forms:select>
+                  &nbsp;
+                  <a href="#" onclick="return HipChatAdmin.save()">Save to reload</a>
+                </td>
+			</tr>
 			<tr>
 				<th>
 					<label for="buildStartedLabel">Build started: </label>
@@ -149,6 +149,22 @@ limitations under the License.
 			<tr class="groupingTitle">
           		<td colspan="2">Server Events Configuration&nbsp;<a href="http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/" class="helpIcon" target="_blank"><bs:helpIcon/></a></td>
         	</tr>
+			<tr>
+				<!-- TODO: Automatically refresh this on URL or token change. -->
+				<th><label for="serverEventRoomId">Room: </label></th>
+				<td>
+				  <forms:select name="serverEventRoomId">
+				  	<forms:option value="">(None)</forms:option>
+                    <c:forEach var="roomIdEntry" items="${roomIdList}">
+                      <forms:option value="${roomIdEntry.value}" selected="${roomIdEntry.value == serverEventRoomId}">
+                        <c:out value="${roomIdEntry.key}"/>
+                      </forms:option>
+                    </c:forEach>
+                  </forms:select>
+                  &nbsp;
+                  <a href="#" onclick="return HipChatAdmin.save()">Save to reload</a>
+                </td>
+			</tr>
 			<tr>
 				<th><label for="serverStartupLabel">Server startup: </label></th>
 				<td>
