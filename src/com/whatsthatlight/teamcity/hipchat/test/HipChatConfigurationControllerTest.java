@@ -656,6 +656,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		String expectedApiUrl = "http://example.com/";
 		String expectedApiToken = "1234567890";
 		String expectedDefaultRoomId = "room1";
+		String expectedServerEventRoomId = "room2";
 		boolean expectedNotifyStatus = false;
 		boolean expectedEventStatus = true;
 		String expectedTemplate = "template";
@@ -688,6 +689,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		request.addParameters("apiUrl", expectedApiUrl);
 		request.addParameters("apiToken", expectedApiToken);
 		request.addParameters("defaultRoomId", expectedDefaultRoomId);
+		request.addParameters("serverEventRoomId", expectedServerEventRoomId);
 		request.addParameters("notify", Boolean.valueOf(expectedNotifyStatus));
 		// Events
 		request.addParameters("buildStarted", Boolean.valueOf(expectedEventStatus));
@@ -713,6 +715,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		AssertJUnit.assertEquals(expectedApiUrl, this.configuration.getApiUrl());
 		AssertJUnit.assertEquals(expectedApiToken, this.configuration.getApiToken());
 		AssertJUnit.assertEquals(expectedDefaultRoomId, this.configuration.getDefaultRoomId());
+		AssertJUnit.assertEquals(expectedServerEventRoomId, this.configuration.getServerEventRoomId());
 		AssertJUnit.assertEquals(expectedNotifyStatus, this.configuration.getDefaultNotifyStatus());
 		// Events
 		HipChatEventConfiguration actualEvents = this.configuration.getEvents();
@@ -771,6 +774,7 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		request.addParameters("apiUrl", expectedApiUrl);
 		request.addParameters("apiToken", expectedApiToken);
 		request.addParameters("defaultRoomId", "");
+		request.addParameters("serverEventRoomId", "");
 		request.addParameters("notify", Boolean.valueOf(expectedNotifyStatus));
 		// Events
 		request.addParameters("buildStarted", Boolean.valueOf(expectedEventStatus));
