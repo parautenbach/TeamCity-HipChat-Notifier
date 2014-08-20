@@ -156,6 +156,55 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 	}
 	
 	@Test
+	public void testFillModelUsingServerEventRoomId() throws Exception {
+		// Test parameters
+		int expectedModelSize = 28;
+		String expectedDefaultRoomId = "room1";
+		String expectedServerEventRoomId = "room2";
+		String expectedRoomName = "test room";
+		
+		ServerPaths serverPaths = org.mockito.Mockito.mock(ServerPaths.class);		
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.setServerEventRoomId(expectedServerEventRoomId);
+		HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+
+		// Expected rooms
+		int startIndex = 0;
+		int maxResults = 1;
+		List<HipChatRoom> roomItems = new ArrayList<HipChatRoom>();
+		roomItems.add(new HipChatRoom(expectedDefaultRoomId, null, expectedRoomName));
+		HipChatApiResultLinks roomLinks = new HipChatApiResultLinks();
+		HipChatRooms rooms = new HipChatRooms(roomItems, startIndex, maxResults, roomLinks);
+
+		// Processor mock
+		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
+		when(processor.getRooms(0)).thenReturn(rooms);
+
+		// Other page dependencies
+		PagePlaces pagePlaces = webFixture.getPagePlaces();
+		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
+        when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
+        HipChatServerExtension serverExtension = org.mockito.Mockito.mock(HipChatServerExtension.class);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
+        // The test page
+        HipChatConfigurationPageExtension myPage = new HipChatConfigurationPageExtension(pagePlaces, descriptor, configuration, processor, templates, serverExtension, emoticonCache);
+
+        // Execute
+		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
+		Map<String, Object> model = new HashMap<String, Object>();
+		myPage.fillModel(model, request);		
+		
+		System.out.println(model.get("apiUrl"));
+		
+		// Test
+		AssertJUnit.assertEquals(expectedModelSize, model.size());
+		AssertJUnit.assertEquals(expectedDefaultRoomId, model.get("defaultRoomId"));
+		AssertJUnit.assertEquals(expectedServerEventRoomId, model.get("serverEventRoomId"));
+	}
+	
+	@Test
 	public void testFillModelNoEventsConfiguration() throws Exception {
 		// Test parameters
 		int expectedModelSize = 20;

@@ -243,4 +243,12 @@ public class UtilsTest extends Utils {
 		assertEquals(expectedNumberOfRooms, actualRooms.size());
 	}
 	
+	@Test
+	public void testIsRoomIdNullOrNone() {
+		assertEquals(false, Utils.IsRoomIdNullOrNone(""));
+		assertEquals(false, Utils.IsRoomIdNullOrNone("room1"));
+		assertEquals(true, Utils.IsRoomIdNullOrNone("none"));
+		assertEquals(true, Utils.IsRoomIdNullOrNone(null));
+	}
+	
 }

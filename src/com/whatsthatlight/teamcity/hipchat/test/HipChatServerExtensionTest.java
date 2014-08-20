@@ -3453,6 +3453,151 @@ public class HipChatServerExtensionTest {
 	}
 	
 	@Test
+	public void testServerStartupAndShutdownEventUsingDefaultBuildEventRoomId() throws URISyntaxException, InterruptedException, IOException {
+		// Test parameters
+		String expectedServerStartupMessage = "Build server started.";
+		String expectedServerShutdownMessage = "Build server shutting down.";
+		boolean expectedNotificationStatus = true;
+		String expectedMessageColour = HipChatMessageColour.NEUTRAL;
+		String expectedMessageFormat = HipChatMessageFormat.HTML;
+		String expectedDefaultRoomId = "room_id";
+
+        // Ensure we get the default template.
+        File startuptemplate = new File("hipchat/serverStartupTemplate.ftl");
+        if (startuptemplate.exists()) {
+            assertTrue(startuptemplate.delete());
+        }
+        File shutdownTemplate = new File("hipchat/serverShutdownTemplate.ftl");
+        if (shutdownTemplate.exists()) {
+            assertTrue(shutdownTemplate.delete());
+        }
+
+        // Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
+		
+		// Mocks and other dependencies, and the extension
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.setServerEventRoomId(null);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
+		HipChatRoomNotification actualNotification = null;
+		String actualDefaultRoomId = null;
+		CallbackObject callbackObject = null;
+		
+		// Execute
+		extension.serverStartup();
+		event.doWait(1000);
+		assertTrue(event.isSet());
+		extension.serverShutdown();
+		event.doWait(1000);
+		assertTrue(event.isSet());
+		
+		// Test start-up
+		assertEquals(2, callbacks.size());
+		// Start-up
+		callbackObject = callbacks.get(0);
+		actualNotification = callbackObject.notification;
+		actualDefaultRoomId = callbackObject.roomId;
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedServerStartupMessage));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
+		// Shutdown
+		callbackObject = callbacks.get(1);
+		actualNotification = callbackObject.notification;
+		actualDefaultRoomId = callbackObject.roomId;
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedServerShutdownMessage));
+		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
+	}
+	
+	@Test
+	public void testServerStartupAndShutdownEventUsingServerEventRoomId() throws URISyntaxException, InterruptedException, IOException {
+		// Test parameters
+		String expectedServerStartupMessage = "Build server started.";
+		String expectedServerShutdownMessage = "Build server shutting down.";
+		boolean expectedNotificationStatus = true;
+		String expectedMessageColour = HipChatMessageColour.NEUTRAL;
+		String expectedMessageFormat = HipChatMessageFormat.HTML;
+		String defaultRoomId = "room_id1";
+		String expectedServerEventRoomId = "room_id2";
+
+        // Ensure we get the default template.
+        File startuptemplate = new File("hipchat/serverStartupTemplate.ftl");
+        if (startuptemplate.exists()) {
+            assertTrue(startuptemplate.delete());
+        }
+        File shutdownTemplate = new File("hipchat/serverShutdownTemplate.ftl");
+        if (shutdownTemplate.exists()) {
+            assertTrue(shutdownTemplate.delete());
+        }
+
+        // Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
+		
+		// Mocks and other dependencies, and the extension
+		MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(defaultRoomId);
+		configuration.setServerEventRoomId(expectedServerEventRoomId);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
+		HipChatRoomNotification actualNotification = null;
+		String actualDefaultRoomId = null;
+		CallbackObject callbackObject = null;
+		
+		// Execute start-up
+		extension.serverStartup();
+		event.doWait(1000);
+		assertTrue(event.isSet());
+		extension.serverShutdown();
+		event.doWait(1000);
+		assertTrue(event.isSet());
+		
+		// Test start-up
+		assertEquals(2, callbacks.size());
+		// Start-up
+		callbackObject = callbacks.get(0);
+		actualNotification = callbackObject.notification;
+		actualDefaultRoomId = callbackObject.roomId;
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedServerStartupMessage));
+		assertEquals(expectedServerEventRoomId, actualDefaultRoomId);
+		// Shutdown
+		callbackObject = callbacks.get(1);
+		actualNotification = callbackObject.notification;
+		actualDefaultRoomId = callbackObject.roomId;
+		System.out.println(actualNotification);
+		assertEquals(expectedMessageColour, actualNotification.color);
+		assertEquals(expectedMessageFormat, actualNotification.messageFormat);
+		assertEquals(expectedNotificationStatus, actualNotification.notify);
+		assertTrue(actualNotification.message.contains(expectedServerShutdownMessage));
+		assertEquals(expectedServerEventRoomId, actualDefaultRoomId);
+	}
+	
+	@Test
 	public void testStartupAndShutdownEventConfigurationIsNull() throws URISyntaxException, InterruptedException, IOException {
 		// Mocks and other dependencies
 		SBuildServer server = mock(SBuildServer.class);
