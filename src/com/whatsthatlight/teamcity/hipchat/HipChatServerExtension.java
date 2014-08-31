@@ -97,11 +97,24 @@ public class HipChatServerExtension extends BuildServerAdapter {
 	@Override
 	public void buildFinished(SRunningBuild build) {
 		super.buildFinished(build);
+		Branch branch = build.getBranch();
 		List<SFinishedBuild> buildHistory = build.getBuildType().getHistory();
 		SFinishedBuild previousBuild = null;
-		if (buildHistory.size() > 1) {
-			previousBuild = buildHistory.get(1);
+				
+		if (branch != null) {			
+			for (SFinishedBuild tmpBuild : buildHistory) {
+				Branch tmpBranch = tmpBuild.getBranch();
+				if ((build.getBuildId() != tmpBuild.getBuildId()) && tmpBranch.getName().equals(branch.getName())) {
+					previousBuild = tmpBuild;
+					break;
+				}
+			}
+		} else {
+			if (buildHistory.size() > 1) {
+				previousBuild = buildHistory.get(1);
+			}
 		}
+		
 		if (build.getBuildStatus().isSuccessful() && this.configuration.getEvents() != null && this.configuration.getEvents().getBuildSuccessfulStatus()) {
 			if (!this.configuration.getEvents().getOnlyAfterFirstBuildSuccessfulStatus() || previousBuild == null || previousBuild.getBuildStatus().isFailed()) {
 				this.processBuildEvent(build, TeamCityEvent.BUILD_SUCCESSFUL);

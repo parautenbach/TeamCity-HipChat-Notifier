@@ -309,6 +309,8 @@ public class HipChatConfigurationController extends BaseController {
 			this.configuration.getEvents().setBuildInterruptedStatus(configuration.getEvents().getBuildInterruptedStatus());
 			this.configuration.getEvents().setServerStartupStatus(configuration.getEvents().getServerStartupStatus());
 			this.configuration.getEvents().setServerShutdownStatus(configuration.getEvents().getServerShutdownStatus());
+			this.configuration.getEvents().setOnlyAfterFirstBuildSuccessfulStatus(configuration.getEvents().getOnlyAfterFirstBuildSuccessfulStatus());
+			this.configuration.getEvents().setOnlyAfterFirstBuildFailedStatus(configuration.getEvents().getOnlyAfterFirstBuildFailedStatus());
 		}
 		if (configuration.getProjectRoomMap() != null) {
 			for (HipChatProjectConfiguration projectConfiguration : configuration.getProjectRoomMap()) {
