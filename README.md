@@ -52,6 +52,9 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 # Change log
 
+## Version 0.7.1
+* Bug: Notify on first success or failure events wasn't taking branches into account (#34).
+
 ## Version 0.7.0
 * Enhancement: Specifying a dedicated room for server events (#33). To keep this backwards compatible, the default build events room will be used if no server events room has been configured.
 
