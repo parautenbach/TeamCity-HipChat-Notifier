@@ -22,6 +22,7 @@ import jetbrains.buildServer.serverSide.ServerPaths;
 
 import org.testng.annotations.Test;
 
+import com.whatsthatlight.teamcity.hipchat.HipChatApiResponseLinks;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticonSet;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageColour;
 import com.whatsthatlight.teamcity.hipchat.HipChatMessageFormat;
@@ -44,6 +45,10 @@ public class DummyTest {
 		// And another stupid one: Some hidden byte code and the only way to get full coverage is to call these methods
 		TeamCityEvent.values();
 		TeamCityEvent.valueOf("BUILD_STARTED");
+		
+		// We're not interested in testing Jackson
+		HipChatApiResponseLinks responseLinks = new HipChatApiResponseLinks();
+		responseLinks.handleUnknown("foo", "bar");
 	}
 
 }

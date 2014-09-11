@@ -16,10 +16,14 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonAnySetter;
 
 public class HipChatApiResponseLinks {
 
+	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
+	
 	@JsonProperty("self")
 	public String self;
 	
@@ -38,4 +42,10 @@ public class HipChatApiResponseLinks {
 		this.webhooks = webhooks;
 		this.members = members;
 	}
+	
+	@JsonAnySetter
+	public void handleUnknown(String key, Object value) {
+	    logger.debug(String.format("Unknown property: %s", key));
+	}
+	
 }

@@ -52,6 +52,9 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 # Change log
 
+## Version 0.7.2
+* Update: Recently released HipChat client went accord with API changes. This is an update to work against the new API (#35).
+
 ## Version 0.7.1
 * Bug: Notify on first success or failure events wasn't taking branches into account (#34).
 
