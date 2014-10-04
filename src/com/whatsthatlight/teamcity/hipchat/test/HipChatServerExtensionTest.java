@@ -270,10 +270,10 @@ public class HipChatServerExtensionTest {
 	@Test
 	public void testBuildStartedEventAndMessageDetails() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
-		String expectedBuildName = "Test Project :: Test Build Configuration (f����b��rba��)";
+		String expectedBuildName = "Test Project :: Test Build Configuration (fŏŏbārbaß)";
 		String expectedStartMessage = "started";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User (f����b��rba��)";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.INFO;
 		String expectedMessageFormat = HipChatMessageFormat.HTML;
@@ -388,6 +388,315 @@ public class HipChatServerExtensionTest {
 		assertTrue(actualNotification.message.contains("<img"));
 		assertTrue(actualNotification.message.contains(expectedBranchName));
 		assertEquals(expectedDefaultRoomId, actualDefaultRoomId);
+	}
+
+	@Test
+	public void testBuildStartedBranchFilterMatch() throws URISyntaxException, InterruptedException, IOException {
+		// Test parameters
+		boolean branchFilterEnabled = true;
+		String branchFilterRegex = "feature1|feature2|feature3";
+		String expectedBranchName = "feature2";
+		String expectedBuildName = "Test Project :: Test Build Configuration (fŏŏbārbaß)";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+		String rootUrl = "http://example.com";
+		String expectedBuildTypeId = "42";
+		long expectedBuildId = 24;
+		String expectedUser1Name = "foo";
+		String expectedUser2Name = "bar";
+		String expectedUser3Name = "baz";
+
+        // Ensure we get the default template.
+        File template = new File("hipchat/buildStartedTemplate.ftl");
+        if (template.exists()) {
+            assertTrue(template.delete());
+        }
+
+        // Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
+		
+		// Mocks and other dependencies
+		Branch branch = mock(Branch.class);
+		when(branch.getDisplayName()).thenReturn(expectedBranchName);
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);	
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn(expectedBuildId);
+		when(build.getBranch()).thenReturn(branch);
+		when(build.getProjectExternalId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn((long)expectedBuildId);
+		HashMap<String, String> additionalParameters = new HashMap<String, String>();
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(additionalParameters);
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
+
+		@SuppressWarnings("unchecked")
+		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
+		Set<SUser> users = new LinkedHashSet<SUser>();
+		SUser user1 = mock(SUser.class);
+		when(user1.getDescriptiveName()).thenReturn(expectedUser1Name);
+		users.add(user1);
+		SUser user2 = mock(SUser.class);
+		when(user2.getDescriptiveName()).thenReturn(expectedUser2Name);
+		users.add(user2);
+		SUser user3 = mock(SUser.class);
+		when(user3.getDescriptiveName()).thenReturn(expectedUser3Name);
+		users.add(user3);
+		when(userSet.getUsers()).thenReturn(users);
+		when(build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD)).thenReturn(userSet);
+				
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		when(server.getRootUrl()).thenReturn(rootUrl);
+		String workingDir = System.getProperty("user.dir");
+	    System.out.println("Current working directory : " + workingDir);
+	    MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.setBranchFilterEnabledStatus(branchFilterEnabled);
+		configuration.setBranchFilterRegex(branchFilterRegex);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
+		extension.changesLoaded(build);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
+		
+		// Test
+		assertFalse(event.isSet());
+	}
+
+	@Test
+	public void testBuildStartedBranchFilterNoMatch() throws URISyntaxException, InterruptedException, IOException {
+		// Test parameters
+		boolean branchFilterEnabled = true;
+		String branchFilterRegex = "feature1|feature2|feature3";
+		String expectedBranchName = "master";
+		String expectedBuildName = "Test Project :: Test Build Configuration (fŏŏbārbaß)";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+		String rootUrl = "http://example.com";
+		String expectedBuildTypeId = "42";
+		long expectedBuildId = 24;
+		String expectedUser1Name = "foo";
+		String expectedUser2Name = "bar";
+		String expectedUser3Name = "baz";
+
+        // Ensure we get the default template.
+        File template = new File("hipchat/buildStartedTemplate.ftl");
+        if (template.exists()) {
+            assertTrue(template.delete());
+        }
+
+        // Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
+		
+		// Mocks and other dependencies
+		Branch branch = mock(Branch.class);
+		when(branch.getDisplayName()).thenReturn(expectedBranchName);
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);	
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn(expectedBuildId);
+		when(build.getBranch()).thenReturn(branch);
+		when(build.getProjectExternalId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn((long)expectedBuildId);
+		HashMap<String, String> additionalParameters = new HashMap<String, String>();
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(additionalParameters);
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
+
+		@SuppressWarnings("unchecked")
+		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
+		Set<SUser> users = new LinkedHashSet<SUser>();
+		SUser user1 = mock(SUser.class);
+		when(user1.getDescriptiveName()).thenReturn(expectedUser1Name);
+		users.add(user1);
+		SUser user2 = mock(SUser.class);
+		when(user2.getDescriptiveName()).thenReturn(expectedUser2Name);
+		users.add(user2);
+		SUser user3 = mock(SUser.class);
+		when(user3.getDescriptiveName()).thenReturn(expectedUser3Name);
+		users.add(user3);
+		when(userSet.getUsers()).thenReturn(users);
+		when(build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD)).thenReturn(userSet);
+				
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		when(server.getRootUrl()).thenReturn(rootUrl);
+		String workingDir = System.getProperty("user.dir");
+	    System.out.println("Current working directory : " + workingDir);
+	    MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.setBranchFilterEnabledStatus(branchFilterEnabled);
+		configuration.setBranchFilterRegex(branchFilterRegex);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
+		extension.changesLoaded(build);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
+		
+		// Test
+		assertTrue(event.isSet());
+	}
+
+	@Test
+	public void testBuildStartedBranchFilterEnabledNoBranch() throws URISyntaxException, InterruptedException, IOException {
+		// E.g. SVN
+		// Test parameters
+		Branch branch = null;
+		boolean branchFilterEnabled = true;
+		String expectedBuildName = "Test Project :: Test Build Configuration (fŏŏbārbaß)";
+		String expectedBuildNumber = "0.0.0.0";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
+		boolean expectedNotificationStatus = true;
+		String expectedDefaultRoomId = "room_id";
+		String expectedProjectId = "project1";
+		String expectedParentProjectId = "_Root";
+		String rootUrl = "http://example.com";
+		String expectedBuildTypeId = "42";
+		long expectedBuildId = 24;
+		String expectedUser1Name = "foo";
+		String expectedUser2Name = "bar";
+		String expectedUser3Name = "baz";
+
+        // Ensure we get the default template.
+        File template = new File("hipchat/buildStartedTemplate.ftl");
+        if (template.exists()) {
+            assertTrue(template.delete());
+        }
+
+        // Callback closure
+		final ArrayList<CallbackObject> callbacks = new ArrayList<CallbackObject>();
+		final Event event = new Event();
+		HipChatRoomNotificationCallback callback = new HipChatRoomNotificationCallback(event, callbacks);
+		
+		// Mocks and other dependencies
+		SBuildType buildType = mock(SBuildType.class);
+		when(buildType.getFullName()).thenReturn(expectedBuildName);	
+		TriggeredBy triggeredBy = mock(TriggeredBy.class);
+		when(triggeredBy.getAsString()).thenReturn(expectedTriggerBy);
+		SRunningBuild build = mock(SRunningBuild.class);
+		when(build.getBuildType()).thenReturn(buildType);
+		when(build.isPersonal()).thenReturn(false);
+		when(build.getBuildNumber()).thenReturn(expectedBuildNumber);
+		when(build.getTriggeredBy()).thenReturn(triggeredBy);
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn(expectedBuildId);
+		when(build.getBranch()).thenReturn(branch);
+		when(build.getProjectExternalId()).thenReturn("");
+		when(build.getBuildTypeExternalId()).thenReturn(expectedBuildTypeId);
+		when(build.getBuildId()).thenReturn((long)expectedBuildId);
+		HashMap<String, String> additionalParameters = new HashMap<String, String>();
+		ParametersProvider parametersProvider = mock(ParametersProvider.class);
+		when(parametersProvider.getAll()).thenReturn(additionalParameters);
+		when(build.getParametersProvider()).thenReturn(parametersProvider);
+		SBuildAgent agent = mock(SBuildAgent.class);
+		when(agent.getAvailableParameters()).thenReturn(new HashMap<String, String>());
+		when(build.getAgent()).thenReturn(agent );
+
+		@SuppressWarnings("unchecked")
+		UserSet<SUser> userSet = (UserSet<SUser>) mock(UserSet.class);
+		Set<SUser> users = new LinkedHashSet<SUser>();
+		SUser user1 = mock(SUser.class);
+		when(user1.getDescriptiveName()).thenReturn(expectedUser1Name);
+		users.add(user1);
+		SUser user2 = mock(SUser.class);
+		when(user2.getDescriptiveName()).thenReturn(expectedUser2Name);
+		users.add(user2);
+		SUser user3 = mock(SUser.class);
+		when(user3.getDescriptiveName()).thenReturn(expectedUser3Name);
+		users.add(user3);
+		when(userSet.getUsers()).thenReturn(users);
+		when(build.getCommitters(SelectPrevBuildPolicy.SINCE_LAST_BUILD)).thenReturn(userSet);
+				
+		SProject parentProject = mock(SProject.class);
+		when(parentProject.getProjectId()).thenReturn(expectedParentProjectId);
+		SProject project = mock(SProject.class);
+		when(project.getProjectId()).thenReturn(expectedProjectId);
+		when(project.getParentProject()).thenReturn(parentProject);
+		ProjectManager projectManager = mock(ProjectManager.class);
+		when(projectManager.findProjectById(any(String.class))).thenReturn(project);
+		SBuildServer server = mock(SBuildServer.class);
+		when(server.getProjectManager()).thenReturn(projectManager);
+		when(server.getRootUrl()).thenReturn(rootUrl);
+		String workingDir = System.getProperty("user.dir");
+	    System.out.println("Current working directory : " + workingDir);
+	    MockHipChatNotificationProcessor processor = new MockHipChatNotificationProcessor(callback);
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setNotifyStatus(expectedNotificationStatus);
+		configuration.setDefaultRoomId(expectedDefaultRoomId);
+		configuration.setBranchFilterEnabledStatus(branchFilterEnabled);
+        ServerPaths serverPaths = mock(ServerPaths.class);
+        when(serverPaths.getConfigDir()).thenReturn(".");           
+        HipChatNotificationMessageTemplates templates = new HipChatNotificationMessageTemplates(serverPaths);
+		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
+
+		// Execute
+		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
+		extension.changesLoaded(build);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
+		
+		// Test
+		assertTrue(event.isSet());
 	}
 
 	@Test
@@ -4043,7 +4352,7 @@ public class HipChatServerExtensionTest {
 		configuration.setApiToken(apiToken);
 		configuration.setDefaultRoomId(actualRoomId);
 		configuration.setNotifyStatus(true);
-		String expectedTriggerBy = "A Test User (f����b��rba��)";
+		String expectedTriggerBy = "A Test User (fŏŏbārbaß)";
 		String expectedProjectId = "project1";
 		String expectedParentProjectId = "_Root";
 		String expectedBuildNumber = "0.0.0.0";
@@ -4098,7 +4407,7 @@ public class HipChatServerExtensionTest {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User (f����b��rba��)";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
@@ -4159,7 +4468,7 @@ public class HipChatServerExtensionTest {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User (f����b��rba��)";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
@@ -4220,7 +4529,7 @@ public class HipChatServerExtensionTest {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User (f����b��rba��)";
+		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
 		String expectedCanceledBy = "Cancel User";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
