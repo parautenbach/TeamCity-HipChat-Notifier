@@ -115,6 +115,8 @@ public class HipChatConfigurationController extends BaseController {
 		String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
 		String serverEventRoomId = request.getParameter(HipChatConfiguration.SERVER_EVENT_ROOM_ID_KEY);
 		String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
+	    String branchFilter = request.getParameter("branchFilter");
+	    String branchFilterRegex = request.getParameter("branchFilterRegex");
 		String buildStarted = request.getParameter(HipChatConfiguration.BUILD_STARTED_KEY);
 		String buildSuccessful = request.getParameter(HipChatConfiguration.BUILD_SUCCESSFUL_KEY);
 		String buildFailed = request.getParameter(HipChatConfiguration.BUILD_FAILED_KEY);
@@ -136,6 +138,8 @@ public class HipChatConfigurationController extends BaseController {
 		logger.debug(String.format("Trigger notification: %s", notify));
 		logger.debug("Events:");
 		logger.debug(String.format("\tDefault room ID: %s", defaultRoomId));
+	    logger.debug(String.format("\tBranch filter enabled: %s", new Object[] { branchFilter }));
+	    logger.debug(String.format("\tBranch filter regex: %s", new Object[] { branchFilterRegex }));
 		logger.debug(String.format("\tBuild started: %s", buildStarted));		
 		logger.debug(String.format("\tBuild successful: %s", onlyAfterFirstBuildSuccessful));
 		logger.debug(String.format("\t\tOnly after first: %s", buildSuccessful));
@@ -159,6 +163,8 @@ public class HipChatConfigurationController extends BaseController {
 		this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
 		this.configuration.setDefaultRoomId(defaultRoomId.equals("") ? null : defaultRoomId);
 		this.configuration.setServerEventRoomId(serverEventRoomId.equals("") ? null : serverEventRoomId);
+	    this.configuration.setBranchFilterEnabledStatus(Boolean.parseBoolean(branchFilter));
+	    this.configuration.setBranchFilterRegex(branchFilterRegex.equals("") ? null : branchFilterRegex);
 		HipChatEventConfiguration events = new HipChatEventConfiguration();
 		events.setBuildStartedStatus(Boolean.parseBoolean(buildStarted));
 		events.setBuildSuccessfulStatus(Boolean.parseBoolean(buildSuccessful));

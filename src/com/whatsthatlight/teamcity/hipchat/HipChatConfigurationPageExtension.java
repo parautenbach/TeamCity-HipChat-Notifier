@@ -87,6 +87,9 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		model.put(HipChatConfiguration.DISABLED_STATUS_KEY, this.configuration.getDisabledStatus());
 		model.put(HipChatConfiguration.EMOTICON_CACHE_SIZE_KEY, this.emoticonCache.getSize());
 		
+	    model.put("branchFilter", Boolean.valueOf(this.configuration.getBranchFilterEnabledStatus()));
+	    model.put("branchFilterRegex", this.configuration.getBranchFilterRegex());
+
 		if (this.configuration.getEvents() != null) {
 			model.put(HipChatConfiguration.BUILD_STARTED_KEY, this.configuration.getEvents().getBuildStartedStatus());
 			model.put(HipChatConfiguration.BUILD_SUCCESSFUL_KEY, this.configuration.getEvents().getBuildSuccessfulStatus());

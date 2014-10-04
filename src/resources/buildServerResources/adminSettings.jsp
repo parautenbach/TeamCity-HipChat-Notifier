@@ -102,6 +102,18 @@ limitations under the License.
 			</tr>
 			<tr>
 				<th>
+					<label for="branchFilterLabel">Branch filter: </label>
+				</th>
+				<td>
+					<textarea id="branchFilterRegex" name="branchFilterRegex" style="width: 92%;" placeholder="A regular expression to trigger notifications...">${branchFilterRegex}</textarea>
+					<div>
+						<forms:checkbox name="branchFilter" checked="${branchFilter}" value="${branchFilter}" />
+						<span style="color: #888; font-size: 90%;">When checked, branches (where supported) will be filtered inclusively according to the regular expression.</span>			
+					</div>
+				</td>
+			</tr>			
+			<tr>
+				<th>
 					<label for="buildStartedLabel">Build started: </label>
 				</th>
 				<td>
@@ -120,7 +132,7 @@ limitations under the License.
 					<input type="hidden" id="buildSuccessfulTemplateDefault" value="${buildSuccessfulTemplateDefault}" /><br>
 					<forms:checkbox name="buildSuccessful" checked="${buildSuccessful}" value="${buildSuccessful}"/>
 					<span style="color: #888; font-size: 90%;">When checked, a message will be sent when a finished build is successful.</span><br>
-					<span style="padding-left: 1.5em;"><forms:checkbox name="onlyAfterFirstBuildSuccessful" checked="${onlyAfterFirstBuildSuccessful}" value="${onlyAfterFirstBuildSuccessful}"/></span>
+					<span style="padding-left: 1.5em;"><forms:checkbox name="onlyAfterFirstBuildSuccessful" checked="${onlyAfterFirstBuildSuccessful}" value="${onlyAfterFirstBuildSuccessful}" onclick="if (this.checked) { jQuery('#buildSuccessful').prop('checked', true); jQuery('#buildSuccessful').prop('disabled', true); } else { jQuery('#buildSuccessful').prop('disabled', false); } return true;"/></span>
 					<span style="color: #888; font-size: 90%;">When checked, a message will be sent only when a the first build after a failed build is successful.</span>
 				</td>
 			</tr>
@@ -132,7 +144,7 @@ limitations under the License.
 					<input type="hidden" id="buildFailedTemplateDefault" value="${buildFailedTemplateDefault}" /><br>
 					<forms:checkbox name="buildFailed" checked="${buildFailed}" value="${buildFailed}"/>
 					<span style="color: #888; font-size: 90%;">When checked, a message will be sent when a finished build failed.</span><br>
-					<span style="padding-left: 1.5em;"><forms:checkbox name="onlyAfterFirstBuildFailed" checked="${onlyAfterFirstBuildFailed}" value="${onlyAfterFirstBuildFailed}"/></span>
+					<span style="padding-left: 1.5em;"><forms:checkbox name="onlyAfterFirstBuildFailed" checked="${onlyAfterFirstBuildFailed}" value="${onlyAfterFirstBuildFailed}" onclick="if (this.checked) { jQuery('#buildFailed').prop('checked', true); jQuery('#buildFailed').prop('disabled', true); } else { jQuery('#buildFailed').prop('disabled', false); } return true;"/></span>
 					<span style="color: #888; font-size: 90%;">When checked, a message will be sent only when a the first build after a successful build has failed.</span>
 				</td>
 			</tr>

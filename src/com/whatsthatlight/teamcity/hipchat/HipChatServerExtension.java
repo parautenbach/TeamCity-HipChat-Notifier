@@ -172,6 +172,16 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		try {
 			logger.info(String.format("Received %s build event", event));
 			if (!this.configuration.getDisabledStatus() && !build.isPersonal()) {
+				
+		        Branch branch = build.getBranch();
+		        if ((this.configuration.getBranchFilterEnabledStatus()) && (branch != null)) {
+		          String branchDisplayName = branch.getDisplayName();
+		          if (branchDisplayName.matches(this.configuration.getBranchFilterRegex())) {
+		            logger.debug(String.format("Branch %s skipped", new Object[] { branchDisplayName }));
+		            return;
+		          }
+		        }
+				
 				logger.info("Processing build event");
 				String message = createHtmlBuildEventMessage(build, event);
 				String colour = getBuildEventMessageColour(event);

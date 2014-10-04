@@ -660,6 +660,8 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		boolean expectedNotifyStatus = false;
 		boolean expectedEventStatus = true;
 		String expectedTemplate = "template";
+		boolean expectedBranchFilter = true;
+		String expectedBranchFilterRegex = "master";
 
 		// Prepare
 		HipChatEventConfiguration events = new HipChatEventConfiguration();
@@ -675,6 +677,8 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		this.configuration.setApiToken("test");
 		this.configuration.setDefaultRoomId("test");
 		this.configuration.setNotifyStatus(!expectedNotifyStatus);
+		this.configuration.setBranchFilterEnabledStatus(!expectedBranchFilter);
+		this.configuration.setBranchFilterRegex("test");
 		// Templates
 		this.templates.writeTemplate(TeamCityEvent.BUILD_STARTED, "test");
 		this.templates.writeTemplate(TeamCityEvent.BUILD_SUCCESSFUL, "test");
@@ -690,7 +694,8 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		request.addParameters("apiToken", expectedApiToken);
 		request.addParameters("defaultRoomId", expectedDefaultRoomId);
 		request.addParameters("serverEventRoomId", expectedServerEventRoomId);
-		request.addParameters("notify", Boolean.valueOf(expectedNotifyStatus));
+		request.addParameters("branchFilter", Boolean.valueOf(expectedBranchFilter));
+		request.addParameters("branchFilterRegex", expectedBranchFilterRegex);
 		// Events
 		request.addParameters("buildStarted", Boolean.valueOf(expectedEventStatus));
 		request.addParameters("buildSuccessful", Boolean.valueOf(expectedEventStatus));
@@ -717,6 +722,8 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		AssertJUnit.assertEquals(expectedDefaultRoomId, this.configuration.getDefaultRoomId());
 		AssertJUnit.assertEquals(expectedServerEventRoomId, this.configuration.getServerEventRoomId());
 		AssertJUnit.assertEquals(expectedNotifyStatus, this.configuration.getDefaultNotifyStatus());
+		AssertJUnit.assertEquals(expectedBranchFilter, this.configuration.getBranchFilterEnabledStatus());
+		AssertJUnit.assertEquals(expectedBranchFilterRegex, this.configuration.getBranchFilterRegex());
 		// Events
 		HipChatEventConfiguration actualEvents = this.configuration.getEvents();
 		AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getBuildStartedStatus());
@@ -745,6 +752,8 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		boolean expectedNotifyStatus = false;
 		boolean expectedEventStatus = true;
 		String expectedTemplate = "template";
+        boolean expectedBranchFilter = true;
+        String expectedBranchFilterRegex = "master";
 
 		// Prepare
 		HipChatEventConfiguration events = new HipChatEventConfiguration();
@@ -760,6 +769,8 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		this.configuration.setApiToken("test");
 		this.configuration.setDefaultRoomId("test");
 		this.configuration.setNotifyStatus(!expectedNotifyStatus);
+        this.configuration.setBranchFilterEnabledStatus(!expectedBranchFilter);
+        this.configuration.setBranchFilterRegex("test");
 		// Templates
 		this.templates.writeTemplate(TeamCityEvent.BUILD_STARTED, "test");
 		this.templates.writeTemplate(TeamCityEvent.BUILD_SUCCESSFUL, "test");
@@ -776,6 +787,8 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		request.addParameters("defaultRoomId", "");
 		request.addParameters("serverEventRoomId", "");
 		request.addParameters("notify", Boolean.valueOf(expectedNotifyStatus));
+		request.addParameters("branchFilter", Boolean.valueOf(expectedBranchFilter));
+		request.addParameters("branchFilterRegex", expectedBranchFilterRegex);
 		// Events
 		request.addParameters("buildStarted", Boolean.valueOf(expectedEventStatus));
 		request.addParameters("buildSuccessful", Boolean.valueOf(expectedEventStatus));

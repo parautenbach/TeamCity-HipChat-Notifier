@@ -140,7 +140,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		extension.serverStartup();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -180,7 +180,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		extension.serverStartup();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertFalse(event.isSet());
@@ -220,7 +220,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		extension.serverShutdown();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertTrue(event.isSet());
@@ -260,7 +260,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(null, configuration, processor, templates, emoticonCache);
 		extension.serverShutdown();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertFalse(event.isSet());
@@ -270,10 +270,10 @@ public class HipChatServerExtensionTest {
 	@Test
 	public void testBuildStartedEventAndMessageDetails() throws URISyntaxException, InterruptedException, IOException {
 		// Test parameters
-		String expectedBuildName = "Test Project :: Test Build Configuration (fŏŏbārbaß)";
+		String expectedBuildName = "Test Project :: Test Build Configuration (f����b��rba��)";
 		String expectedStartMessage = "started";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
+		String expectedTriggerBy = "Test User (f����b��rba��)";
 		boolean expectedNotificationStatus = true;
 		String expectedMessageColour = HipChatMessageColour.INFO;
 		String expectedMessageFormat = HipChatMessageFormat.HTML;
@@ -365,7 +365,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertTrue(event.isSet());
@@ -504,7 +504,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertTrue(event.isSet());
@@ -632,7 +632,7 @@ public class HipChatServerExtensionTest {
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.register();
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertTrue(event.isSet());
@@ -725,7 +725,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
         logger.removeAppender(appender);
 		
 		// Test
@@ -829,7 +829,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertTrue(event.isSet());
@@ -924,7 +924,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertFalse(event.isSet());
@@ -1102,7 +1102,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertFalse(event.isSet());
@@ -1171,7 +1171,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -1251,7 +1251,7 @@ public class HipChatServerExtensionTest {
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		event.clear();
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -1321,7 +1321,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertFalse(event.isSet());
@@ -1391,7 +1391,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertFalse(event.isSet());
@@ -1465,7 +1465,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -1546,7 +1546,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -1624,7 +1624,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -1704,7 +1704,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -1786,7 +1786,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -1871,7 +1871,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -1945,7 +1945,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 	
 		// Test
 		assertFalse(event.isSet());
@@ -2021,7 +2021,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.changesLoaded(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertFalse(event.isSet());
@@ -2100,7 +2100,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -2189,7 +2189,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -2283,7 +2283,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -2382,7 +2382,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -2486,7 +2486,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -2589,7 +2589,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -2688,7 +2688,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertFalse(event.isSet());
@@ -2746,7 +2746,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertFalse(event.isSet());
@@ -2855,7 +2855,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 
 		// Test
 		assertTrue(event.isSet());
@@ -2958,7 +2958,7 @@ public class HipChatServerExtensionTest {
         // Execute
         HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
         extension.buildFinished(build);
-        event.doWait(1000);
+        event.doWait(Constants.NO_EVENT_TIMEOUT);
 
         // Test
         assertTrue(event.isSet());
@@ -3057,7 +3057,7 @@ public class HipChatServerExtensionTest {
         // Execute
         HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
         extension.buildFinished(build);
-        event.doWait(1000);
+        event.doWait(Constants.NO_EVENT_TIMEOUT);
 
         // Test
         assertTrue(event.isSet());
@@ -3174,7 +3174,7 @@ public class HipChatServerExtensionTest {
         // Execute
         HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
         extension.buildFinished(build);
-        event.doWait(1000);
+        event.doWait(Constants.NO_EVENT_TIMEOUT);
 
         // Test
         assertTrue(event.isSet());
@@ -3278,7 +3278,7 @@ public class HipChatServerExtensionTest {
         // Execute
         HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
         extension.buildFinished(build);
-        event.doWait(1000);
+        event.doWait(Constants.NO_EVENT_TIMEOUT);
 
         // Test
         assertTrue(event.isSet());
@@ -3396,7 +3396,7 @@ public class HipChatServerExtensionTest {
         // Execute
         HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
         extension.buildFinished(build);
-        event.doWait(1000);
+        event.doWait(Constants.NO_EVENT_TIMEOUT);
 
         // Test
         assertTrue(event.isSet());
@@ -3488,7 +3488,7 @@ public class HipChatServerExtensionTest {
         // Execute
         HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
         extension.buildFinished(build);
-        event.doWait(1000);
+        event.doWait(Constants.NO_EVENT_TIMEOUT);
 
         // Test
         assertFalse(event.isSet());
@@ -3546,7 +3546,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildFinished(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertFalse(event.isSet());
@@ -3663,7 +3663,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildInterrupted(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertTrue(event.isSet());
@@ -3751,13 +3751,13 @@ public class HipChatServerExtensionTest {
 		
 		// Execute start-up
 		extension.serverStartup();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		assertTrue(event.isSet());
 				
 		// Execute shutdown
 		event.clear();
 		extension.serverShutdown();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		assertTrue(event.isSet());
 		
 		// Test start-up
@@ -3827,10 +3827,10 @@ public class HipChatServerExtensionTest {
 		
 		// Execute
 		extension.serverStartup();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		assertTrue(event.isSet());
 		extension.serverShutdown();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		assertTrue(event.isSet());
 		
 		// Test start-up
@@ -3900,10 +3900,10 @@ public class HipChatServerExtensionTest {
 		
 		// Execute start-up
 		extension.serverStartup();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		assertTrue(event.isSet());
 		extension.serverShutdown();
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		assertTrue(event.isSet());
 		
 		// Test start-up
@@ -4043,7 +4043,7 @@ public class HipChatServerExtensionTest {
 		configuration.setApiToken(apiToken);
 		configuration.setDefaultRoomId(actualRoomId);
 		configuration.setNotifyStatus(true);
-		String expectedTriggerBy = "A Test User (fŏŏbārbaß)";
+		String expectedTriggerBy = "A Test User (f����b��rba��)";
 		String expectedProjectId = "project1";
 		String expectedParentProjectId = "_Root";
 		String expectedBuildNumber = "0.0.0.0";
@@ -4098,7 +4098,7 @@ public class HipChatServerExtensionTest {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
+		String expectedTriggerBy = "Test User (f����b��rba��)";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
@@ -4159,7 +4159,7 @@ public class HipChatServerExtensionTest {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
+		String expectedTriggerBy = "Test User (f����b��rba��)";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
 		configuration.setApiToken(apiToken);
@@ -4220,7 +4220,7 @@ public class HipChatServerExtensionTest {
 		// Test parameters
 		String expectedBuildName = "Test Project :: Test Build Configuration";
 		String expectedBuildNumber = "0.0.0.0";
-		String expectedTriggerBy = "Test User (fŏŏbārbaß)";
+		String expectedTriggerBy = "Test User (f����b��rba��)";
 		String expectedCanceledBy = "Cancel User";
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
@@ -4341,7 +4341,7 @@ public class HipChatServerExtensionTest {
 		// Execute
 		HipChatServerExtension extension = new HipChatServerExtension(server, configuration, processor, templates, emoticonCache);
 		extension.buildInterrupted(build);
-		event.doWait(1000);
+		event.doWait(Constants.NO_EVENT_TIMEOUT);
 		
 		// Test
 		assertFalse(event.isSet());

@@ -49,7 +49,9 @@ public class HipChatConfiguration {
 	public static final String EMOTICON_CACHE_SIZE_KEY = "emoticonCacheSize";
 	public static final String ONLY_AFTER_FIRST_BUILD_SUCCESSFUL_KEY = "onlyAfterFirstBuildSuccessful";
 	public static final String ONLY_AFTER_FIRST_BUILD_FAILED_KEY = "onlyAfterFirstBuildFailed";
-
+	public static final String BRANCH_FILTER_KEY = "branchFilter";
+	public static final String BRANCH_FILTER_REGEX_KEY = "branchFilterRegex";
+	  
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;
 
@@ -75,6 +77,12 @@ public class HipChatConfiguration {
 	@XStreamAlias(HipChatConfiguration.EVENTS_KEY)
 	private HipChatEventConfiguration events = new HipChatEventConfiguration();
 	
+	@XStreamAlias("branchFilter")
+	private boolean branchFilterEnabled;
+
+	@XStreamAlias("branchFilterRegex")
+	private String branchFilterRegex;
+
 	public HipChatConfiguration() {
 		// Intentionally left empty
 	}
@@ -137,7 +145,15 @@ public class HipChatConfiguration {
 	public String getServerEventRoomId() {
 		return this.serverEventRoomId;
 	}
-	
+
+	public boolean getBranchFilterEnabledStatus() {
+		return this.branchFilterEnabled;
+	}
+
+	public String getBranchFilterRegex() {
+		return this.branchFilterRegex;
+	}
+		  
 	public void setApiToken(String token) {
 		this.apiToken = token;
 	}
@@ -163,4 +179,12 @@ public class HipChatConfiguration {
 		this.serverEventRoomId = roomId;
 	}
 	
+	public void setBranchFilterEnabledStatus(boolean status) {
+		this.branchFilterEnabled = status;
+	}
+
+	public void setBranchFilterRegex(String regex) {
+		this.branchFilterRegex = regex;
+	}
+
 }

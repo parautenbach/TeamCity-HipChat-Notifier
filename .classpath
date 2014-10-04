@@ -83,7 +83,7 @@
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/jsr305-1.3.9.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/jstl.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/log4j-1.2.12.jar"/>
-	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/lucene-core-2.9.1.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/lucene-core-2.9.4.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/mail.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/nekohtml.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/notificator-common.jar"/>
@@ -113,7 +113,7 @@
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/tomcat-juli-7.0.23.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/toolLoader.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/trove4j.jar"/>
-	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/user-agent-utils-1.12.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/UserAgentUtils-1.14-snapshot.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/util.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/web.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/xercesImpl.jar"/>
