@@ -1,6 +1,7 @@
 Version 0.7.3
-* linked
-* branches
+* linked first notify check boxes to parent
+* branch filters
+* template validation before saving configuration
 
 Version 0.7.2
 * Update: Recently released HipChat client went accord with API changes. This is an update to work against the new API (#35).

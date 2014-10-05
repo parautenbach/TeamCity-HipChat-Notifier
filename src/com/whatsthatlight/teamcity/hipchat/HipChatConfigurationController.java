@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpStatus;
@@ -65,7 +67,9 @@ public class HipChatConfigurationController extends BaseController {
 	private static final String HIPCHAT_CONFIG_FILE = "hipchat.xml";
 	public static final String HIPCHAT_CONFIG_DIRECTORY = "hipchat";
 	private static final String SAVED_ID = "configurationSaved";
+	private static final String NOT_SAVED_ID = "configurationNotSaved";
 	private static final String SAVED_MESSAGE = "Saved";
+	private static final String NOT_SAVED_TEMPLATE_VALIDATION_FAILED = "Template validation failed. Check the FreeMarker documentation for syntax.";
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	private String configFilePath;
 
@@ -103,6 +107,16 @@ public class HipChatConfigurationController extends BaseController {
 		this.configuration.setProjectConfiguration(projectConfiguration);
 		this.getOrCreateMessages(request).addMessage(SAVED_ID, SAVED_MESSAGE);
 		this.saveConfiguration();
+	}
+	
+	private static boolean validateTemplates(List<String> templateStrings) {
+		for (String templateString : templateStrings) {
+			if (!HipChatNotificationMessageTemplates.validateTemplate(templateString)) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	private void handleConfigurationChange(HttpServletRequest request) throws IOException {
@@ -157,6 +171,19 @@ public class HipChatConfigurationController extends BaseController {
 		logger.debug(String.format("\tServer startup: %s", serverStartupTemplate));
 		logger.debug(String.format("\tServer shutdown: %s", serverShutdownTemplate));
 		
+		// Validation
+		ArrayList<String> templateStrings = new ArrayList<String>();
+		templateStrings.add(buildStartedTemplate);
+		templateStrings.add(buildSuccessfulTemplate);
+		templateStrings.add(buildSuccessfulTemplate);
+		templateStrings.add(buildInterruptedTemplate);
+		templateStrings.add(serverStartupTemplate);
+		templateStrings.add(serverShutdownTemplate);
+		if (!validateTemplates(templateStrings)) {
+			this.getOrCreateMessages(request).addMessage(NOT_SAVED_ID, NOT_SAVED_TEMPLATE_VALIDATION_FAILED);
+			return;
+		}
+
 		// Save the configuration
 		this.configuration.setApiUrl(apiUrl);
 		this.configuration.setApiToken(apiToken);

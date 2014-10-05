@@ -744,6 +744,150 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 	}
 
 	@Test
+	public void testConfigurationTemplateValidationFails() throws Exception {
+		// Issue #39
+		// Test parameters
+		String expectedApiUrl = "http://example.com/";
+		String expectedApiToken = "1234567890";
+		String expectedDefaultRoomId = "room1";
+		String expectedServerEventRoomId = "room2";
+		boolean expectedEventStatus = true;
+		// The if's condition is faulty as the variable is wrapped in ${...}
+		String testTemplate = "<#if ${.data_model[\"system.deployBuildNumber\"]}> ${.data_model[\"system.deployBuildNumber\"]} is being deployed</#if>";
+		boolean expectedBranchFilter = true;
+		String expectedBranchFilterRegex = "master";
+
+		// Prepare
+		HipChatEventConfiguration events = new HipChatEventConfiguration();
+		// Global
+		this.configuration.setEvents(events);
+		this.configuration.setBranchFilterEnabledStatus(!expectedBranchFilter);
+		this.configuration.setBranchFilterRegex("test");
+
+		// Mocks
+		MockRequest request = new MockRequest();
+		request.addParameters("edit", "1");
+		request.addParameters("apiUrl", expectedApiUrl);
+		request.addParameters("apiToken", expectedApiToken);
+		request.addParameters("defaultRoomId", expectedDefaultRoomId);
+		request.addParameters("serverEventRoomId", expectedServerEventRoomId);
+		request.addParameters("branchFilter", Boolean.valueOf(expectedBranchFilter));
+		request.addParameters("branchFilterRegex", expectedBranchFilterRegex);
+		// Events
+		request.addParameters("buildStarted", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("buildSuccessful", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("buildFailed", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("buildInterrupted", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("serverStartup", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("serverShutdown", Boolean.valueOf(expectedEventStatus));
+		// Templates
+		request.addParameters("buildStartedTemplate", testTemplate);
+		request.addParameters("buildSuccessfulTemplate", testTemplate);
+		request.addParameters("buildFailedTemplate", testTemplate);
+		request.addParameters("buildInterruptedTemplate", testTemplate);
+		request.addParameters("serverStartupTemplate", testTemplate);
+		request.addParameters("serverShutdownTemplate", testTemplate);
+		this.myRequest = request;
+
+		// Execute -- and don't blow up
+		processRequest();
+	}
+
+	@Test
+	public void testConfigurationEmptyBranchFilterRegexTranslatesToNull() throws Exception {
+		// Test parameters
+		String expectedTemplate = "template";
+		boolean expectedBranchFilter = true;
+		String expectedBranchFilterRegex = null;
+		String inputBranchFilterRegex = "";
+		String expectedApiUrl = "http://example.com/";
+		String expectedApiToken = "1234567890";
+		String expectedDefaultRoomId = "room1";
+		String expectedServerEventRoomId = "room2";
+		boolean expectedNotifyStatus = false;
+		boolean expectedEventStatus = true;
+
+		// Prepare
+		HipChatEventConfiguration events = new HipChatEventConfiguration();
+		events.setBuildStartedStatus(!expectedEventStatus);
+		events.setBuildSuccessfulStatus(!expectedEventStatus);
+		events.setBuildInterruptedStatus(!expectedEventStatus);
+		events.setBuildFailedStatus(!expectedEventStatus);
+		events.setServerStartupStatus(!expectedEventStatus);
+		events.setServerShutdownStatus(!expectedEventStatus);
+		// Global
+		this.configuration.setEvents(events);
+		this.configuration.setApiUrl("test");
+		this.configuration.setApiToken("test");
+		this.configuration.setDefaultRoomId("test");
+		this.configuration.setNotifyStatus(!expectedNotifyStatus);
+		this.configuration.setBranchFilterEnabledStatus(!expectedBranchFilter);
+		this.configuration.setBranchFilterRegex("test");
+		// Templates
+		this.templates.writeTemplate(TeamCityEvent.BUILD_STARTED, "test");
+		this.templates.writeTemplate(TeamCityEvent.BUILD_SUCCESSFUL, "test");
+		this.templates.writeTemplate(TeamCityEvent.BUILD_INTERRUPTED, "test");
+		this.templates.writeTemplate(TeamCityEvent.BUILD_FAILED, "test");
+		this.templates.writeTemplate(TeamCityEvent.SERVER_STARTUP, "test");
+		this.templates.writeTemplate(TeamCityEvent.SERVER_SHUTDOWN, "test");
+
+		// Mocks
+		MockRequest request = new MockRequest();
+		request.addParameters("edit", "1");
+		request.addParameters("apiUrl", expectedApiUrl);
+		request.addParameters("apiToken", expectedApiToken);
+		request.addParameters("defaultRoomId", expectedDefaultRoomId);
+		request.addParameters("serverEventRoomId", expectedServerEventRoomId);
+		request.addParameters("branchFilter", Boolean.valueOf(expectedBranchFilter));
+		request.addParameters("branchFilterRegex", inputBranchFilterRegex);
+		// Events
+		request.addParameters("buildStarted", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("buildSuccessful", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("buildFailed", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("buildInterrupted", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("serverStartup", Boolean.valueOf(expectedEventStatus));
+		request.addParameters("serverShutdown", Boolean.valueOf(expectedEventStatus));
+		// Templates
+		request.addParameters("buildStartedTemplate", expectedTemplate);
+		request.addParameters("buildSuccessfulTemplate", expectedTemplate);
+		request.addParameters("buildFailedTemplate", expectedTemplate);
+		request.addParameters("buildInterruptedTemplate", expectedTemplate);
+		request.addParameters("serverStartupTemplate", expectedTemplate);
+		request.addParameters("serverShutdownTemplate", expectedTemplate);
+		this.myRequest = request;
+
+		// Execute
+		ModelAndView result = processRequest();
+
+		// Test
+		AssertJUnit.assertNull(result);
+		AssertJUnit.assertEquals(expectedApiUrl, this.configuration.getApiUrl());
+		AssertJUnit.assertEquals(expectedApiToken, this.configuration.getApiToken());
+		AssertJUnit.assertEquals(expectedDefaultRoomId, this.configuration.getDefaultRoomId());
+		AssertJUnit.assertEquals(expectedServerEventRoomId, this.configuration.getServerEventRoomId());
+		AssertJUnit.assertEquals(expectedNotifyStatus, this.configuration.getDefaultNotifyStatus());
+		AssertJUnit.assertEquals(expectedBranchFilter, this.configuration.getBranchFilterEnabledStatus());
+		AssertJUnit.assertEquals(expectedBranchFilterRegex, this.configuration.getBranchFilterRegex());
+		// Events
+		HipChatEventConfiguration actualEvents = this.configuration.getEvents();
+		AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getBuildStartedStatus());
+		AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getBuildSuccessfulStatus());
+		AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getBuildInterruptedStatus());
+		AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getBuildFailedStatus());
+		AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getServerStartupStatus());
+		AssertJUnit.assertEquals(expectedEventStatus, actualEvents.getServerShutdownStatus());
+		// Templates
+		System.out.println(expectedTemplate);
+		System.out.println(this.templates.readTemplate(TeamCityEvent.BUILD_STARTED));
+		AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.BUILD_STARTED))));
+		AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.BUILD_SUCCESSFUL))));
+		AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.BUILD_INTERRUPTED))));
+		AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.BUILD_FAILED))));
+		AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.SERVER_STARTUP))));
+		AssertJUnit.assertTrue(expectedTemplate.equals(renderTemplate(this.templates.readTemplate(TeamCityEvent.SERVER_SHUTDOWN))));
+	}
+
+	@Test
 	public void testConfigurationChangeNullRoomId() throws Exception {
 		// Test parameters
 		String expectedApiUrl = "http://example.com/";

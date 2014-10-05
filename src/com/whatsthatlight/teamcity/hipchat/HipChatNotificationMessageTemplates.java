@@ -117,7 +117,7 @@ public class HipChatNotificationMessageTemplates {
 		if (fullPath.exists()) {
 			return this.config.getTemplate(templateName + TEMPLATE_NAME_EXTENSION);
 		}
-		return createDefaultTemplate(this.defaultTemplateCache.get(event));		
+		return createTemplate(this.defaultTemplateCache.get(event));		
 	}
 
 	public void writeTemplate(TeamCityEvent event, String template) throws IOException {
@@ -139,12 +139,22 @@ public class HipChatNotificationMessageTemplates {
 		return filePath.getCanonicalPath();
 	}
 
-	private static Template createDefaultTemplate(String templateString) throws IOException {
+	private static Template createTemplate(String templateString) throws IOException {
 		String templateName = "template";
 		StringTemplateLoader loader = new StringTemplateLoader();
 		loader.putTemplate(templateName, templateString);
 		Configuration config = new Configuration();
 		config.setTemplateLoader(loader);
 		return config.getTemplate(templateName);
+	}
+	
+	public static boolean validateTemplate(String templateString) {
+		try {
+			createTemplate(templateString);
+			return true;
+		} catch (IOException e) {
+			logger.debug(e);
+			return false;
+		}
 	}
 }
