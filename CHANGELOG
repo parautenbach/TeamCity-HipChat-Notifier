@@ -1,7 +1,8 @@
-Version 0.7.3
+Version 0.8.0 (prep)
 * linked first notify check boxes to parent
 * branch filters
 * template validation before saving configuration
+* stand-alone hipchat server support
 
 Version 0.7.2
 * Update: Recently released HipChat client went accord with API changes. This is an update to work against the new API (#35).

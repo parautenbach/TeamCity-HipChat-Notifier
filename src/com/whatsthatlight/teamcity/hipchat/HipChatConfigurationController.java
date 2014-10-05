@@ -298,25 +298,23 @@ public class HipChatConfigurationController extends BaseController {
 
 	private void upgradeConfigurationFromV0dot1ToV0dot2() throws IOException, SAXException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException {
 		File configFile = new File(this.configFilePath);
-		if (configFile.exists()) {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document document = builder.parse(configFile);
-			Element rootElement = document.getDocumentElement();
-			NodeList nodes = rootElement.getChildNodes();
-			for (int i = 0; i < nodes.getLength(); i++) {
-				if (nodes.item(i).getNodeName().equals(HipChatConfiguration.DEFAULT_ROOM_ID_KEY_V0DOT1) && nodes.item(i) instanceof Element) {
-					Element roomElement = (Element)nodes.item(i);
-					document.renameNode(roomElement, roomElement.getNamespaceURI(), HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
-				}
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.parse(configFile);
+		Element rootElement = document.getDocumentElement();
+		NodeList nodes = rootElement.getChildNodes();
+		for (int i = 0; i < nodes.getLength(); i++) {
+			if (nodes.item(i).getNodeName().equals(HipChatConfiguration.DEFAULT_ROOM_ID_KEY_V0DOT1)) {
+				Element roomElement = (Element)nodes.item(i);
+				document.renameNode(roomElement, roomElement.getNamespaceURI(), HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
 			}
-			
-			// Save
-			Transformer transformer = TransformerFactory.newInstance().newTransformer();
-			Result output = new StreamResult(configFile);
-			Source input = new DOMSource(document);
-			transformer.transform(input, output);
 		}
+
+		// Save
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Result output = new StreamResult(configFile);
+		Source input = new DOMSource(document);
+		transformer.transform(input, output);
 	}
 	
 	public void loadConfiguration() throws IOException {

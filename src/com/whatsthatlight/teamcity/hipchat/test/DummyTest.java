@@ -34,7 +34,7 @@ public class DummyTest {
 	@Test
 	public void forCoverageOnly() throws IOException {
 		// EMMA doesn't cover these classes fully, as their constructors are never invoked
-		// The problem is that they are effectively static classes, but there's no support for static classes in Java
+		// The problem is that they are effectively static classes, but there's no direct support for static classes in Java
 		new HipChatMessageColour();
 		new HipChatMessageFormat();
 		new HipChatEmoticonSet();
