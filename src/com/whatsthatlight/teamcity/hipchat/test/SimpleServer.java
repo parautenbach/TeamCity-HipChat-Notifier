@@ -20,16 +20,20 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
 public class SimpleServer implements Runnable {
-	
-	org.eclipse.jetty.server.Server server;
-	Thread thread;
+		
+	private org.eclipse.jetty.server.Server server;
+	private Thread thread;
 	
 	public SimpleServer(int port, AbstractHandler handler) {
+		this(port, handler, false);
+	}
+
+	public SimpleServer(int port, AbstractHandler handler, boolean secure) {
 		this.server = new Server(port);
 		this.server.setHandler(handler);
 		this.thread = new Thread(this);
 	}
-	
+
 	public void run() {
 		try {
 			this.server.start();

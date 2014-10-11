@@ -52,7 +52,7 @@ public class Utils {
 				map.put(room.name, room.id);
 			}
 			startIndex = startIndex + rooms.maxResults;
-		} while (rooms.links.next != null);
+		} while (rooms.links != null && rooms.links.next != null);
 		return map;
 	}
 	

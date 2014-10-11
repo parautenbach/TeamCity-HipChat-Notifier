@@ -38,7 +38,6 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.WriterAppender;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.eclipse.jetty.server.Request;
-
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
@@ -55,6 +54,13 @@ import com.whatsthatlight.teamcity.hipchat.HipChatRoomNotification;
 import com.whatsthatlight.teamcity.hipchat.HipChatRooms;
 
 import org.eclipse.jetty.server.handler.AbstractHandler;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.*;
 
 public class HipChatApiProcessorTest {
 
@@ -545,6 +551,41 @@ public class HipChatApiProcessorTest {
 	}
 	
 	@Test
+	public void testTestAuthenticationBypassSslCertCheckSuccess() throws Exception {
+		// Test parameters
+		boolean bypassSsl = true;
+		int expectedStatusCode = HttpServletResponse.SC_ACCEPTED;
+		String host = "localhost";
+		int httpsPort = 8443;
+		URI uri = new URI(String.format("https://%s:%s/v2/", host, httpsPort));
+		String token = "token";
+
+		// Setup
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setBypassSslCheck(bypassSsl);
+		configuration.setApiUrl(uri.toString());
+		configuration.setApiToken(token);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+
+		// Mocks
+        WireMockConfiguration config = wireMockConfig().httpsPort(httpsPort);
+        WireMockServer wireMockServer = new WireMockServer(config);
+        wireMockServer.start();
+        WireMock.configure();
+        stubFor(get(urlMatching("/v2/.*")).willReturn(aResponse().withStatus(expectedStatusCode)));
+		try {
+			// Execute
+			boolean actualAuthResult = processor.testAuthentication();
+
+			// Test
+			assertTrue(actualAuthResult);		
+		} finally {
+			// Clean up
+	        wireMockServer.stop();
+		}
+	}
+
+	@Test
 	public void testTestAuthenticationFailure() throws Exception {
 		// Test parameters
 		int expectedStatusCode = HttpServletResponse.SC_BAD_REQUEST;
@@ -614,6 +655,21 @@ public class HipChatApiProcessorTest {
 
 		String apiUrl = "https://api.hipchat.com/v2/";
 		String apiToken = "token";
+
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+
+		assertTrue(processor.testAuthentication());
+	}
+	
+	@Test(enabled = false)
+	public void testTestAuthenticationWithSelfSignedCertManual() throws URISyntaxException {
+
+		String apiUrl = "https://192.168.1.55/v2/";
+		String apiToken = "iTnXh0pVqSueht2epR7sj0qLQbUjn4jNsTYi7Ct1";
 
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);

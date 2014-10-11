@@ -51,6 +51,7 @@ public class HipChatConfiguration {
 	public static final String ONLY_AFTER_FIRST_BUILD_FAILED_KEY = "onlyAfterFirstBuildFailed";
 	public static final String BRANCH_FILTER_KEY = "branchFilter";
 	public static final String BRANCH_FILTER_REGEX_KEY = "branchFilterRegex";
+	public static final String BYPASS_SSL_CHECK = "bypassSslCheck";
 	  
 	@XStreamAlias(API_TOKEN_KEY)
 	private String apiToken = null;
@@ -77,12 +78,15 @@ public class HipChatConfiguration {
 	@XStreamAlias(HipChatConfiguration.EVENTS_KEY)
 	private HipChatEventConfiguration events = new HipChatEventConfiguration();
 	
-	@XStreamAlias("branchFilter")
+	@XStreamAlias(BRANCH_FILTER_KEY)
 	private boolean branchFilterEnabled;
 
-	@XStreamAlias("branchFilterRegex")
+	@XStreamAlias(BRANCH_FILTER_REGEX_KEY)
 	private String branchFilterRegex;
 
+	@XStreamAlias(BYPASS_SSL_CHECK)
+	private boolean bypassSslCheck;
+	
 	public HipChatConfiguration() {
 		// Intentionally left empty
 	}
@@ -153,6 +157,10 @@ public class HipChatConfiguration {
 	public String getBranchFilterRegex() {
 		return this.branchFilterRegex;
 	}
+	
+	public boolean getBypassSslCheck() {
+		return this.bypassSslCheck;
+	}
 		  
 	public void setApiToken(String token) {
 		this.apiToken = token;
@@ -187,4 +195,8 @@ public class HipChatConfiguration {
 		this.branchFilterRegex = regex;
 	}
 
+	public void setBypassSslCheck(boolean bypassSslCheck) {
+		this.bypassSslCheck = bypassSslCheck;
+	}
+	
 }

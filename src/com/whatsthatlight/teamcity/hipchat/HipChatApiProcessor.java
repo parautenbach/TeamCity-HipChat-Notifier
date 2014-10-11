@@ -21,6 +21,9 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import org.apache.http.HttpHeaders;
@@ -30,8 +33,13 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +61,7 @@ public class HipChatApiProcessor {
 			String authorisationHeader = String.format("Bearer %s", this.configuration.getApiToken());
 
 			// Make request
-			HttpClient client = HttpClientBuilder.create().build();
+			HttpClient client = createClient();
 			HttpGet getRequest = new HttpGet(uri.toString());
 			getRequest.addHeader(HttpHeaders.AUTHORIZATION, authorisationHeader);
 			getRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
@@ -80,7 +88,7 @@ public class HipChatApiProcessor {
 			String authorisationHeader = String.format("Bearer %s", this.configuration.getApiToken());
 
 			// Make request
-			HttpClient client = HttpClientBuilder.create().build();
+			HttpClient client = createClient();
 			HttpGet getRequest = new HttpGet(uri.toString());
 			getRequest.addHeader(HttpHeaders.AUTHORIZATION, authorisationHeader);
 			getRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
@@ -113,7 +121,7 @@ public class HipChatApiProcessor {
 			logger.debug(json);
 
 			// Make request
-			HttpClient client = HttpClientBuilder.create().build();
+			HttpClient client = createClient();
 			HttpPost postRequest = new HttpPost(uri.toString());
 			postRequest.addHeader(HttpHeaders.AUTHORIZATION, authorisationHeader);
 			postRequest.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
@@ -134,7 +142,7 @@ public class HipChatApiProcessor {
 			URI uri = new URI(String.format("%s%s", this.configuration.getApiUrl(), resource));
 
 			// Make request
-			HttpClient client = HttpClientBuilder.create().build();
+			HttpClient client = createClient();
 			HttpGet getRequest = new HttpGet(uri.toString());
 			HttpResponse postResponse = client.execute(getRequest);
 			StatusLine status = postResponse.getStatusLine();
@@ -149,5 +157,18 @@ public class HipChatApiProcessor {
 		
 		return false;		
 	}
-	
+
+	private CloseableHttpClient createClient() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+		if (this.configuration.getBypassSslCheck()) {
+			logger.warn("SSL check being bypassed");
+			SSLContextBuilder builder = new SSLContextBuilder();
+			builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+			SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(builder.build(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(socketFactory).build();
+			return client;
+		} else {
+			return HttpClientBuilder.create().build();
+		}
+	}
+
 }
