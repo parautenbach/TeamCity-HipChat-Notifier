@@ -75,21 +75,21 @@
 		<echo>
 	      Source:         ${src}
 	      Classes:        ${classes}
-		  Classpath:      ${manifest.classpath}
+          Classpath:      ${manifest.classpath}
 	      Resources:      ${resources}
 	      Build:          ${build}
 	      Reports:        ${reports}
-		  Coverage:       ${coverage.dir}
+          Coverage:       ${coverage.dir}
 	      Main Class:     ${main-class}
 	      Version:        ${version}
-		  Version Tag:    ${versiontag}
+          Version Tag:    ${versiontag}
 	      Vendor:         ${vendor}
 	      Tag Type:       ${tag-type}
 	      Jar Name        ${jar}
 	      Library path:   ${lib}
 	      JUnit Home:     ${junit.home}
-		  TeamCity Home:  ${teamcity.home}
-		  TeamCity App:   ${teamcity.appdir}
+          TeamCity Home:  ${teamcity.home}
+          TeamCity App:   ${teamcity.appdir}
 	    </echo>
 	</target>
 
