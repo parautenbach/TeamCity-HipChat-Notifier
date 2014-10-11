@@ -146,22 +146,23 @@
 
 	<target name="release" depends="compile" description="Generate the distribution" >
 		<replaceregexp file="teamcity-plugin.xml" match="&lt;version&gt;.*?&lt;/version&gt;" replace="${versiontag}" />
-		<mkdir dir="${build}"/>
+		<mkdir dir="${build}/server"/>
 		<copy file="${plugin.xml}" todir="${build}"/>
-		<jar jarfile="${build}/${jar}.jar" manifest="${manifest}" basedir="${build}">
+		<jar jarfile="${build}/server/${jar}.jar" manifest="${manifest}" basedir="${build}">
 			<metainf dir="${src}/META-INF"/>
 			<fileset dir="${classes}" excludes="**/test/**"/>
 			<fileset dir="${resources}"/>
 		</jar>
-		<mkdir dir="${build}/${lib}"/>
-		<copy todir="${build}/${lib}">
-		    <fileset dir="${lib}" includes="**"/>
+		<mkdir dir="${build}/server/${lib}"/>
+		<copy todir="${build}/server/${lib}">
+		    <fileset dir="${lib}" includes="**">
+		    	<exclude name="test/**"/>
+			</fileset>
 		</copy>
-		<zip basedir="${build}" destfile="${jar}.zip" includes="${jar}.jar,${plugin.xml},${lib}/**"/>
+		<zip basedir="${build}" destfile="${jar}.zip" includes="server/${jar}.jar,${plugin.xml},server/${lib}/**"/>
 		<move file="${jar}.zip" todir="${build}"/>
-		<delete file="${build}/${jar}.jar"/>
+		<delete dir="${build}/server"/>
 		<delete file="${build}/${plugin.xml}"/>
-		<delete dir="${build}/${lib}"/>
 	</target>
 
 	<target name="run" depends="release">

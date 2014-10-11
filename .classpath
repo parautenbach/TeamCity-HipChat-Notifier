@@ -3,20 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="lib" path="lib/mockito-1.9.5/mockito-all-1.9.5.jar"/>
-	<classpathentry kind="lib" path="lib/junit-4.8.2/junit-4.11.jar"/>
-	<classpathentry kind="lib" path="lib/junit-4.8.2/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-1.9.11/jackson-all-1.9.11.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-2.1.2/jackson-annotations-2.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-2.1.2/jackson-core-2.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-2.1.2/jackson-databind-2.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/json-path-0.8.1/json-path-0.8.1.jar"/>
-	<classpathentry kind="lib" path="lib/jsonassert-1.2.1/jsonassert-1.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/json-20090211/json-20090211.jar"/>
-	<classpathentry kind="lib" path="lib/xmlunit-1.5/xmlunit-1.5.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-6.1.26/jetty-6.1.26.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-6.1.26/jetty-util-6.1.26.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-6.1.26/servlet-api-2.5-20081211.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-4.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpcore-4.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/commons-codec-1.6.jar"/>
@@ -25,17 +12,30 @@
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpclient-cache-4.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpcomponents-client-4.3.2/httpmime-4.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/freemarker-2.3.20/freemarker.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-server-8.1.15.v20140411.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-util-8.1.15.v20140411.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-http-8.1.15.v20140411.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-io-8.1.15.v20140411.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-8.1.15/jetty-continuation-8.1.15.v20140411.jar"/>
-	<classpathentry kind="lib" path="lib/testng-6.8/testng-6.8-bsh-noguice.jar"/>
-	<classpathentry kind="lib" path="lib/testng-6.8/testng-6.8-dist.jar"/>
-	<classpathentry kind="lib" path="lib/testng-6.8/testng-6.8-junit.jar"/>
-	<classpathentry kind="lib" path="lib/testng-6.8/testng-6.8-nobsh-guice.jar"/>
-	<classpathentry kind="lib" path="lib/testng-6.8/testng-6.8-nobsh-noguice.jar"/>
-	<classpathentry kind="lib" path="lib/wiremock-1.46/wiremock-1.46.jar"/>
+	<classpathentry kind="lib" path="lib/test/mockito-1.9.5/mockito-all-1.9.5.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit-4.8.2/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit-4.8.2/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/test/jackson-2.1.2/jackson-annotations-2.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/jackson-2.1.2/jackson-core-2.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/jackson-2.1.2/jackson-databind-2.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/jetty-8.1.15/jetty-server-8.1.15.v20140411.jar"/>
+	<classpathentry kind="lib" path="lib/test/jetty-8.1.15/jetty-util-8.1.15.v20140411.jar"/>
+	<classpathentry kind="lib" path="lib/test/jetty-8.1.15/jetty-http-8.1.15.v20140411.jar"/>
+	<classpathentry kind="lib" path="lib/test/jetty-8.1.15/jetty-io-8.1.15.v20140411.jar"/>
+	<classpathentry kind="lib" path="lib/test/jetty-8.1.15/jetty-continuation-8.1.15.v20140411.jar"/>
+	<classpathentry kind="lib" path="lib/test/testng-6.8/testng-6.8-bsh-noguice.jar"/>
+	<classpathentry kind="lib" path="lib/test/testng-6.8/testng-6.8-dist.jar"/>
+	<classpathentry kind="lib" path="lib/test/testng-6.8/testng-6.8-junit.jar"/>
+	<classpathentry kind="lib" path="lib/test/testng-6.8/testng-6.8-nobsh-guice.jar"/>
+	<classpathentry kind="lib" path="lib/test/testng-6.8/testng-6.8-nobsh-noguice.jar"/>
+    <classpathentry kind="lib" path="lib/test/json-path-0.8.1/json-path-0.8.1.jar"/>
+    <classpathentry kind="lib" path="lib/test/jsonassert-1.2.1/jsonassert-1.2.1.jar"/>
+    <classpathentry kind="lib" path="lib/test/json-20090211/json-20090211.jar"/>
+    <classpathentry kind="lib" path="lib/test/xmlunit-1.5/xmlunit-1.5.jar"/>
+    <classpathentry kind="lib" path="lib/test/jetty-6.1.26/jetty-6.1.26.jar"/>
+    <classpathentry kind="lib" path="lib/test/jetty-6.1.26/jetty-util-6.1.26.jar"/>
+    <classpathentry kind="lib" path="lib/test/jetty-6.1.26/servlet-api-2.5-20081211.jar"/>
+    <classpathentry kind="lib" path="lib/test/wiremock-1.46/wiremock-1.46.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/devPackage/tests/org.springframework.test-3.0.5.RELEASE.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/devPackage/tests/patches-test.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/devPackage/tests/tests-integration.jar"/>

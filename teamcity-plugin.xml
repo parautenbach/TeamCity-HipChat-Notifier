@@ -12,8 +12,4 @@
     </vendor>
   </info>
   <deployment use-separate-classloader="true" /> <!-- load server plugin's classes in separate classloader-->
-  <!-- <parameters> -->
-    <!-- <parameter name="key">value</parameter> -->
-    <!-- ... -->
-  <!-- </parameters> -->
 </teamcity-plugin>
