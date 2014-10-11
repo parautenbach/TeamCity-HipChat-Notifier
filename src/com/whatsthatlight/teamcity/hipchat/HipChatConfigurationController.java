@@ -266,6 +266,7 @@ public class HipChatConfigurationController extends BaseController {
 				this.handleReloadEmoticons(request);
 			} else {
 				logger.debug("No handler for request:");
+				@SuppressWarnings("unchecked")
 				Map<String, String[]> requestParameters = request.getParameterMap();
 				for (String key : requestParameters.keySet()) {
 					logger.debug(String.format("%s=%s", key, requestParameters.get(key)[0]));
