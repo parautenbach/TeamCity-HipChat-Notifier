@@ -22,16 +22,6 @@ limitations under the License.
   ${teamcityPluginResourcesPath}css/hipChatAdmin.css
 </bs:linkCSS>
 
-<script type="text/javascript">
-	(function($) {		
-		$("#bypassSslCheckWarning").on("load", function() {
-			if ($("#bypassSslCheck").checked) {
-				$("#bypassSslCheck").onclick();
-			}
-		});
-	})(jQuery);
-</script>
-
 <form action="${actionUrl}" id="hipChatForm" method="POST"
 	onsubmit="return HipChatAdmin.save()">
 	<div class="editNotificatorSettingsPage">
@@ -39,13 +29,13 @@ limitations under the License.
 			<c:when test="${disabled}">
 				<div class="pauseNote" style="margin-bottom: 1em;">
 					The notifier is <strong>disabled</strong>. All HipChat
-					notifications are suspended&nbsp;&nbsp;<a class="btn btn_mini"
+					notifications are suspended.&nbsp;&nbsp;<a class="btn btn_mini"
 						href="#" id="enable-btn">Enable</a>
 				</div>
 			</c:when>
 			<c:otherwise>
 				<div style="margin-left: 0.6em;">
-					The notifier is <strong>enabled</strong>&nbsp;&nbsp;<a
+					The notifier is <strong>enabled</strong>.&nbsp;&nbsp;<a
 						class="btn btn_mini" href="#" id="disable-btn">Disable</a>
 				</div>
 			</c:otherwise>
@@ -63,7 +53,7 @@ limitations under the License.
 				<td>
 					<forms:textField name="apiUrl" value="${apiUrl}" style="width: 300px;" />
 					<span class="smallNote">This must be the base URL to the <a href="https://www.hipchat.com/docs/apiv2" target="_blank">HipChat version 2 API</a>.</span>
-					<forms:checkbox name="bypassSslCheck" checked="${bypassSslCheck}" value="${bypassSslCheck}" 
+					<forms:checkbox name="bypassSslCheck" id="bypassSslCheck" checked="${bypassSslCheck}" value="${bypassSslCheck}" 
 					onclick="if (this.checked) { jQuery('#bypassSslCheckText').css('color', '#C00'); jQuery('#bypassSslCheckWarning').show(); } else { jQuery('#bypassSslCheckText').css('color', '#888'); jQuery('#bypassSslCheckWarning').hide(); } return true;"/>
 					<span id="bypassSslCheckText" style="color: #888; font-size: 90%;">When checked, SSL certificate validation will be bypassed.</span>
 					<span id="bypassSslCheckWarning" style="color: #C00; font-size: 90%; display: none;">This option is intended exclusively for testing against 
@@ -225,6 +215,14 @@ limitations under the License.
 <bs:linkScript>
     ${teamcityPluginResourcesPath}js/hipChatAdmin.js
 </bs:linkScript>
+
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		if (jQuery(${bypassSslCheck}) {
+			jQuery('#bypassSslCheckText').css('color', '#C00'); jQuery('#bypassSslCheckWarning').show();
+		}		
+	});
+</script>
 
 <script type="text/javascript">
 	(function($) {
