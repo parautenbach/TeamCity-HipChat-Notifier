@@ -218,7 +218,7 @@ limitations under the License.
 
 <script type="text/javascript">
 	jQuery(document).ready(function() {
-		if (jQuery(${bypassSslCheck}) {
+		if (jQuery(${bypassSslCheck})) {
 			jQuery('#bypassSslCheckText').css('color', '#C00'); jQuery('#bypassSslCheckWarning').show();
 		}		
 	});
