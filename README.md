@@ -53,6 +53,13 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 # Change log
 
+## Version 0.8.0
+* Bug: Syntax check templates before saving configuration (#39).
+* Bug: Server room ID wasn't loaded from config during plugin initialisation.
+* Feature: Specify a branch filter for which events must be triggered (#38).
+* Feature: Support for testing against a stand-alone HipChat server by bypassing the SSL certificate check (#36).
+* Enhancement: Linked the notify on first event check boxes to their parent check boxes.
+
 ## Version 0.7.2
 * Update: Recently released HipChat client went accord with API changes. This is an update to work against the new API (#35).
 
