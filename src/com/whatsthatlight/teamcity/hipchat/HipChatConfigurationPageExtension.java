@@ -76,6 +76,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 	public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
 		super.fillModel(model, request);
 		model.put(HipChatConfiguration.API_URL_KEY, this.configuration.getApiUrl());
+		logger.debug(String.format("Bypass SSL check: %s", this.configuration.getBypassSslCheck()));
 		model.put(HipChatConfiguration.BYPASS_SSL_CHECK, this.configuration.getBypassSslCheck());
 		model.put(HipChatConfiguration.API_TOKEN_KEY, this.configuration.getApiToken());
 		model.put(HipChatConfiguration.DEFAULT_ROOM_ID_KEY, this.configuration.getDefaultRoomId());
@@ -87,9 +88,8 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 		model.put(HipChatConfiguration.NOTIFY_STATUS_KEY, this.configuration.getDefaultNotifyStatus());
 		model.put(HipChatConfiguration.DISABLED_STATUS_KEY, this.configuration.getDisabledStatus());
 		model.put(HipChatConfiguration.EMOTICON_CACHE_SIZE_KEY, this.emoticonCache.getSize());
-		
-	    model.put("branchFilter", Boolean.valueOf(this.configuration.getBranchFilterEnabledStatus()));
-	    model.put("branchFilterRegex", this.configuration.getBranchFilterRegex());
+	    model.put(HipChatConfiguration.BRANCH_FILTER_KEY, Boolean.valueOf(this.configuration.getBranchFilterEnabledStatus()));
+	    model.put(HipChatConfiguration.BRANCH_FILTER_REGEX_KEY, this.configuration.getBranchFilterRegex());
 
 		if (this.configuration.getEvents() != null) {
 			model.put(HipChatConfiguration.BUILD_STARTED_KEY, this.configuration.getEvents().getBuildStartedStatus());

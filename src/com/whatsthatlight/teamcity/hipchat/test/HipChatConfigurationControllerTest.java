@@ -226,6 +226,14 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		String expectedDisabledStatusKey = "disabled";
 		boolean expectedDisabledStatusValue = false;
 		String expectedProjectRoomMapKey = "projectRoom";
+		String expectedbranchFilterKey = "branchFilter";
+		boolean expectedBranchFilterValue = true;
+		String expectedbranchFilterRegexKey = "branchFilterRegex";
+		String expectedBranchFilterRegexValue = "foo|bar|bas";
+		String expectedbypassSslCheckKey = "bypassSslCheck";
+		boolean expectedBypassSslCheckValue = true;
+		String expectedServerEventRoomIdKey = "serverEventRoomId";
+		String expectedServerEventRoomIdValue = "serverRoomId";
 		String expectedConfigDir = ".";
 
 		// Mocks
@@ -235,7 +243,6 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		WebControllerManager manager = org.mockito.Mockito.mock(WebControllerManager.class);
 		HipChatEmoticonCache emoticonCache = org.mockito.Mockito.mock(HipChatEmoticonCache.class);
 		HipChatNotificationMessageTemplates templates = org.mockito.Mockito.mock(HipChatNotificationMessageTemplates.class);
-
 		// Pre-conditions
 		// @formatter:off
 		String configFileContent = 
@@ -245,6 +252,10 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 				"<defaultRoomId>" + expectedRoomIdValue + "</defaultRoomId>" +
 				"<notify>" + expectedNotifyStatusValue + "</notify>" +
 				"<disabled>" + expectedDisabledStatusValue + "</disabled>" + 
+				"<branchFilter>" + expectedBranchFilterValue + "</branchFilter>" + 
+				"<branchFilterRegex>" + expectedBranchFilterRegexValue + "</branchFilterRegex>" + 
+				"<bypassSslCheck>" + expectedBypassSslCheckValue + "</bypassSslCheck>" + 
+				"<serverEventRoomId>" + expectedServerEventRoomIdValue + "</serverEventRoomId>" + 
 				"</hipchat>";
 		// @formatter:on
 		File configFile = new File(expectedConfigDir, expectedFileName);
@@ -274,13 +285,21 @@ public class HipChatConfigurationControllerTest extends BaseControllerTestCase<H
 		AssertJUnit.assertEquals(expectedNotifyStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedNotifyStatusKey)));
 		AssertJUnit.assertEquals(expectedDisabledStatusValue, Boolean.parseBoolean(rootElement.getChildText(expectedDisabledStatusKey)));
 		AssertJUnit.assertNull(rootElement.getChildText(expectedProjectRoomMapKey));
-
+		AssertJUnit.assertEquals(expectedBranchFilterValue, Boolean.parseBoolean(rootElement.getChildText(expectedbranchFilterKey)));
+		AssertJUnit.assertEquals(expectedBranchFilterRegexValue, rootElement.getChildText(expectedbranchFilterRegexKey));
+		AssertJUnit.assertEquals(expectedBypassSslCheckValue, Boolean.parseBoolean(rootElement.getChildText(expectedbypassSslCheckKey)));
+		AssertJUnit.assertEquals(expectedServerEventRoomIdValue, rootElement.getChildText(expectedServerEventRoomIdKey));
+				
 		// Now check the loaded configuration
 		AssertJUnit.assertEquals(expectedApiUrlValue, configuration.getApiUrl());
 		AssertJUnit.assertEquals(expectedApiTokenValue, configuration.getApiToken());
 		AssertJUnit.assertEquals(expectedRoomIdValue, configuration.getDefaultRoomId());
 		AssertJUnit.assertEquals(expectedNotifyStatusValue, configuration.getDefaultNotifyStatus());
 		AssertJUnit.assertEquals(expectedDisabledStatusValue, configuration.getDisabledStatus());
+		AssertJUnit.assertEquals(expectedBranchFilterValue, configuration.getBranchFilterEnabledStatus());
+		AssertJUnit.assertEquals(expectedBranchFilterRegexValue, configuration.getBranchFilterRegex());
+		AssertJUnit.assertEquals(expectedBypassSslCheckValue, configuration.getBypassSslCheck());
+		AssertJUnit.assertEquals(expectedServerEventRoomIdValue, configuration.getServerEventRoomId());
 		AssertJUnit.assertEquals(0, configuration.getProjectRoomMap().size());
 	}
 

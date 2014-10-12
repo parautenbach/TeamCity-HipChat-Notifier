@@ -61,8 +61,8 @@
 	</manifestclasspath>
 	
 	<path id="emma.lib">
-	    <pathelement location="${lib}/emma-2.1.5320/emma.jar" />
-	    <pathelement location="${lib}/emma-2.1.5320/emma_ant.jar" />
+	    <pathelement location="${lib}/test/emma-2.1.5320/emma.jar" />
+	    <pathelement location="${lib}/test/emma-2.1.5320/emma_ant.jar" />
 	</path>
 	
 	<taskdef resource="emma_ant.properties" classpathref="emma.lib" />

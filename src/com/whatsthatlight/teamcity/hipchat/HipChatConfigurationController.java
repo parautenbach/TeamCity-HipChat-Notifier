@@ -337,6 +337,10 @@ public class HipChatConfigurationController extends BaseController {
 		this.configuration.setDefaultRoomId(configuration.getDefaultRoomId());
 		this.configuration.setNotifyStatus(configuration.getDefaultNotifyStatus());
 		this.configuration.setDisabledStatus(configuration.getDisabledStatus());
+		this.configuration.setBranchFilterEnabledStatus(configuration.getBranchFilterEnabledStatus());
+		this.configuration.setBranchFilterRegex(configuration.getBranchFilterRegex());
+		this.configuration.setBypassSslCheck(configuration.getBypassSslCheck());
+		this.configuration.setServerEventRoomId(configuration.getServerEventRoomId());
 		if (configuration.getEvents() != null) {
 			this.configuration.getEvents().setBuildStartedStatus(configuration.getEvents().getBuildStartedStatus());
 			this.configuration.getEvents().setBuildSuccessfulStatus(configuration.getEvents().getBuildSuccessfulStatus());

@@ -22,6 +22,16 @@ limitations under the License.
   ${teamcityPluginResourcesPath}css/hipChatAdmin.css
 </bs:linkCSS>
 
+<script type="text/javascript">
+	(function($) {		
+		$("#bypassSslCheckWarning").on("load", function() {
+			if ($("#bypassSslCheck").checked) {
+				$("#bypassSslCheck").onclick();
+			}
+		});
+	})(jQuery);
+</script>
+
 <form action="${actionUrl}" id="hipChatForm" method="POST"
 	onsubmit="return HipChatAdmin.save()">
 	<div class="editNotificatorSettingsPage">
@@ -53,7 +63,8 @@ limitations under the License.
 				<td>
 					<forms:textField name="apiUrl" value="${apiUrl}" style="width: 300px;" />
 					<span class="smallNote">This must be the base URL to the <a href="https://www.hipchat.com/docs/apiv2" target="_blank">HipChat version 2 API</a>.</span>
-					<forms:checkbox name="bypassSslCheck" checked="${bypassSslCheck}" value="${bypassSslCheck}" onclick="if (this.checked) { jQuery('#bypassSslCheckText').css('color', '#C00'); jQuery('#bypassSslCheckWarning').show(); } else { jQuery('#bypassSslCheckText').css('color', '#888'); jQuery('#bypassSslCheckWarning').hide(); } return true;"/>
+					<forms:checkbox name="bypassSslCheck" checked="${bypassSslCheck}" value="${bypassSslCheck}" 
+					onclick="if (this.checked) { jQuery('#bypassSslCheckText').css('color', '#C00'); jQuery('#bypassSslCheckWarning').show(); } else { jQuery('#bypassSslCheckText').css('color', '#888'); jQuery('#bypassSslCheckWarning').hide(); } return true;"/>
 					<span id="bypassSslCheckText" style="color: #888; font-size: 90%;">When checked, SSL certificate validation will be bypassed.</span>
 					<span id="bypassSslCheckWarning" style="color: #C00; font-size: 90%; display: none;">This option is intended exclusively for testing against 
 					a stand-alone HipChat server instance. By disabling certificate validation you are exposing yourself to man-in-the-middle attacks, among others.
