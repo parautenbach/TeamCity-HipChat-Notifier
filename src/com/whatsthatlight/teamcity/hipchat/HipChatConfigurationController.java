@@ -125,12 +125,13 @@ public class HipChatConfigurationController extends BaseController {
 		
 		// Get parameters
 		String apiUrl = request.getParameter(HipChatConfiguration.API_URL_KEY);
+		String bypassSslCheck = request.getParameter(HipChatConfiguration.BYPASS_SSL_CHECK);
 		String apiToken = request.getParameter(HipChatConfiguration.API_TOKEN_KEY);
 		String defaultRoomId = request.getParameter(HipChatConfiguration.DEFAULT_ROOM_ID_KEY);
 		String serverEventRoomId = request.getParameter(HipChatConfiguration.SERVER_EVENT_ROOM_ID_KEY);
 		String notify = request.getParameter(HipChatConfiguration.NOTIFY_STATUS_KEY);
-	    String branchFilter = request.getParameter("branchFilter");
-	    String branchFilterRegex = request.getParameter("branchFilterRegex");
+	    String branchFilter = request.getParameter(HipChatConfiguration.BRANCH_FILTER_KEY);
+	    String branchFilterRegex = request.getParameter(HipChatConfiguration.BRANCH_FILTER_REGEX_KEY);
 		String buildStarted = request.getParameter(HipChatConfiguration.BUILD_STARTED_KEY);
 		String buildSuccessful = request.getParameter(HipChatConfiguration.BUILD_SUCCESSFUL_KEY);
 		String buildFailed = request.getParameter(HipChatConfiguration.BUILD_FAILED_KEY);
@@ -148,6 +149,7 @@ public class HipChatConfigurationController extends BaseController {
 		
 		// Logging
 		logger.debug(String.format("API URL: %s", apiUrl));
+		logger.debug(String.format("Bypass SSL check: %s", bypassSslCheck));
 		logger.debug(String.format("API token: %s", apiToken));
 		logger.debug(String.format("Trigger notification: %s", notify));
 		logger.debug("Events:");
@@ -186,6 +188,7 @@ public class HipChatConfigurationController extends BaseController {
 
 		// Save the configuration
 		this.configuration.setApiUrl(apiUrl);
+		this.configuration.setBypassSslCheck(Boolean.parseBoolean(bypassSslCheck));
 		this.configuration.setApiToken(apiToken);
 		this.configuration.setNotifyStatus(Boolean.parseBoolean(notify));
 		this.configuration.setDefaultRoomId(defaultRoomId.equals("") ? null : defaultRoomId);

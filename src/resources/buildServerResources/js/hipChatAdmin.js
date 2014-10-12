@@ -58,6 +58,7 @@ var HipChatAdmin = {
 			parameters : 
 				"edit=1" + 
 				"&apiUrl="                        + $("apiUrl").value + 
+				"&bypassSslCheck="                + $("bypassSslCheck").checked +
 				"&apiToken="                      + $("apiToken").value +
 				"&defaultRoomId="                 + $("defaultRoomId").value +
 				"&serverEventRoomId="             + $("serverEventRoomId").value +

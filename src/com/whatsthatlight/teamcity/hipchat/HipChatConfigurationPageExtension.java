@@ -76,6 +76,7 @@ public class HipChatConfigurationPageExtension extends AdminPage {
 	public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
 		super.fillModel(model, request);
 		model.put(HipChatConfiguration.API_URL_KEY, this.configuration.getApiUrl());
+		model.put(HipChatConfiguration.BYPASS_SSL_CHECK, this.configuration.getBypassSslCheck());
 		model.put(HipChatConfiguration.API_TOKEN_KEY, this.configuration.getApiToken());
 		model.put(HipChatConfiguration.DEFAULT_ROOM_ID_KEY, this.configuration.getDefaultRoomId());
 		model.put(HipChatConfiguration.SERVER_EVENT_ROOM_ID_KEY, this.configuration.getDefaultRoomId());
