@@ -668,8 +668,8 @@ public class HipChatApiProcessorTest {
 	@Test(enabled = false)
 	public void testTestAuthenticationWithSelfSignedCertManual() throws URISyntaxException {
 
-		String apiUrl = "https://192.168.1.55/v2/";
-		String apiToken = "iTnXh0pVqSueht2epR7sj0qLQbUjn4jNsTYi7Ct1";
+		String apiUrl = "https://localhost/v2/";
+		String apiToken = "token";
 
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
