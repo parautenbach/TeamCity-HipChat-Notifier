@@ -196,6 +196,7 @@ public class HipChatApiProcessorTest {
 	public void testGetEmoticonsReturnsEmptyInCaseOfFailure() throws URISyntaxException {
 		String apiUrl = "https://api.hipchat.com/v2/";
 		String apiToken = "invalid_token";
+		//
 		
 		HipChatConfiguration configuration = new HipChatConfiguration();
 		configuration.setApiUrl(apiUrl);
