@@ -5,20 +5,49 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
 import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
+import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticon;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticonCache;
 import com.whatsthatlight.teamcity.hipchat.HipChatEmoticons;
 
 public class HipChatEmoticonCacheTest {
 
+	@BeforeClass
+	public static void ClassSetup() {
+		// Set up a basic logger for debugging purposes
+		BasicConfigurator.configure();
+	}
+	
+	@Test(enabled = false)
+	public void testReload() throws URISyntaxException {
+		String apiUrl = "https://api.hipchat.com/v2/";
+		String apiToken = "token";
+		
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl(apiUrl);
+		configuration.setApiToken(apiToken);
+						
+		// Execute
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration);
+		HipChatEmoticonCache emoticonCache = new HipChatEmoticonCache(processor);
+		emoticonCache.reload();
+		
+		// Test
+		AssertJUnit.assertEquals(204, emoticonCache.getSize());
+	}
+	
 	@Test
 	public void testSingleBatch() throws IOException {
 

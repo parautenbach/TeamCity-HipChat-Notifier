@@ -47,8 +47,10 @@ public class HipChatEmoticonCache {
 				logger.debug(String.format("Adding emoticon: %s - %s", emoticon.shortcut, emoticon.url));
 				this.emoticonCache.put(emoticon.shortcut, emoticon.url);
 			}
-			startIndex = startIndex + emoticons.maxResults;
-		} while (emoticons.links.next != null);		
+			// Due to a bug in the HipChat REST API, we have to work around using the next resource (#49).
+			// The HipChat API returns a next resource on each request, even when there are no more emoticons to retrieve.
+			startIndex = startIndex + emoticons.items.size();
+		} while (emoticons.items.size() > 0);		
 		logger.info(String.format("Emoticon cache reloaded: %s", this.emoticonCache.size()));
 		return this.emoticonCache.size();
 	}

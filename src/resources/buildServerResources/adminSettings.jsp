@@ -114,7 +114,7 @@ limitations under the License.
 					<textarea id="branchFilterRegex" name="branchFilterRegex" style="width: 92%;" placeholder="A regular expression to trigger notifications...">${branchFilterRegex}</textarea>
 					<div>
 						<forms:checkbox name="branchFilter" checked="${branchFilter}" value="${branchFilter}" />
-						<span style="color: #888; font-size: 90%;">When checked, branches (where supported) will be filtered inclusively according to the regular expression.</span>			
+						<span style="color: #888; font-size: 90%;">When checked, branches (where supported by the VCS) will be filtered inclusively according to the regular expression.</span>			
 					</div>
 				</td>
 			</tr>			
