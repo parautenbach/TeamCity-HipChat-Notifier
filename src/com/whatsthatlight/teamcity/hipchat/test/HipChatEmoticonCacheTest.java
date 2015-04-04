@@ -109,7 +109,7 @@ public class HipChatEmoticonCacheTest {
 		// Second call
 		HipChatEmoticon emoticon2 = new HipChatEmoticon(emoticonId2, null, emoticonShortcut2, emoticonUrl2);
 		List<HipChatEmoticon> items2 = new ArrayList<HipChatEmoticon>();
-		items1.add(emoticon2);
+		items2.add(emoticon2);
 		HipChatApiResultLinks links2 = new HipChatApiResultLinks(null, null, null);
 		HipChatEmoticons expectedEmoticons2 = new HipChatEmoticons(items2, startIndex1, maxResults, links2);		
 

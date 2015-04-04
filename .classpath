@@ -120,6 +120,7 @@
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/tomcat-jdbc-7.0.23.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/tomcat-juli-7.0.23.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/toolLoader.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/trove-3.0.3.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/trove4j.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/UserAgentUtils.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/util.jar"/>

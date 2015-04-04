@@ -303,5 +303,6 @@ public class HipChatConfigurationPageExtensionTest extends BaseServerTestCase {
 			}
 		}
 		AssertJUnit.assertTrue(exceptionFound);
+		super.clearFailure();
 	}
 }
