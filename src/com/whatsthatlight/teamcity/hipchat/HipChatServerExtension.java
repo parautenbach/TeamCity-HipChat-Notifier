@@ -19,6 +19,7 @@ package com.whatsthatlight.teamcity.hipchat;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,6 +36,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import jetbrains.buildServer.serverSide.Branch;
 import jetbrains.buildServer.serverSide.BuildServerAdapter;
+import jetbrains.buildServer.serverSide.BuildStatistics;
 import jetbrains.buildServer.serverSide.ProjectManager;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.serverSide.SBuildServer;
@@ -242,6 +244,30 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		boolean hasContributors = !contributors.isEmpty();
 		logger.debug(String.format("Has contributors: %s", hasContributors));
 		
+		// Fill the template.
+		Map<String, Object> templateMap = new HashMap<String, Object>();		
+		
+		// Build statistics
+		logger.debug("Adding build statistics");
+		BuildStatistics statistics = build.getFullStatistics();
+		logger.debug(String.format("Number of tests: %s", statistics.getAllTestCount()));
+		logger.debug(String.format("Number of passed tests: %s", statistics.getPassedTestCount()));
+		logger.debug(String.format("Number of failed tests: %s", statistics.getFailedTestCount()));
+		logger.debug(String.format("Number of new failed tests: %s", statistics.getNewFailedCount()));
+		logger.debug(String.format("Number of ignored tests: %s", statistics.getIgnoredTestCount()));
+		logger.debug(String.format("Tests duration: %s", statistics.getTotalDuration()));
+		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_TESTS, statistics.getAllTestCount());
+		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_PASSED_TESTS, statistics.getPassedTestCount());
+		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_FAILED_TESTS, statistics.getFailedTestCount());
+		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_NEW_FAILED_TESTS, statistics.getNewFailedCount());
+		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_IGNORED_TESTS, statistics.getIgnoredTestCount());
+		templateMap.put(HipChatNotificationMessageTemplates.Parameters.DURATION_OF_TESTS, statistics.getTotalDuration());
+		Map<String, BigDecimal> allStatistics = build.getStatisticValues();
+		for (Map.Entry<String, BigDecimal> statistic : allStatistics.entrySet()) {
+			logger.debug(String.format("\t%s: %s", statistic.getKey(), statistic.getValue()));
+			templateMap.put(String.format("%s.%s", HipChatNotificationMessageTemplates.STATS_PARAMETERS_PREFIX, statistic.getKey()), statistic.getValue());
+		}
+		
 //		// TODO: Add artifact dependencies as a template variable
 //		try {
 //			SBuildType buildType = build.getBuildType();
@@ -259,8 +285,6 @@ public class HipChatServerExtension extends BuildServerAdapter {
 //		} catch (Exception e) {
 //		}
 				
-		// Fill the template.
-		Map<String, Object> templateMap = new HashMap<String, Object>();
 		// Add all available project, build configuration, agent, server, etc. parameters to the data model
 		// These are accessed as ${.data_model["some.variable"]}
 		// See: http://freemarker.org/docs/ref_specvar.html

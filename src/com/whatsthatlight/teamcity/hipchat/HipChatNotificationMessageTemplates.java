@@ -42,7 +42,7 @@ public class HipChatNotificationMessageTemplates {
 		public static final String TRIGGERED_BY = "triggeredBy";
 		public static final String EMOTICON_URL = "emoticonUrl";
 		public static final String CANCELLED_BY = "cancelledBy";
-		public static final String CONTRIBUTORS = "contributors";		
+		public static final String CONTRIBUTORS = "contributors";
 		public static final String BRANCH = "branch";
 		public static final String SERVER_URL = "serverUrl";
 		public static final String PROJECT_ID = "projectId";
@@ -50,7 +50,12 @@ public class HipChatNotificationMessageTemplates {
 		public static final String BUILD_TYPE_ID = "buildTypeId";		
 		public static final String HAS_BRANCH = "hasBranch";
 		public static final String HAS_CONTRIBUTORS = "hasContributors";
-		
+		public static final String NO_OF_TESTS = "noOfTests";
+		public static final String NO_OF_PASSED_TESTS = "noOfPassedTests";
+		public static final String NO_OF_FAILED_TESTS = "noOfFailedTests";
+		public static final String NO_OF_NEW_FAILED_TESTS = "noOfNewFailedTests";
+		public static final String NO_OF_IGNORED_TESTS = "noOfIgnoredTests";
+		public static final String DURATION_OF_TESTS = "durationOfTests";
 	}
 
 	public static final String BUILD_STARTED_TEMPLATE_KEY = "buildStartedTemplate";
@@ -74,6 +79,7 @@ public class HipChatNotificationMessageTemplates {
 	public static final String SERVER_STARTUP_DEFAULT_TEMPLATE = "Build server started.";
 	public static final String SERVER_SHUTDOWN_DEFAULT_TEMPLATE = "Build server shutting down.";
 		
+	public static final String STATS_PARAMETERS_PREFIX = "stats";
 	private static final String TEMPLATE_NAME_EXTENSION = ".ftl";
 	private Configuration config;
 	private String templateBasePathName;
