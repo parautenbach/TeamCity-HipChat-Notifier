@@ -114,7 +114,7 @@
 
 	<!-- http://stackoverflow.com/questions/52984/how-do-i-generate-emma-code-coverage-reports-using-ant -->
 	<target name="emma" description="turns on EMMA's on-the-fly instrumentation mode" >
-	    <property name="emma.enabled" value="true" />
+	    <property name="emma.enabled" value="false" />
 		<property name="emma.filter" value="-com.whatsthatlight.teamcity.hipchat.test.*"/>
     </target>
 	
