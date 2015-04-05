@@ -1,53 +1,92 @@
 Version 0.9.0 (not yet released)
 * Enhancement: TeamCity 9 compatibility (specifically v9.0.2) (#44).
-* New feature: Build statistics (#45).
+* Feature: New build statistics message template variables (#45): 
+           `${noOfTests}`, `${noOfPassedTests}`, `${noOfFailedTests}`, 
+           `${noOfNewFailedTests}`, `${noOfIgnoredTests}` and 
+           `${durationOfTests}`. Other build statistics, e.g. custom 
+           defined statistics, code duplicates, code coverage, etc. 
+           can be referenced in a template with the `stats.` prefix 
+           within the data model, e.g. `${.data_model["stats.myKey"]}`. 
+           The exact variables will vary, so enable debug logging to 
+           see what's available in your environment.
+* 
 
 Version 0.8.0
 * Bug: Syntax check templates before saving configuration (#39).
-* Bug: Server room ID wasn't loaded from config during plugin initialisation.
-* Feature: Specify a branch filter for which events must be triggered (#38).
-* Feature: Support for testing against a stand-alone HipChat server by bypassing the SSL certificate check (#36).
-* Enhancement: Linked the notify on first event check boxes to their parent check boxes.
+* Bug: Server room ID wasn't loaded from config during plugin 
+       initialisation.
+* Feature: Specify a branch filter for which events must be 
+           triggered (#38).
+* Feature: Support for testing against a stand-alone HipChat server 
+           by bypassing the SSL certificate check (#36).
+* Enhancement: Linked the notify on first event check boxes to their 
+               parent check boxes.
 
 Version 0.7.2
-* Update: Recently released HipChat client went accord with API changes. This is an update to work against the new API (#35).
+* Update: Recently released HipChat client went accord with API 
+          changes. This is an update to work against the new 
+          API (#35).
 
 Version 0.7.1
-* Bug: Notify on first success or failure events wasn't taking branches into account (#34).
+* Bug: Notify on first success or failure events wasn't taking 
+       branches into account (#34).
 
 Version 0.7.0
-* Enhancement: Specifying a dedicated room for server events (#33). To keep this backwards compatible, the default build events room will be used if no server events room has been configured.
+* Enhancement: Specifying a dedicated room for server events (#33). 
+               To keep this backwards compatible, the default build 
+               events room will be used if no server events room 
+               has been configured.
 
 Version 0.6.3
-* Bug: For large setups, only a 100 rooms were returned to select from (#32).
+* Bug: For large setups, only a 100 rooms were returned to select 
+       from (#32).
 
 Version 0.6.2
-* Bug: Point the link in the message (default template) to the build configuration rather than the project (#28).
+* Bug: Point the link in the message (default template) to the build 
+       configuration rather than the project (#28).
 * Bug: Build ID wasn't corrected formatted as a string (#29).
-* Bug: Links to a build ID don't require the build type ID anymore, since TeamCity 8 (#30, #31).
+* Bug: Links to a build ID don't require the build type ID anymore, 
+       since TeamCity 8 (#30, #31).
 
 Version 0.6.1
-* Bug: Large GET request when submitting plugin configuration (due to the templates) can cause a 404 on some setups because of request limits (#26, #27).
-* Enhancement: Global setting to only notify on first successful build after a failure, or first failed build after a successful build (#21). 
+* Bug: Large GET request when submitting plugin configuration (due to 
+       the templates) can cause a 404 on some setups because of 
+       request limits (#26, #27).
+* Enhancement: Global setting to only notify on first successful 
+               build after a failure, or first failed build after a 
+               successful build (#21). 
 
 Version 0.6.0
-* Bug: Unicode notification message payloads weren't sent as UTF-8 (#20).
-* Bug: Race condition during plugin initialisation (during server startup) that sometimes prevented emoticons from being cached (#25).
+* Bug: Unicode notification message payloads weren't sent as 
+       UTF-8 (#20).
+* Bug: Race condition during plugin initialisation (during server 
+       startup) that sometimes prevented emoticons from being 
+       cached (#25).
 * Enhancement: Configurable notification message templates.
-* Enhancement: In addition to configurable templates, any build or agent parameter can now be referenced too (#16).
-* Enhancement: Switched from JUnit to TestNG, added EMMA for code coverage analysis and lint4j for static analysis, with the result that 722 out of 727 lines (99%) are now tested. 
+* Enhancement: In addition to configurable templates, any build or 
+               agent parameter can now be referenced too (#16).
+* Enhancement: Switched from JUnit to TestNG, added EMMA for code 
+               coverage analysis and lint4j for static analysis, with 
+               the result that 722 out of 727 lines (99%) are now 
+               tested. 
 
 Version 0.5.0
-* Enhancement: The branch will be rendered as part of the notification for VCSs that uses branches.
-* Enhancement: The ability to reload rooms when configuring the API URL and token.
-* Enhancement: Switched from StringTemplate to Freemarker for better MVC separation.
-* Enhancement: Contributors will now be rendered also in the build started notification.
+* Enhancement: The branch will be rendered as part of the notification 
+               for VCSs that uses branches.
+* Enhancement: The ability to reload rooms when configuring the API 
+               URL and token.
+* Enhancement: Switched from StringTemplate to Freemarker for better 
+               MVC separation.
+* Enhancement: Contributors will now be rendered also in the build 
+               started notification.
 
 Version 0.4.4
-* Bug: Contributors would only be included if they have a name (and not only a username) on the build server.
+* Bug: Contributors would only be included if they have a name (and 
+       not only a username) on the build server.
 
 Version 0.4.3
-* Bug: If emoticons can't be retrieved during plugin initialisation, the server extension's registration will fail.
+* Bug: If emoticons can't be retrieved during plugin initialisation, 
+       the server extension's registration will fail.
 
 Version 0.4.2
 * Enhancement: Made the project/build configuration a clickable link.
@@ -59,7 +98,8 @@ Version 0.4.0
 * Feature: Clickable links in messages to the build.
 
 Version 0.3.1
-* Bug: Project configuration tab didn't use room ID aliases when inheriting from the default or parent configuration. 
+* Bug: Project configuration tab didn't use room ID aliases when 
+       inheriting from the default or parent configuration. 
 
 Version 0.3.0 
 
@@ -67,10 +107,17 @@ Version 0.3.0
 
 Version 0.2.0 
 
-* Feature: Allow setting different rooms for different projects, and allow to use the default configuration or none, or inherit from the parent project. As a consequence, server up and down events are sent to only the default room, if configured.
-* Improvement: Instead of entering a room ID, it can now be selected from a dropdown list of available rooms.
-* Improvement: Added a button on the configuration page to test the API credentials.
-* Bug: Fixed UI bug where disabling the plugin after saving settings didn't respond.
+* Feature: Allow setting different rooms for different projects, and 
+           allow to use the default configuration or none, or inherit 
+           from the parent project. As a consequence, server up and 
+           down events are sent to only the default room, if 
+           configured.
+* Improvement: Instead of entering a room ID, it can now be selected 
+               from a dropdown list of available rooms.
+* Improvement: Added a button on the configuration page to test the 
+               API credentials.
+* Bug: Fixed UI bug where disabling the plugin after saving settings 
+       didn't respond.
 
 Version 0.1.0
 
