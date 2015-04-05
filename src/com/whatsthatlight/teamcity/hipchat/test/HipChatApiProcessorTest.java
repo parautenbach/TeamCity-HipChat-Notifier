@@ -535,6 +535,7 @@ public class HipChatApiProcessorTest {
 		}
 		
 		// Setup
+		// TODO: A more correct test would be to actually start up a proxy server here on another port.
 		Properties systemProperties = new Properties();
 		systemProperties.setProperty("http.proxyHost", host);
 		systemProperties.setProperty("http.proxyPort", Integer.toString(port));
