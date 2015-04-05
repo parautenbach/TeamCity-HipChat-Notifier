@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
@@ -500,6 +501,58 @@ public class HipChatApiProcessorTest {
 			}
 		}
 		assertTrue(exceptionFound);
+	}
+	
+	@Test
+	public void testProxySupport() throws Exception {
+		// Test parameters
+		int expectedStatusCode = HttpServletResponse.SC_ACCEPTED;
+		String host = "localhost";
+		int port = 8080;
+		URI uri = new URI(String.format("http://%s:%s/", host, port));
+		String token = "token";
+
+		// Handler
+		class Handler extends AbstractHandler {
+			
+			private int statusCode;
+			private String authToken;
+
+			public Handler(int statusCode, String authToken) {
+				this.statusCode = statusCode;
+				this.authToken = authToken;
+			}
+
+			@Override
+			public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+				assertEquals(this.authToken, request.getParameter("auth_token"));
+				assertEquals("true", request.getParameter("auth_test"));
+				response.setContentType("text/html;charset=utf-8");
+		        response.setStatus(this.statusCode);
+		        baseRequest.setHandled(true);
+			}
+			
+		}
+		
+		// Setup
+		Properties systemProperties = new Properties();
+		systemProperties.setProperty("http.proxyHost", host);
+		systemProperties.setProperty("http.proxyPort", Integer.toString(port));
+		HipChatConfiguration configuration = new HipChatConfiguration();
+		configuration.setApiUrl(uri.toString());
+		configuration.setApiToken(token);
+		HipChatApiProcessor processor = new HipChatApiProcessor(configuration, systemProperties);
+		SimpleServer server = new SimpleServer(port, new Handler(expectedStatusCode, token));
+		server.start();
+		
+		// Execute
+		boolean actualAuthResult = processor.testAuthentication();			
+		
+		// Clean up
+		server.stop();
+
+		// Test
+		assertTrue(actualAuthResult);
 	}
 	
 	@Test

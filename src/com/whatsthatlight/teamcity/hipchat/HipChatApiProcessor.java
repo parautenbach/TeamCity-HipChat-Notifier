@@ -25,8 +25,10 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -40,6 +42,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
@@ -48,11 +51,17 @@ import org.springframework.http.MediaType;
 public class HipChatApiProcessor {
 	
 	private HipChatConfiguration configuration;
+	private Properties systemProperties;
 	
 	private static Logger logger = Logger.getLogger("com.whatsthatlight.teamcity.hipchat");
 	
 	public HipChatApiProcessor(@NotNull HipChatConfiguration configuration) throws URISyntaxException {
+		this(configuration, System.getProperties());
+	}	
+	
+	public HipChatApiProcessor(@NotNull HipChatConfiguration configuration, Properties systemProperties) throws URISyntaxException {
 		this.configuration = configuration;
+		this.systemProperties = systemProperties;
 	}
 	
 	public HipChatEmoticons getEmoticons(int startIndex) {
@@ -161,13 +170,29 @@ public class HipChatApiProcessor {
 	private CloseableHttpClient createClient() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 		if (this.configuration.getBypassSslCheck()) {
 			logger.warn("SSL check being bypassed");
-			SSLContextBuilder builder = new SSLContextBuilder();
-			builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-			SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(builder.build(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-			CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(socketFactory).build();
+			SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
+			sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+			SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContextBuilder.build(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			HttpClientBuilder httpClientBuilder = HttpClients.custom().setSSLSocketFactory(socketFactory);
+			CloseableHttpClient client = httpClientBuilder.build();
 			return client;
 		} else {
-			return HttpClientBuilder.create().build();
+			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+			String proxyHost = systemProperties.getProperty("http.proxyHost");
+			if (proxyHost != null) {
+				logger.info("Proxy configuration detected");
+				logger.debug(String.format("Host: %s", proxyHost));
+				int proxyPort = 80;
+				String proxyPortString = systemProperties.getProperty("http.proxyPort");
+				if (proxyPortString != null) {
+					proxyPort = Integer.parseInt(proxyPortString);
+				}
+				HttpHost proxy = new HttpHost(proxyHost, proxyPort, "http");
+				DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+				httpClientBuilder.setRoutePlanner(routePlanner);
+				logger.info(String.format("Proxy configured: %s:%s", proxyHost, proxyPort));
+			}
+			return httpClientBuilder.build();
 		}
 	}
 
