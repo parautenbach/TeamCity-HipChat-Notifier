@@ -248,7 +248,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		Map<String, Object> templateMap = new HashMap<String, Object>();		
 		
 		// Build statistics
-		logger.debug("Adding build statistics");
+		logger.debug("Adding standard build statistics");
 		BuildStatistics statistics = build.getFullStatistics();
 		logger.debug(String.format("\tNumber of tests: %s", statistics.getAllTestCount()));
 		logger.debug(String.format("\tNumber of passed tests: %s", statistics.getPassedTestCount()));
@@ -262,6 +262,7 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_NEW_FAILED_TESTS, statistics.getNewFailedCount());
 		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_IGNORED_TESTS, statistics.getIgnoredTestCount());
 		templateMap.put(HipChatNotificationMessageTemplates.Parameters.DURATION_OF_TESTS, statistics.getTotalDuration());
+		logger.debug("Adding discovered build statistics");
 		Map<String, BigDecimal> allStatistics = build.getStatisticValues();
 		for (Map.Entry<String, BigDecimal> statistic : allStatistics.entrySet()) {
 			logger.debug(String.format("\t%s: %s", statistic.getKey(), statistic.getValue()));
