@@ -250,12 +250,12 @@ public class HipChatServerExtension extends BuildServerAdapter {
 		// Build statistics
 		logger.debug("Adding build statistics");
 		BuildStatistics statistics = build.getFullStatistics();
-		logger.debug(String.format("Number of tests: %s", statistics.getAllTestCount()));
-		logger.debug(String.format("Number of passed tests: %s", statistics.getPassedTestCount()));
-		logger.debug(String.format("Number of failed tests: %s", statistics.getFailedTestCount()));
-		logger.debug(String.format("Number of new failed tests: %s", statistics.getNewFailedCount()));
-		logger.debug(String.format("Number of ignored tests: %s", statistics.getIgnoredTestCount()));
-		logger.debug(String.format("Tests duration: %s", statistics.getTotalDuration()));
+		logger.debug(String.format("\tNumber of tests: %s", statistics.getAllTestCount()));
+		logger.debug(String.format("\tNumber of passed tests: %s", statistics.getPassedTestCount()));
+		logger.debug(String.format("\tNumber of failed tests: %s", statistics.getFailedTestCount()));
+		logger.debug(String.format("\tNumber of new failed tests: %s", statistics.getNewFailedCount()));
+		logger.debug(String.format("\tNumber of ignored tests: %s", statistics.getIgnoredTestCount()));
+		logger.debug(String.format("\tTests duration: %s", statistics.getTotalDuration()));
 		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_TESTS, statistics.getAllTestCount());
 		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_PASSED_TESTS, statistics.getPassedTestCount());
 		templateMap.put(HipChatNotificationMessageTemplates.Parameters.NO_OF_FAILED_TESTS, statistics.getFailedTestCount());
