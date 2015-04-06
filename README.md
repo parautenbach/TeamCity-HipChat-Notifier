@@ -13,6 +13,7 @@ directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins
 [Visit](http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/) my website for more detailled instructions and information.
 
 Compatibility:
+* Release v0.9.0 was tested against TeamCity 9.0.2.
 * Releases v0.8.0 and above was tested against TeamCity 8.1.5.
 * Releases v0.4.4 to v0.7.2 was tested against TeamCity 8.1.1.
 * Releases v0.1.0 to v0.4.3 was tested against TeamCity 8.0.5.
