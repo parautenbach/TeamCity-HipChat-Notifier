@@ -50,7 +50,6 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 * Configurable notification colours and emoticon sets.
 * Implement more events: Right now the supported events seem sufficient. 
-* Add more build statistics, such as the number of tests passed and failed.
 
 # Change log
 
