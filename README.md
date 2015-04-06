@@ -53,6 +53,21 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 # Change log
 
+## Version 0.9.0
+* Enhancement: TeamCity 9 compatibility, specifically v9.0.2 (#44).
+* Bug: Loading emoticons causes an infinite loop, due to un-RESTful HipChat API (#49).
+* Feature: New build statistics message template variables (#45): 
+           `${noOfTests}`, `${noOfPassedTests}`, `${noOfFailedTests}`, 
+           `${noOfNewFailedTests}`, `${noOfIgnoredTests}` and 
+           `${durationOfTests}`. Other build statistics, e.g. custom 
+           defined statistics, code duplicates, code coverage, etc. 
+           can be referenced in a template with the `stats.` prefix 
+           within the data model, e.g. `${.data_model["stats.myKey"]}`. 
+           The exact variables will vary, so enable debug logging to 
+           see what's available in your environment.
+* Feature: Proxy support (#46). For setting up TeamCity proxy support 
+           refer to the [online documentation](https://confluence.jetbrains.com/display/TCD9/How+To...#HowTo...-ConfigureTeamCitytoUseProxyServerforOutgoingConnections).
+
 ## Version 0.8.0
 * Bug: Syntax check templates before saving configuration (#39).
 * Bug: Server room ID wasn't loaded from config during plugin initialisation.
