@@ -10,7 +10,7 @@ Version 0.9.0
            within the data model, e.g. `${.data_model["stats.myKey"]}`. 
            The exact variables will vary, so enable debug logging to 
            see what's available in your environment.
-* Feature: Proxy support (#46).
+* Feature: Proxy support (#46). 
            https://confluence.jetbrains.com/display/TCD9/How+To...#HowTo...-ConfigureTeamCitytoUseProxyServerforOutgoingConnections
 
 Version 0.8.0
