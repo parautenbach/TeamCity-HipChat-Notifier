@@ -19,7 +19,7 @@ Compatibility:
 * Releases v0.1.0 to v0.4.3 was tested against TeamCity 8.0.5.
 * Support for older TeamCity versions is uncertain.
 
-I will gladly provide information and experiences by others here. 
+I will gladly provide information and experiences by others here.
 
 # Configuration
 
@@ -52,6 +52,9 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 * Implement more events: Right now the supported events seem sufficient. 
 
 # Change log
+
+## Version 0.9.1
+* Bug: Update by Atlassian of the HipChat API broke the retrieval of emoticons (#53).
 
 ## Version 0.9.0
 * Enhancement: TeamCity 9 compatibility, specifically v9.0.2 (#44).

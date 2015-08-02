@@ -1,3 +1,6 @@
+Version 0.9.1
+* Bug: Update by Atlassian of the HipChat API broke the retrieval of emoticons (#53).
+
 Version 0.9.0
 * Enhancement: TeamCity 9 compatibility, specifically v9.0.2 (#44).
 * Bug: Loading emoticons causes an infinite loop, due to un-RESTful HipChat API (#49).

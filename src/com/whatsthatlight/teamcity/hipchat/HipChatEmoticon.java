@@ -16,8 +16,10 @@ limitations under the License.
 
 package com.whatsthatlight.teamcity.hipchat;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class HipChatEmoticon {
 	
 	@JsonProperty("id")
@@ -31,7 +33,7 @@ public class HipChatEmoticon {
 
 	@JsonProperty("url")
 	public String url;
-	
+		
 	public HipChatEmoticon() {
 		// Intentionally left empty
 	}
