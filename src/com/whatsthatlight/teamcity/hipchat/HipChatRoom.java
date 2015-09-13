@@ -17,7 +17,9 @@ limitations under the License.
 package com.whatsthatlight.teamcity.hipchat;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class HipChatRoom {
 	
 	@JsonProperty("id")
@@ -28,6 +30,9 @@ public class HipChatRoom {
 	
 	@JsonProperty("name")
 	public String name;
+	
+	@JsonProperty("version")
+	public String version;
 	
 	public HipChatRoom() {
 		// Intentionally left empty

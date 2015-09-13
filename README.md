@@ -13,6 +13,8 @@ directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins
 [Visit](http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/) my website for more detailled instructions and information.
 
 Compatibility:
+* Release v0.9.2 was tested against TeamCity 9.1.1.
+* Release v0.9.1 was tested against TeamCity 9.0.2, but was pulled because of a faulty archive that included EMMA instrumented code.
 * Release v0.9.0 was tested against TeamCity 9.0.2.
 * Releases v0.8.0 and above was tested against TeamCity 8.1.5.
 * Releases v0.4.4 to v0.7.2 was tested against TeamCity 8.1.1.
@@ -53,7 +55,14 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 
 # Change log
 
+## Version 0.9.2
+* Bug: HipChat API changed (#59).
+* Bug: Faulty 0.9.1 release that included EMMA instrumented code (#56, #57, #58).
+
 ## Version 0.9.1
+*WARNING: This release was pulled because of a faulty archive that included EMMA instrumented code. If this version is your only option,
+take the EMMA JAR file from the matching release's tag and put it on the classpath.*
+
 * Bug: Update by Atlassian of the HipChat API broke the retrieval of emoticons (#53).
 
 ## Version 0.9.0

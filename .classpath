@@ -100,7 +100,7 @@
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/packtag-3.8.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/patches-impl.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/processesTerminator.jar"/>
-	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/quartz-1.6.0.jar"/>
+	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/quartz-1.6.1.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/remote-api-impl.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/resources_en.jar"/>
 	<classpathentry kind="var" path="TEAMCITY_HOME/webapps/ROOT/WEB-INF/lib/runtime-util.jar"/>
