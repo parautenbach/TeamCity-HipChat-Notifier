@@ -26,7 +26,7 @@ I will gladly provide information and experiences by others here.
 # Configuration
 
 On HipChat, create a user account to represent the build server and generate a V2 API token for that user (https://youraccountname.hipchat.com/account/api). 
-Note: There are two HipChat APIs, so ensure your token is for the v2 API and not the v1 API. 
+Note: There are two HipChat APIs, so ensure your token is for the v2 API and not the v1 API. You need to give the token *at least* the scopes *Send Notification* and *View Group*, the latter so that the plugin can retrieve the list of rooms (and emoticons).
 
 On TeamCity, as an administrator, configure the generated token and other settings on the Administration panel.
 
