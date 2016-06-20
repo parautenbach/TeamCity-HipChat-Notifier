@@ -1,5 +1,7 @@
 package com.whatsthatlight.teamcity.hipchat.test;
 
+import com.whatsthatlight.teamcity.hipchat.*;
+import jetbrains.buildServer.serverSide.auth.SecurityContext;
 import org.apache.log4j.BasicConfigurator;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
@@ -17,14 +19,6 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor;
-import com.whatsthatlight.teamcity.hipchat.HipChatApiResultLinks;
-import com.whatsthatlight.teamcity.hipchat.HipChatConfiguration;
-import com.whatsthatlight.teamcity.hipchat.HipChatProjectConfiguration;
-import com.whatsthatlight.teamcity.hipchat.HipChatProjectTab;
-import com.whatsthatlight.teamcity.hipchat.HipChatRoom;
-import com.whatsthatlight.teamcity.hipchat.HipChatRooms;
-
 import jetbrains.buildServer.controllers.WebFixture;
 import jetbrains.buildServer.serverSide.SProject;
 import jetbrains.buildServer.serverSide.impl.BaseServerTestCase;
@@ -32,7 +26,7 @@ import jetbrains.buildServer.users.SUser;
 import jetbrains.buildServer.web.openapi.PagePlaces;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
 
-public class HipChatProjectTabTest extends BaseServerTestCase {
+public class HipChatProjectSettingsTest extends BaseServerTestCase {
 	
 	private WebFixture webFixture;
 
@@ -81,24 +75,28 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		SProject project = org.mockito.Mockito.mock(SProject.class);
 		when(project.getParentProject()).thenReturn(parentProject);
 		when(project.getProjectId()).thenReturn(expectedProjectId);
-		
+
+		// HttpServletRequest mock
+		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
+		when(request.getAttribute("currentProject")).thenReturn(project);
+
 		// Processor mock
 		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
 		when(processor.getRooms(0)).thenReturn(rooms);
 
 		// Other page dependencies
-		SUser user = org.mockito.Mockito.mock(SUser.class);
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
-		
+
+		SecurityContext securityContext = org.mockito.Mockito.mock(SecurityContext.class);
+
         // The test page
-        HipChatProjectTab myPage = new HipChatProjectTab(pagePlaces, this.myProjectManager, descriptor, configuration, processor);
+		HipChatProjectSettings myPage = new HipChatProjectSettings(pagePlaces, descriptor, securityContext, configuration, processor);
 
         // Execute
-		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
 		Map<String, Object> model = new HashMap<String, Object>();
-		myPage.fillModel(model, request, project, user);
+		myPage.fillModel(model, request);
 		
 		// Test
 		AssertJUnit.assertEquals(expectedModelSize, model.size());
@@ -143,7 +141,11 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		SProject project = org.mockito.Mockito.mock(SProject.class);
 		when(project.getParentProject()).thenReturn(parentProject);
 		when(project.getProjectId()).thenReturn(expectedProjectId);
-		
+
+		// HttpServletRequest mock
+		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
+		when(request.getAttribute("currentProject")).thenReturn(project);
+
 		// Processor mock
 		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
 		when(processor.getRooms(0)).thenReturn(rooms);
@@ -153,14 +155,14 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
-		
-        // The test page
-        HipChatProjectTab myPage = new HipChatProjectTab(pagePlaces, this.myProjectManager, descriptor, configuration, processor);
+		SecurityContext securityContext = org.mockito.Mockito.mock(SecurityContext.class);
+
+		// The test page
+		HipChatProjectSettings myPage = new HipChatProjectSettings(pagePlaces, descriptor, securityContext, configuration, processor);
 
         // Execute
-		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
 		Map<String, Object> model = new HashMap<String, Object>();
-		myPage.fillModel(model, request, project, user);
+		myPage.fillModel(model, request);
 		
 		// Test
 		AssertJUnit.assertEquals(expectedModelSize, model.size());
@@ -205,6 +207,10 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		SProject project = org.mockito.Mockito.mock(SProject.class);
 		when(project.getParentProject()).thenReturn(parentProject);
 		when(project.getProjectId()).thenReturn(expectedProjectId);
+
+		// HttpServletRequest mock
+		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
+		when(request.getAttribute("currentProject")).thenReturn(project);
 		
 		// Processor mock
 		HipChatApiProcessor processor = org.mockito.Mockito.mock(HipChatApiProcessor.class);
@@ -215,14 +221,15 @@ public class HipChatProjectTabTest extends BaseServerTestCase {
 		PagePlaces pagePlaces = webFixture.getPagePlaces();
 		PluginDescriptor descriptor = org.mockito.Mockito.mock(PluginDescriptor.class);
         when(descriptor.getPluginResourcesPath(anyString())).thenReturn("");
-		
-        // The test page
-        HipChatProjectTab myPage = new HipChatProjectTab(pagePlaces, this.myProjectManager, descriptor, configuration, processor);
+
+		SecurityContext securityContext = org.mockito.Mockito.mock(SecurityContext.class);
+
+		// The test page
+		HipChatProjectSettings myPage = new HipChatProjectSettings(pagePlaces, descriptor, securityContext, configuration, processor);
 
         // Execute
-		HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
 		Map<String, Object> model = new HashMap<String, Object>();
-		myPage.fillModel(model, request, project, user);
+		myPage.fillModel(model, request);
 		
 		// Test
 		AssertJUnit.assertEquals(expectedModelSize, model.size());
