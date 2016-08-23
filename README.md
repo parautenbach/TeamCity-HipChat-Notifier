@@ -7,8 +7,8 @@ A fun TeamCity HipChat Notifier for sending build server notifications to a HipC
 
 # Installation
 
-[Download](https://github.com/parautenbach/TeamCity-HipChat-Notifier/releases/latest) the ZIP file release, drop it in your TeamCity installation's `.BuildServer/plugins/` 
-directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins/)) and restart the server. 
+[Download](https://github.com/parautenbach/TeamCity-HipChat-Notifier/releases/latest) the ZIP file release, drop it in your TeamCity installation's `.BuildServer/plugins/`
+directory (as explained by [Jetbrains](http://www.jetbrains.com/teamcity/plugins/)) and restart the server.
 
 [Visit](http://www.whatsthatlight.com/index.php/projects/teamcity-hipchat-plugin/) my website for more detailled instructions and information.
 
@@ -25,18 +25,18 @@ I will gladly provide information and experiences by others here.
 
 # Configuration
 
-On HipChat, create a user account to represent the build server and generate a V2 API token for that user (https://youraccountname.hipchat.com/account/api). 
-Note: There are two HipChat APIs, so ensure your token is for the v2 API and not the v1 API. 
+On HipChat, create a user account to represent the build server and generate a V2 API token for that user (https://youraccountname.hipchat.com/account/api).
+Note: There are two HipChat APIs, so ensure your token is for the v2 API and not the v1 API. You need to give the token *at least* the scopes *Send Notification* and *View Group*, the latter so that the plugin can retrieve the list of rooms (and emoticons).
 
 On TeamCity, as an administrator, configure the generated token and other settings on the Administration panel.
 
 # Developers
 
-* This is an Eclipse project. 
-* Clone the repository and set the `teamcity.home` property in the `build.xml` to your TeamCity server's home directory (Windows users, use forward slashes in the path, e.g. `C:/TeamCity`). 
-* To open the project in Eclipse go to _File -> Import -> General -> Existing Projects into Workspace -> Select root directory_. Navigate to the folder with the cloned source code. You can consider to use the Mylyn Github connector for Eclipse.  
-* Set the `TEAMCITY_HOME` classpath variable under Eclipse preferences to the same location as above. 
-* Check that Eclipse knows where to find a JDK (under Installed JREs in the Java section of Eclipse preferences). 
+* This is an Eclipse project.
+* Clone the repository and set the `teamcity.home` property in the `build.xml` to your TeamCity server's home directory (Windows users, use forward slashes in the path, e.g. `C:/TeamCity`).
+* To open the project in Eclipse go to _File -> Import -> General -> Existing Projects into Workspace -> Select root directory_. Navigate to the folder with the cloned source code. You can consider to use the Mylyn Github connector for Eclipse.
+* Set the `TEAMCITY_HOME` classpath variable under Eclipse preferences to the same location as above.
+* Check that Eclipse knows where to find a JDK (under Installed JREs in the Java section of Eclipse preferences).
 * On Windows make sure that you have `JAVA_HOME` variable set to where your JDK is installed, e.g. `C:\Program Files\Java\jdk1.7.0_51`.
 * To release the project as a TeamCity plugin right click on `build.xml` and select _Run As -> 2 Ant Build_. Check the release target and run. The plugin package will be created under a `build` folder.
 * Tests are built on [TestNG](http://testng.org/), coverage determined by [EMMA](http://emma.sourceforge.net/) and static analysis performed using [lint4j](http://www.jutils.com/).
@@ -51,7 +51,7 @@ For debugging, add the snippets in [`teamcity-server-log4j.xml`](https://github.
 # Future Improvements
 
 * Configurable notification colours and emoticon sets.
-* Implement more events: Right now the supported events seem sufficient. 
+* Implement more events: Right now the supported events seem sufficient.
 
 # Change log
 
@@ -68,16 +68,16 @@ take the EMMA JAR file from the matching release's tag and put it on the classpa
 ## Version 0.9.0
 * Enhancement: TeamCity 9 compatibility, specifically v9.0.2 (#44).
 * Bug: Loading emoticons causes an infinite loop, due to un-RESTful HipChat API (#49).
-* Feature: New build statistics message template variables (#45): 
-           `${noOfTests}`, `${noOfPassedTests}`, `${noOfFailedTests}`, 
-           `${noOfNewFailedTests}`, `${noOfIgnoredTests}` and 
-           `${durationOfTests}`. Other build statistics, e.g. custom 
-           defined statistics, code duplicates, code coverage, etc. 
-           can be referenced in a template with the `stats.` prefix 
-           within the data model, e.g. `${.data_model["stats.myKey"]}`. 
-           The exact variables will vary, so enable debug logging to 
+* Feature: New build statistics message template variables (#45):
+           `${noOfTests}`, `${noOfPassedTests}`, `${noOfFailedTests}`,
+           `${noOfNewFailedTests}`, `${noOfIgnoredTests}` and
+           `${durationOfTests}`. Other build statistics, e.g. custom
+           defined statistics, code duplicates, code coverage, etc.
+           can be referenced in a template with the `stats.` prefix
+           within the data model, e.g. `${.data_model["stats.myKey"]}`.
+           The exact variables will vary, so enable debug logging to
            see what's available in your environment.
-* Feature: Proxy support (#46). For setting up TeamCity proxy support 
+* Feature: Proxy support (#46). For setting up TeamCity proxy support
            refer to the [online documentation](https://confluence.jetbrains.com/display/TCD9/How+To...#HowTo...-ConfigureTeamCitytoUseProxyServerforOutgoingConnections).
 
 ## Version 0.8.0
@@ -106,14 +106,14 @@ take the EMMA JAR file from the matching release's tag and put it on the classpa
 
 ## Version 0.6.1
 * Bug: Large GET request when submitting plugin configuration (due to the templates) can cause a 404 on some setups because of request limits (#26, #27).
-* Enhancement: Global setting to only notify on first successful build after a failure, or first failed build after a successful build (#21). 
+* Enhancement: Global setting to only notify on first successful build after a failure, or first failed build after a successful build (#21).
 
 ## Version 0.6.0
 * Bug: Unicode notification message payloads weren't sent as UTF-8 (#20).
 * Bug: Race condition during plugin initialisation (during server startup) that sometimes prevented emoticons from being cached (#25).
 * Enhancement: Configurable notification message templates, using [FreeMarker](http://freemarker.org/).
 * Enhancement: In addition to configurable templates, any build or agent parameter can now be referenced too (#16).
-* Enhancement: Switched from JUnit to TestNG, added EMMA for code coverage analysis and lint4j for static analysis. 
+* Enhancement: Switched from JUnit to TestNG, added EMMA for code coverage analysis and lint4j for static analysis.
 
 ## Version 0.5.0
 * Enhancement: The branch will be rendered as part of the notification for VCSs that uses branches.
@@ -137,13 +137,13 @@ take the EMMA JAR file from the matching release's tag and put it on the classpa
 * Feature: Clickable links in messages to the build.
 
 ## Version 0.3.1
-* Bug: Project configuration tab didn't use room ID aliases when inheriting from the default or parent configuration. 
+* Bug: Project configuration tab didn't use room ID aliases when inheriting from the default or parent configuration.
 
-## Version 0.3.0 
+## Version 0.3.0
 
-* Feature: Disable or enable build and server events. 
+* Feature: Disable or enable build and server events.
 
-## Version 0.2.0 
+## Version 0.2.0
 
 * Feature: Allow setting different rooms for different projects, and allow to use the default configuration or none, or inherit from the parent project. As a consequence, server up and down events are sent to only the default room, if configured.
 * Improvement: Instead of entering a room ID, it can now be selected from a dropdown list of available rooms.
