@@ -5,7 +5,7 @@
   <bean id="hipChatConfiguration" class="com.whatsthatlight.teamcity.hipchat.HipChatConfiguration"/>
   <bean id="hipChatNotificationMessageTemplates" class="com.whatsthatlight.teamcity.hipchat.HipChatNotificationMessageTemplates"/>  
   <bean id="hipChatApiProcessor" class="com.whatsthatlight.teamcity.hipchat.HipChatApiProcessor"/>
-  <bean id="hipChatProjectTab" class="com.whatsthatlight.teamcity.hipchat.HipChatProjectTab"/>
+  <bean id="hipChatProjectSettings" class="com.whatsthatlight.teamcity.hipchat.HipChatProjectSettings"/>
   <bean id="hipChatServerExtension" class="com.whatsthatlight.teamcity.hipchat.HipChatServerExtension" init-method="register"/>
   <bean id="hipChatAdminPage" class="com.whatsthatlight.teamcity.hipchat.HipChatConfigurationPageExtension"/>
   <bean id="hipChatEmoticonCache" class="com.whatsthatlight.teamcity.hipchat.HipChatEmoticonCache"/>
